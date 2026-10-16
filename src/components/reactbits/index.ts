@@ -25,6 +25,9 @@ import PixelSwapImpl from './PixelSwap.jsx';
 import CursorGridImpl from './CursorGrid.jsx';
 import FlexCarouselImpl from './FlexCarousel.jsx';
 import StarBorderImpl from './StarBorder.jsx';
+import SpotlightCardImpl from './SpotlightCard.jsx';
+import GlareHoverImpl from './GlareHover.jsx';
+import VariableProximityImpl from './VariableProximity.jsx';
 
 import type {
   BlurTextProps,
@@ -40,7 +43,10 @@ import type {
   PixelSwapProps,
   CursorGridProps,
   FlexCarouselProps,
-  StarBorderProps
+  StarBorderProps,
+  SpotlightCardProps,
+  GlareHoverProps,
+  VariableProximityProps
 } from './types';
 
 export const BlurText = BlurTextImpl as ComponentType<BlurTextProps>;
@@ -57,6 +63,9 @@ export const PixelSwap = PixelSwapImpl as ComponentType<PixelSwapProps>;
 export const CursorGrid = CursorGridImpl as ComponentType<CursorGridProps>;
 export const FlexCarousel = FlexCarouselImpl as ComponentType<FlexCarouselProps>;
 export const StarBorder = StarBorderImpl as ComponentType<StarBorderProps>;
+export const SpotlightCard = SpotlightCardImpl as ComponentType<SpotlightCardProps>;
+export const GlareHover = GlareHoverImpl as ComponentType<GlareHoverProps>;
+export const VariableProximity = VariableProximityImpl as ComponentType<VariableProximityProps>;
 
 export type {
   BlurTextProps,
@@ -72,5 +81,8 @@ export type {
   PixelSwapProps,
   CursorGridProps,
   FlexCarouselProps,
-  StarBorderProps
+  StarBorderProps,
+  SpotlightCardProps,
+  GlareHoverProps,
+  VariableProximityProps
 };

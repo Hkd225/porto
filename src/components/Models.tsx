@@ -23,6 +23,7 @@ import { Cascade } from './Cascade';
 import { MaskLines } from './MaskLines';
 import { ScrambleText } from './ScrambleText';
 import { CountUp } from './CountUp';
+import { SpotlightCard } from './reactbits';
 import { useHoverPreview } from '../hooks/useProjectPreview';
 import { gsap, EASE } from '../lib/gsap';
 import { useReducedMotion } from '../hooks/useReducedMotion';
@@ -71,7 +72,7 @@ function ModelCard({ model, index }: { model: HFArtifact; index: number }) {
       target="_blank"
       rel="noreferrer noopener"
       data-cursor-label="Open"
-      className="group flex min-w-0 flex-col bg-ink transition-colors duration-500 hover:bg-surface"
+      className="group flex min-w-0 flex-col"
       {...preview}
     >
       <div className="relative aspect-[4/3] overflow-hidden border-b border-line-soft">
@@ -341,7 +342,29 @@ export function Models() {
           className="mt-16 grid gap-px border border-line md:grid-cols-2 xl:grid-cols-3 xl:[&>*:last-child]:col-span-2"
         >
           {models.map((model, i) => (
-            <ModelCard key={model.slug} model={model} index={i} />
+            <SpotlightCard
+              key={model.slug}
+              spotlightColor="#c8ff4d"
+              intensity={0.14}
+              spotlightSize={280}
+              softness={0.75}
+              borderGlow={0.7}
+              proximity={60}
+              grain={0}
+              style={{
+                /* The card surface lives on this root so the spotlight
+                   layer (z -1) stays visible beneath the card's content;
+                   outer pills/edges are neutralized because the cascade
+                   grid already draws the hairlines. */
+                '--spotlight-card-surface': 'var(--color-ink)',
+                '--spotlight-card-border': 'transparent',
+                '--spotlight-card-shadow': 'none',
+                padding: 0,
+                borderRadius: 0,
+              }}
+            >
+              <ModelCard model={model} index={i} />
+            </SpotlightCard>
           ))}
         </Cascade>
 

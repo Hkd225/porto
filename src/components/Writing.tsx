@@ -5,6 +5,7 @@ import { Cascade } from './Cascade';
 import { useHoverPreview, artFor } from '../hooks/useProjectPreview';
 import { ScrambleText } from './ScrambleText';
 import { MaskLines } from './MaskLines';
+import { GlareHover } from './reactbits';
 
 /** Rough reading time from the verified word count. ~220 wpm. */
 const readingTime = (words: number) => Math.max(1, Math.round(words / 220));
@@ -22,53 +23,73 @@ function WritingCard({ post, index }: { post: Writing; index: number }) {
   });
 
   return (
-    <a
-      href={post.url}
-      target="_blank"
-      rel="noreferrer noopener"
-      data-cursor-label="Read"
-      className="group relative flex flex-col justify-between gap-10 bg-ink p-7 transition-colors duration-500 hover:bg-surface md:p-9"
-      {...preview}
+    /* React Bits: GlareHover — a bone sheen travels the card on approach.
+        The wrapper renders inline-grid with place-items center, so the card
+        must own w-full; its own bg and hover tint stay untouched because the
+        glare layer sits above the content. */
+    <GlareHover
+      width="100%"
+      background="transparent"
+      borderColor="transparent"
+      borderRadius="0px"
+      glareColor="#f0f0e8"
+      glareOpacity={0.32}
+      glareAngle={-35}
+      glareSize={30}
+      softness={0.55}
+      variant="streak"
+      mode="follow"
+      transitionDuration={700}
+      className="w-full"
     >
-      <div>
-        <div
-          data-cascade
-          className="flex flex-wrap items-center gap-3 font-mono text-[0.62rem] tracking-[0.16em] text-muted uppercase"
-        >
-          <span className="text-acid">{post.tags[0]}</span>
-          <span aria-hidden="true">/</span>
-          <span>{post.published}</span>
-          <span aria-hidden="true">/</span>
-          <span className="inline-flex items-center gap-1.5">
-            <BookOpen size={11} aria-hidden="true" />
-            {readingTime(post.words)} min read
-          </span>
+      <a
+        href={post.url}
+        target="_blank"
+        rel="noreferrer noopener"
+        data-cursor-label="Read"
+        className="group relative flex w-full flex-col justify-between gap-10 bg-ink p-7 transition-colors duration-500 hover:bg-surface md:p-9"
+        {...preview}
+      >
+        <div>
+          <div
+            data-cascade
+            className="flex flex-wrap items-center gap-3 font-mono text-[0.62rem] tracking-[0.16em] text-muted uppercase"
+          >
+            <span className="text-acid">{post.tags[0]}</span>
+            <span aria-hidden="true">/</span>
+            <span>{post.published}</span>
+            <span aria-hidden="true">/</span>
+            <span className="inline-flex items-center gap-1.5">
+              <BookOpen size={11} aria-hidden="true" />
+              {readingTime(post.words)} min read
+            </span>
+          </div>
+
+          <h3
+            data-cascade
+            className="mt-6 max-w-[24ch] font-display text-h3 leading-[1.1] tracking-[-0.035em] text-bone transition-colors duration-500 group-hover:text-acid"
+          >
+            {post.title}
+          </h3>
+
+          <p data-cascade className="mt-4 max-w-[46ch] leading-relaxed text-muted">
+            {post.summary}
+          </p>
         </div>
 
-        <h3
-          data-cascade
-          className="mt-6 max-w-[24ch] font-display text-h3 leading-[1.1] tracking-[-0.035em] text-bone transition-colors duration-500 group-hover:text-acid"
-        >
-          {post.title}
-        </h3>
-
-        <p data-cascade className="mt-4 max-w-[46ch] leading-relaxed text-muted">
-          {post.summary}
-        </p>
-      </div>
-
-      <div data-cascade className="flex items-center justify-between">
-        <span className="mono-label">{String(index + 1).padStart(2, '0')}</span>
-        <span className="flex items-center gap-2 font-mono text-[0.62rem] tracking-[0.16em] text-muted uppercase transition-colors duration-500 group-hover:text-acid">
-          Read on Medium
-          <ArrowUpRight
-            size={14}
-            aria-hidden="true"
-            className="transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-          />
-        </span>
-      </div>
-    </a>
+        <div data-cascade className="flex items-center justify-between">
+          <span className="mono-label">{String(index + 1).padStart(2, '0')}</span>
+          <span className="flex items-center gap-2 font-mono text-[0.62rem] tracking-[0.16em] text-muted uppercase transition-colors duration-500 group-hover:text-acid">
+            Read on Medium
+            <ArrowUpRight
+              size={14}
+              aria-hidden="true"
+              className="transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            />
+          </span>
+        </div>
+      </a>
+    </GlareHover>
   );
 }
 

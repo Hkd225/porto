@@ -1,5 +1,5 @@
 import { ArrowUp, ArrowUpRight, BookOpen, Boxes, Contact as ContactIcon, GitBranch } from 'lucide-react';
-import { FadeContent, GradientText, LogoLoop, Magnet, StarBorder } from './reactbits';
+import { FadeContent, GradientText, LogoLoop, Magnet, StarBorder, VariableProximity } from './reactbits';
 import { profile } from '../data/profile';
 import { Reveal } from './Reveal';
 import { Cascade } from './Cascade';
@@ -314,12 +314,28 @@ export function Contact() {
             </div>
           </div>
 
-          {/* wordmark */}
-          <div
-            aria-hidden="true"
-            className="mt-14 select-none bg-gradient-to-b from-bone/18 to-bone/[0.02] bg-clip-text text-center font-display text-[clamp(3.5rem,19vw,18rem)] leading-[0.78] tracking-[-0.055em] text-transparent"
-          >
-            HAKID
+          {/* wordmark — React Bits: VariableProximity. At rest it is the ghost
+              bone it always was (14% alpha, the old gradient's top stop); as the
+              cursor approaches, each letter presses to full weight and tints
+              acid through color-mix. Only the wght axis is driven because that
+              is what our Space Grotesk variable font carries, so the vendor's
+              default font is overridden inline — same typeface as the rest of
+              the site. The loop parks whenever the pointer settles. */}
+          <div aria-hidden="true" className="mt-14 select-none text-center">
+            <VariableProximity
+              label="HAKID"
+              fromFontVariationSettings="'wght' 300"
+              toFontVariationSettings="'wght' 700"
+              radius={340}
+              falloff="gaussian"
+              smoothing={0.28}
+              fromColor="rgba(240, 240, 232, 0.14)"
+              toColor="#c8ff4d"
+              lift={0.045}
+              idleWave={false}
+              className="font-display text-[clamp(3.5rem,19vw,18rem)] leading-[0.78] tracking-[-0.055em]"
+              style={{ fontFamily: "'Space Grotesk', ui-sans-serif, system-ui, sans-serif" }}
+            />
           </div>
         </div>
 

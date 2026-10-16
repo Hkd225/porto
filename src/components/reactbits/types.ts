@@ -10,6 +10,13 @@
 export type Keyframe = Record<string, string | number>;
 export type MagnetAxis = 'x' | 'y' | 'both';
 
+/** React.CSSProperties has no index for vendor-agnostic CSS custom properties,
+    but the vendored component styles are driven through `--component-*` vars —
+    this is the accepted surface for passing them inline. */
+export type CSSPropertiesWithVars = React.CSSProperties & {
+  [customProperty: `--${string}`]: string | number;
+};
+
 export interface BlurTextProps {
   text?: string;
   /** Per-segment delay in ms. */
@@ -494,4 +501,100 @@ export interface StarBorderProps extends React.HTMLAttributes<HTMLElement> {
   rel?: string;
   /** Button passthrough when `as` is unset. */
   type?: 'button' | 'submit' | 'reset';
+}
+
+/* ------------------------------------------------------------------ */
+/* Cursor-reactive surfaces                                            */
+/* ------------------------------------------------------------------ */
+
+export interface SpotlightCardProps {
+  children?: React.ReactNode;
+  className?: string;
+  /** Accepts `--spotlight-card-*` custom properties for surface/border/shadow. */
+  style?: CSSPropertiesWithVars;
+  /** Spotlight color — drives the center fill, rim glow, and flare. */
+  spotlightColor?: string;
+  /** Center fill strength, 0–1 (scaled by theme). */
+  intensity?: number;
+  /** Spotlight radius, px. */
+  spotlightSize?: number;
+  /** Edge softness, 0 (hard core) to 1 (wide bloom). */
+  softness?: number;
+  shape?: 'circle' | 'beam';
+  /** Hover ring glow strength, 0–1. */
+  borderGlow?: number;
+  /** Distance beyond the card edge where the field still reacts, px. */
+  proximity?: number;
+  /** Light-follow smoothing, 0 (snap) to 1 (slow). */
+  smoothing?: number;
+  /** Drift the light when no pointer is near; keeps the paint loop warm. */
+  ambient?: boolean;
+  /** Bloom flare while pressed. */
+  flare?: boolean;
+  /** Noise-streak grain over the light, 0–1. */
+  grain?: number;
+  theme?: 'dark' | 'light';
+}
+
+export type GlareHoverVariant = 'streak' | 'twin' | 'sheen';
+export type GlareHoverMode = 'hover' | 'follow' | 'click' | 'loop';
+
+export interface GlareHoverProps {
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  /** Root size; pass '100%' to fill a grid cell or column. */
+  width?: string;
+  height?: string;
+  /** Own surface — set transparent to wrap an existing card untreated. */
+  background?: string;
+  borderRadius?: string;
+  borderColor?: string;
+  /** Band color/opacity/angle (-45° sweeps corner to corner). */
+  glareColor?: string;
+  glareOpacity?: number;
+  glareAngle?: number;
+  /** Band width as a % of the root diagonal. */
+  glareSize?: number;
+  softness?: number;
+  variant?: GlareHoverVariant;
+  blendMode?: string;
+  /** Sweep a 1px rim highlight with the band. */
+  rimGlint?: boolean;
+  mode?: GlareHoverMode;
+  transitionDuration?: number;
+  /** Seconds between auto sweeps in loop mode. */
+  interval?: number;
+  /** A single sweep instead of an enter/exit pair. */
+  playOnce?: boolean;
+  /** Sweep once the first time the card is roughly in view. */
+  intro?: boolean;
+}
+
+export interface VariableProximityProps {
+  label?: string;
+  /** CSS font-variation-settings strings, e.g. "'wght' 300". Only axes that
+      exist on the loaded variable font take effect. */
+  fromFontVariationSettings?: string;
+  toFontVariationSettings?: string;
+  /** Element whose box gates the field; unset = react anywhere. */
+  containerRef?: React.RefObject<HTMLElement | null>;
+  /** Field radius, px. */
+  radius?: number;
+  falloff?: 'linear' | 'exponential' | 'gaussian';
+  /** Pointer-follow smoothing, 0–1. */
+  smoothing?: number;
+  /** Rest and nearest colors; composed via color-mix while approaching. */
+  fromColor?: string;
+  toColor?: string;
+  /** Extra growth at full proximity, 0–1. */
+  scale?: number;
+  /** em rise at full proximity. */
+  lift?: number;
+  /** Ambient wave while idle; keeps a paint loop running. */
+  idleWave?: boolean;
+  fontSize?: number | string;
+  className?: string;
+  style?: React.CSSProperties;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }
