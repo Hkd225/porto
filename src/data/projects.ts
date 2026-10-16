@@ -325,6 +325,9 @@ export interface Writing {
   words: number;
   summary: string;
   tags: string[];
+  /** Decorative atmospheric texture (never an article screenshot); treated
+      to the site's duotone in the card. Sources credited in public/img. */
+  art?: string;
 }
 
 export const writing: Writing[] = [
@@ -337,6 +340,7 @@ export const writing: Writing[] = [
     summary:
       'Why an agent needs to estimate its own reliability before it acts, and the control layer that turns that estimate into a decision.',
     tags: ['Uncertainty', 'Agentic AI'],
+    art: '/img/writing-fog.jpg',
   },
   {
     title:
@@ -347,6 +351,7 @@ export const writing: Writing[] = [
     summary:
       'On governance structures for systems that modify themselves, and why self-evolution needs constraints defined outside the thing being constrained.',
     tags: ['AI Safety', 'Self-improvement'],
+    art: '/img/writing-glass.jpg',
   },
 ];
 

@@ -47,10 +47,24 @@ function WritingCard({ post, index }: { post: Writing; index: number }) {
         target="_blank"
         rel="noreferrer noopener"
         data-cursor-label="Read"
-        className="group relative flex w-full flex-col justify-between gap-10 bg-ink p-7 transition-colors duration-500 hover:bg-surface md:p-9"
+        className="group relative flex w-full flex-col justify-between gap-10 overflow-hidden bg-ink p-7 md:p-9"
         {...preview}
       >
-        <div>
+        {post.art && (
+          /* Photographic underlay — an atmospheric texture, never a fake
+              article screenshot. It rests under a heavy scrim and surfaces
+              as the pointer arrives: the hover that bg-surface used to be. */
+          <div aria-hidden="true" className="absolute inset-0">
+            <img
+              src={post.art}
+              alt=""
+              loading="lazy"
+              className="h-full w-full object-cover grayscale contrast-[1.06] brightness-[.52] transition-[transform,filter] duration-[1200ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.04] group-hover:brightness-[.7]"
+            />
+            <div className="absolute inset-0 bg-ink/75 transition-colors duration-700 group-hover:bg-ink/55" />
+          </div>
+        )}
+        <div className="relative">
           <div
             data-cascade
             className="flex flex-wrap items-center gap-3 font-mono text-[0.62rem] tracking-[0.16em] text-muted uppercase"
@@ -77,7 +91,7 @@ function WritingCard({ post, index }: { post: Writing; index: number }) {
           </p>
         </div>
 
-        <div data-cascade className="flex items-center justify-between">
+        <div data-cascade className="relative flex items-center justify-between">
           <span className="mono-label">{String(index + 1).padStart(2, '0')}</span>
           <span className="flex items-center gap-2 font-mono text-[0.62rem] tracking-[0.16em] text-muted uppercase transition-colors duration-500 group-hover:text-acid">
             Read on Medium

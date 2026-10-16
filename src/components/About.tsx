@@ -158,6 +158,20 @@ export function About() {
       className="relative z-10 border-t border-line py-section"
       aria-labelledby="about-title"
     >
+      {/* Photographic wallpaper — an ink-wash scan flipped to white strokes on
+          black, i.e. the photograph's own paper/ink relationship reversed to
+          sit inside this palette. Ghosted at rest under ink gradients so the
+          long read keeps full contrast. */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden">
+        <img
+          src="/img/wash-grey.jpg"
+          alt=""
+          loading="lazy"
+          className="h-full w-full object-cover object-center opacity-15 [filter:invert(1)_grayscale(1)_brightness(.55)_contrast(1.1)]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink via-ink/10 to-ink" />
+      </div>
+
       <div className="container-x">
         <p className="mono-label mb-5"><ScrambleText text="007 / About" /></p>
 
