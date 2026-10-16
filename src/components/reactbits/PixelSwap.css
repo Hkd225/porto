@@ -1,0 +1,30 @@
+.pixel-swap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  outline: none;
+}
+
+.pixel-swap:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+.pixel-swap__layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Each cover layer caches as its own composited texture: the parent art
+     wrapper scrolls with a gsap-scrubbed parallax, and without promotion that
+     per-frame transform re-rasterised the whole subtree (inline SVG covers
+     with hundreds of pixel cells) — the single heaviest raster in the page
+     during fast scroll. With promotion the texture is painted once and the
+     scroll only translates it. */
+  will-change: transform;
+}
+
+.pixel-swap__layer[data-visible='false'] {
+  visibility: hidden;
+}

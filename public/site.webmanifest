@@ -1,0 +1,40 @@
+{
+  "name": "Muhammad Auffa Hakim Aditya — AI Systems & Autonomous Agents",
+  "short_name": "Hakid",
+  "description": "Independent AI systems researcher building agentic architectures, cognitive memory systems, and uncertainty-aware reasoning.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#090a09",
+  "theme_color": "#090a09",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["portfolio", "technology", "developer"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ]
+}

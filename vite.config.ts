@@ -1,0 +1,24 @@
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  build: {
+    target: 'es2022',
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        // Keep the animation runtime out of the app chunk so first paint
+        // isn't blocked by GSAP + Motion.
+        manualChunks(id) {
+          if (id.includes('node_modules/gsap')) return 'gsap';
+          if (id.includes('node_modules/motion') || id.includes('node_modules/framer-motion')) {
+            return 'motion';
+          }
+          return undefined;
+        },
+      },
+    },
+  },
+});

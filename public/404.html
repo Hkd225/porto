@@ -1,0 +1,151 @@
+<!doctype html>
+<!--
+  404. GitHub Pages serves this for any unmatched path.
+
+  It is a standalone document on purpose: no bundler output is available here, so
+  the styling is inlined and the fonts fall back to system stacks rather than
+  pulling three webfont families for an error page.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>404 — Not found</title>
+    <meta name="theme-color" content="#090a09" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      :root {
+        --ink: #090a09;
+        --bone: #f0f0e8;
+        --muted: #969a90;
+        --line: rgba(240, 240, 232, 0.14);
+        --acid: #c8ff4d;
+      }
+
+      * {
+        box-sizing: border-box;
+        border-color: var(--line);
+      }
+
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        background: var(--ink);
+        color: var(--bone);
+        font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      .grid {
+        position: fixed;
+        inset: 0;
+        background-image: repeating-linear-gradient(
+          to right,
+          rgba(240, 240, 232, 0.055) 0 1px,
+          transparent 1px 12.5%
+        );
+        -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+        mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+        pointer-events: none;
+      }
+
+      main {
+        position: relative;
+        width: min(100% - 2.5rem, 52rem);
+        padding: 4rem 0;
+      }
+
+      .meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        font-size: 0.68rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .code {
+        margin: 3.5rem 0 0;
+        font-size: clamp(5rem, 22vw, 13rem);
+        line-height: 0.82;
+        letter-spacing: -0.05em;
+        color: transparent;
+        -webkit-text-stroke: 1.5px var(--acid);
+      }
+
+      h1 {
+        margin: 2rem 0 0;
+        font-size: clamp(1.5rem, 4vw, 2.25rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+      }
+
+      p {
+        margin: 1.25rem 0 0;
+        max-width: 46ch;
+        line-height: 1.7;
+        color: var(--muted);
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      }
+
+      nav {
+        margin-top: 2.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+      }
+
+      a {
+        color: var(--bone);
+        font-size: 0.68rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: color 0.25s ease;
+      }
+
+      a:hover {
+        color: var(--acid);
+      }
+
+      a::after {
+        content: '↗';
+        margin-left: 0.5rem;
+        color: var(--muted);
+      }
+
+      a:first-child::after {
+        content: '';
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid" aria-hidden="true"></div>
+
+    <main>
+      <div class="meta">
+        <span>Hakid. / MA</span>
+        <span>404 / Error</span>
+      </div>
+
+      <p class="code" aria-hidden="true">404</p>
+      <h1>This route does not resolve.</h1>
+      <p>
+        The page you asked for is not here. It may have been renamed, or the link may have been
+        mistyped. Everything on this site lives on a single page.
+      </p>
+
+      <nav>
+        <a href="/">Back to the portfolio</a>
+        <a href="https://github.com/Hkd225">GitHub</a>
+        <a href="https://huggingface.co/Hakid">Hugging Face</a>
+      </nav>
+    </main>
+  </body>
+</html>
