@@ -598,3 +598,105 @@ export interface VariableProximityProps {
   style?: React.CSSProperties;
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
 }
+
+/* ------------------------------------------------------------------ */
+/* Kinetic type (GSAP SplitText) and scroll-velocity type               */
+/* ------------------------------------------------------------------ */
+
+export interface SplitTextProps {
+  text: string;
+  className?: string;
+  /** Milliseconds between successive chars / words / lines. */
+  delay?: number;
+  duration?: number;
+  /** Any GSAP ease string, e.g. 'expo.out'. */
+  ease?: string;
+  splitType?: 'chars' | 'words' | 'lines';
+  /** Full GSAP from/to vars; overrides the built-in effect presets. */
+  from?: Record<string, unknown>;
+  to?: Record<string, unknown>;
+  /** 0–1 — portion of the element that must be on screen for a 'view' run. */
+  threshold?: number;
+  /** ScrollTrigger root margin for the 'view' trigger, e.g. '-100px'. */
+  rootMargin?: string;
+  textAlign?: 'left' | 'center' | 'right' | 'justify';
+  tag?: 'h1' | 'h2' | 'h3' | 'p' | 'span' | 'div';
+  staggerFrom?: 'start' | 'end' | 'center' | 'edges' | 'random' | number;
+  /** Mask each unit so it rises out of its own clipped line. */
+  mask?: boolean;
+  effect?: 'rise' | 'fade' | 'blur' | 'flip' | 'pop' | 'skew' | 'wave';
+  /** 'load' = run at mount; 'view' = wait for the element; 'hover' / 'click' replay. */
+  trigger?: 'load' | 'view' | 'hover' | 'click';
+  loop?: boolean;
+  loopDelay?: number;
+  /** Pointer lift / wave applied after the reveal. */
+  hoverEffect?: 'none' | 'lift' | 'wave';
+  color?: string;
+  /** Starting tint each unit flashes before returning to the text color. */
+  accentColor?: string;
+  onLetterAnimationComplete?: () => void;
+}
+
+export interface ScrollVelocityProps {
+  /** Entries run left; every odd entry runs the opposite way. */
+  texts?: React.ReactNode[];
+  /** px/s drift at rest. */
+  velocity?: number;
+  numCopies?: number;
+  velocityMapping?: { input: number[]; output: number[] };
+  damping?: number;
+  stiffness?: number;
+  className?: string;
+  parallaxClassName?: string;
+  scrollerClassName?: string;
+  parallaxStyle?: React.CSSProperties;
+  scrollerStyle?: React.CSSProperties;
+  separator?: React.ReactNode;
+  pauseOnHover?: boolean;
+  fadeEdges?: boolean;
+  skewWithVelocity?: number;
+  scaleWithVelocity?: number;
+  outlineAlternate?: boolean;
+  gap?: number;
+  fontSize?: number | string;
+  fontWeight?: number | string;
+  color?: string;
+  scrollContainerRef?: React.RefObject<HTMLElement | null>;
+  draggable?: boolean;
+}
+
+/* ------------------------------------------------------------------ */
+/* Canvas-animated text                                                 */
+/* ------------------------------------------------------------------ */
+
+export interface FuzzyTextProps {
+  children?: React.ReactNode;
+  fontSize?: number | string;
+  fontWeight?: number | string;
+  fontFamily?: string;
+  color?: string;
+  enableHover?: boolean;
+  /** Rest-state fuzz, 0–1. */
+  baseIntensity?: number;
+  /** Pointer fuzz, 0–1. */
+  hoverIntensity?: number;
+  /** Max slice shift, px. */
+  fuzzRange?: number;
+  fps?: number;
+  direction?: 'horizontal' | 'vertical' | 'both';
+  transitionDuration?: number;
+  clickEffect?: boolean;
+  glitchMode?: boolean;
+  glitchInterval?: number;
+  glitchDuration?: number;
+  gradient?: string[] | null;
+  letterSpacing?: number;
+  sliceSize?: number;
+  /** 'hover' = fuzz on pointer; 'always' = continuous loop; 'click' = on click. */
+  trigger?: 'hover' | 'always' | 'click';
+  intro?: boolean;
+  introDuration?: number;
+  /** RGB slice split for analog-chromatic edges, 0–1. */
+  colorSplit?: number;
+  className?: string;
+}

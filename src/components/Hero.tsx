@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import { ExternalLink, MoveDown } from 'lucide-react';
 
-import { BlurText } from './reactbits';
+import { DecryptedText, ShinyText } from './reactbits';
 import { Magnet } from './reactbits';
 import { DotGrid } from './reactbits';
-import { DecryptedText, ShinyText } from './reactbits';
+import { SplitText } from './reactbits';
 import { SignalPanel } from './SignalPanel';
 import { HeroField } from './HeroField';
 import { CountUp } from './CountUp';
@@ -221,41 +221,54 @@ export function Hero({ ready }: HeroProps) {
             </span>
           </h1>
 
-          <div data-hero-headline className="flex flex-col gap-1">
-            {/* `data-kinetic` owns the variable-font axes and the tracking for the
-                whole block, so all three lines change together as the hero
-                scrolls out. The gap must be absolute: an `em` here would resolve
-                against this container's 16px font-size, not the display size. */}
+          <div data-hero-headline>
+            {/* SplitText (React Bits): the headline now resolves character by
+                character out of its own clipped mask — a slower, more made
+                cascade than the word blur it replaces, timed to finish while
+                the entry curtain is still sweeping. The `data-kinetic` block
+                keeps owning the variable-font axes and tracking, and the gap
+                between lines stays absolute: an `em` here would resolve
+                against this container's 16px font-size, not the display size.
+                `data-hero-line` feeds the entrance timeline, which referenced
+                it before the markup carried it. */}
             <div
               data-kinetic
+              data-hero-line
               className="flex flex-col gap-1"
               style={{ fontVariationSettings: "'wght' 700, 'wdth' 100" }}
             >
               <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 md:gap-x-9">
-                <BlurText
+                <SplitText
                   text="I BUILD"
                   className="font-display text-display leading-[0.86] text-bone"
-                  delay={45}
-                  animateBy="words"
-                  direction="bottom"
+                  delay={30}
+                  duration={1.15}
+                  effect="rise"
+                  mask
+                  trigger="load"
+                  textAlign="left"
                 />
-                <BlurText
+                <SplitText
                   text="INTELLIGENT"
                   className="font-display text-display leading-[0.86] text-acid"
-                  delay={45}
-                  animateBy="words"
-                  direction="bottom"
+                  delay={30}
+                  duration={1.15}
+                  effect="rise"
+                  mask
+                  trigger="load"
+                  textAlign="left"
                 />
               </div>
-              <div>
-                <BlurText
-                  text="SYSTEMS."
-                  className="font-display text-display leading-[0.86] text-bone"
-                  delay={45}
-                  animateBy="words"
-                  direction="bottom"
-                />
-              </div>
+              <SplitText
+                text="SYSTEMS."
+                className="font-display text-display leading-[0.86] text-bone"
+                delay={52}
+                duration={1.15}
+                effect="rise"
+                mask
+                trigger="load"
+                textAlign="left"
+              />
             </div>
           </div>
 

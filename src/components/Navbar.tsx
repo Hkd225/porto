@@ -146,7 +146,9 @@ export function Navbar({ onSearch }: { onSearch: () => void }) {
             scrolled ? 'py-3' : 'py-5'
           }`}
         >
-          {/* Mark */}
+          {/* Mark — text on purpose: a canvas fuzz at 16px reads as glitch
+              noise, not as a mark. (FuzzyText stays vendored for a bigger
+              surface if it ever earns one.) */}
           <a
             href="#index"
             onClick={(e) => go(e, '#index')}

@@ -23,6 +23,10 @@ const OUT = path.resolve(__dirname, '../src/components/reactbits');
         json.files.find((f) => path.basename(f.path) === `${base}.${ext}`) ??
         json.files.find((f) => f.path === `${base}/${base}.${ext}`);
       if (!file) {
+        if (ext === 'css') {
+          console.log(`${base}: no ${base}.${ext} — motion-only component, skipped`);
+          continue;
+        }
         throw new Error(
           `${base}: no ${base}.${ext} — registry lists ${json.files.map((f) => f.path).join(', ')}`
         );

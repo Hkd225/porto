@@ -22,24 +22,24 @@
   --color-dim: #6a6e66;
   --color-acid: #c8ff4d;
   --color-acid-dim: #9dc73a;
-  --color-line: rgba(240, 240, 232, 0.14);
-  --color-line-soft: rgba(240, 240, 232, 0.07);
+  --color-line: rgba(240, 240, 232, 0.12);
+  --color-line-soft: rgba(240, 240, 232, 0.055);
 
   --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
 
   /* Height-aware so the hero always clears the fold on short viewports. */
-  --text-display: clamp(3.4rem, min(10.5vw, 15.5vh), 9rem);
-  --text-h1: clamp(2.25rem, 6vw, 5rem);
-  --text-h2: clamp(1.75rem, 4vw, 3.25rem);
+  --text-display: clamp(3.5rem, min(11vw, 15.5vh), 10rem);
+  --text-h1: clamp(2.4rem, 6.4vw, 5.4rem);
+  --text-h2: clamp(1.85rem, 4.2vw, 3.4rem);
   --text-h3: clamp(1.25rem, 2vw, 1.75rem);
-  --text-lead: clamp(1.05rem, 1.5vw, 1.35rem);
+  --text-lead: clamp(1.08rem, 1.55vw, 1.42rem);
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 
-  --spacing-section: clamp(5rem, 11vw, 11rem);
+  --spacing-section: clamp(5.5rem, 12vw, 12.5rem);
 }
 
 /* ============================================================
@@ -180,7 +180,7 @@
   line-height: 0.9;
   font-weight: 500;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(240, 240, 232, 0.16);
+  -webkit-text-stroke: 1px rgba(240, 240, 232, 0.13);
   user-select: none;
   letter-spacing: -0.04em;
   /* clearance so the label below never collides with the descender */

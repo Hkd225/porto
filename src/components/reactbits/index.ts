@@ -28,6 +28,9 @@ import StarBorderImpl from './StarBorder.jsx';
 import SpotlightCardImpl from './SpotlightCard.jsx';
 import GlareHoverImpl from './GlareHover.jsx';
 import VariableProximityImpl from './VariableProximity.jsx';
+import SplitTextImpl from './SplitText.jsx';
+import ScrollVelocityImpl from './ScrollVelocity.jsx';
+import FuzzyTextImpl from './FuzzyText.jsx';
 
 import type {
   BlurTextProps,
@@ -46,7 +49,10 @@ import type {
   StarBorderProps,
   SpotlightCardProps,
   GlareHoverProps,
-  VariableProximityProps
+  VariableProximityProps,
+  SplitTextProps,
+  ScrollVelocityProps,
+  FuzzyTextProps
 } from './types';
 
 export const BlurText = BlurTextImpl as ComponentType<BlurTextProps>;
@@ -66,6 +72,9 @@ export const StarBorder = StarBorderImpl as ComponentType<StarBorderProps>;
 export const SpotlightCard = SpotlightCardImpl as ComponentType<SpotlightCardProps>;
 export const GlareHover = GlareHoverImpl as ComponentType<GlareHoverProps>;
 export const VariableProximity = VariableProximityImpl as ComponentType<VariableProximityProps>;
+export const SplitText = SplitTextImpl as ComponentType<SplitTextProps>;
+export const ScrollVelocity = ScrollVelocityImpl as ComponentType<ScrollVelocityProps>;
+export const FuzzyText = FuzzyTextImpl as ComponentType<FuzzyTextProps>;
 
 export type {
   BlurTextProps,
@@ -84,5 +93,8 @@ export type {
   StarBorderProps,
   SpotlightCardProps,
   GlareHoverProps,
-  VariableProximityProps
+  VariableProximityProps,
+  SplitTextProps,
+  ScrollVelocityProps,
+  FuzzyTextProps
 };
