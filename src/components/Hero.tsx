@@ -32,6 +32,9 @@ export function Hero() {
           clickRipple={false}
           intro
         />
+        {/* Ink scrim over the statement column — keeps the type legible
+            against bright silk crests while the right edge stays open. */}
+        <div className="absolute inset-0 bg-[linear-gradient(78deg,rgba(10,10,10,0.66)_0%,rgba(10,10,10,0.4)_38%,transparent_66%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(88%_70%_at_50%_42%,transparent_30%,rgba(10,10,10,0.72)_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ink" />
       </div>
@@ -41,7 +44,7 @@ export function Hero() {
 
         <div className="mt-10">
           <GradientText
-            colors={['#f6f6f3', '#a3a39d', '#f6f6f3']}
+            colors={['#f8f8f5', '#d6d6d0', '#f8f8f5']}
             variant="flow"
             animationSpeed={13}
             scale={3}
