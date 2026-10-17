@@ -784,3 +784,53 @@ export interface SilkProps {
   className?: string;
   style?: React.CSSProperties;
 }
+
+export interface SlicedWavesProps {
+  color1?: string;
+  color2?: string;
+  color3?: string;
+  /** Waves of light, 1–6. */
+  ribbons?: number;
+  /** Distance between the bars mid-view, in px. */
+  spacing?: number;
+  /** Bar width as a share of the spacing. */
+  barWidth?: number;
+  /** Wave height as a fraction of the view height. */
+  ribbonHeight?: number;
+  /** Vertical distance between the waves, as a fraction of the view height. */
+  spread?: number;
+  /** Rise and fall, as a fraction of the view height. */
+  amplitude?: number;
+  /** Waves fitted across the view. */
+  frequency?: number;
+  /** Animation speed; negative reverses. */
+  speed?: number;
+  /** How much the strip of bars turns away, 0–1. */
+  perspective?: number;
+  /** How much the strip bends in depth, 0–1. */
+  curve?: number;
+  /** Depth of field; the focus follows the cursor. */
+  blur?: number;
+  /** Soft light strength around each bar. */
+  glow?: number;
+  /** Overall brightness; overlaps burn to white. */
+  brightness?: number;
+  /** Vertical position of the waves, 0 top – 1 bottom. */
+  position?: number;
+  /** Rotation of the whole effect, degrees. */
+  rotation?: number;
+  /** Segment cuts (LED look); 0 keeps bars solid. */
+  slices?: number;
+  /** Film grain strength. */
+  grain?: number;
+  mouseInteraction?: boolean;
+  intro?: boolean;
+  /** Edge fade into the page, 0–1. */
+  fade?: number;
+  opacity?: number;
+  /** Draw bars as coloured ink for light backgrounds. */
+  lightMode?: boolean;
+  paused?: boolean;
+  dpr?: number;
+  className?: string;
+}

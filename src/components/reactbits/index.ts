@@ -36,6 +36,7 @@ import RotatingTextImpl from './RotatingText';
 import ScrollFloatImpl from './ScrollFloat';
 import TextPressureImpl from './TextPressure';
 import SilkImpl from './Silk.jsx';
+import SlicedWavesImpl from './SlicedWaves.jsx';
 
 import type {
   BlurTextProps,
@@ -62,7 +63,8 @@ import type {
   RotatingTextProps,
   ScrollFloatProps,
   TextPressureProps,
-  SilkProps
+  SilkProps,
+  SlicedWavesProps
 } from './types';
 
 export const BlurText = BlurTextImpl as ComponentType<BlurTextProps>;
@@ -90,6 +92,7 @@ export const RotatingText = RotatingTextImpl as ComponentType<RotatingTextProps>
 export const ScrollFloat = ScrollFloatImpl as ComponentType<ScrollFloatProps>;
 export const TextPressure = TextPressureImpl as ComponentType<TextPressureProps>;
 export const Silk = SilkImpl as ComponentType<SilkProps>;
+export const SlicedWaves = SlicedWavesImpl as ComponentType<SlicedWavesProps>;
 
 export type {
   BlurTextProps,
@@ -116,5 +119,6 @@ export type {
   RotatingTextProps,
   ScrollFloatProps,
   TextPressureProps,
-  SilkProps
+  SilkProps,
+  SlicedWavesProps
 };

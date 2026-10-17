@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 
-import { SpotlightCard } from './reactbits';
+import { SlicedWaves, SpotlightCard } from './reactbits';
 import type { CSSPropertiesWithVars } from './reactbits/types';
 import { Section } from './Section';
 import {
@@ -56,6 +56,56 @@ export function Work() {
       label="Selected work"
       title="A selection of built work"
       lede={`${featuredProjects.length} flagships and ${archive.length} archived builds — every description taken from the repositories themselves.`}
+      background={
+        <>
+          {/* Monochrome waves of light — same recolour discipline as the hero
+              silk: bone, grey and graphite, nothing else. The effect is built
+              for a ~600px stage, so it lives in its own bottom band instead of
+              being stretched across the whole chapter; opacity stays low so
+              the archive rows keep full legibility. */}
+          <div className="absolute inset-x-0 bottom-0 h-[480px]">
+            <SlicedWaves
+              color1="#f2f2ef"
+              color2="#8e8e88"
+              color3="#3c3c39"
+              ribbons={3}
+              spacing={26}
+              barWidth={0.5}
+              ribbonHeight={0.24}
+              spread={0.08}
+              amplitude={0.09}
+              frequency={1.1}
+              speed={0.8}
+              perspective={0.42}
+              curve={0.45}
+              blur={0.9}
+              glow={0.4}
+              brightness={1}
+              position={0.72}
+              rotation={0}
+              slices={0}
+              grain={0.08}
+              fade={0.55}
+              opacity={0.32}
+              mouseInteraction
+              intro
+            />
+          </div>
+          {/* Legibility: ink melt at the header zone and both edges, plus a
+              band-top melt so the last archive rows keep their contrast.
+              All melts sit at z-10 to beat the composited WebGL canvas; the
+              whole background layer is isolated so they cannot escape it. */}
+          <div className="absolute inset-x-0 top-0 z-10 h-56 bg-gradient-to-b from-ink/85 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 z-10 h-56 bg-gradient-to-t from-ink/85 to-transparent" />
+          <div
+            className="absolute inset-x-0 bottom-0 z-10 h-[480px]"
+            style={{
+              background:
+                'linear-gradient(to bottom, rgba(10,10,10,0.9), rgba(10,10,10,0.78) 52%, transparent 78%)',
+            }}
+          />
+        </>
+      }
     >
       {/* Category tabs with live counts — LPAS's "Housing 31 / Interiors 17…" grammar. */}
       <div className="flex flex-wrap items-center gap-2">

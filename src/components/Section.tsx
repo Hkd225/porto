@@ -9,6 +9,8 @@ interface SectionProps {
   /** Short right-hand note on the overline row. */
   lede?: string;
   className?: string;
+  /** Optional animated backdrop rendered behind the chapter content. */
+  background?: ReactNode;
   children: ReactNode;
 }
 
@@ -18,10 +20,18 @@ interface SectionProps {
  * uniform chrome is what makes the occasional full-bleed scene (hero, focus
  * carousel) read as intentional rather than random.
  */
-export function Section({ id, num, label, title, lede, className = '', children }: SectionProps) {
+export function Section({ id, num, label, title, lede, className = '', background, children }: SectionProps) {
   return (
-    <section id={id} className={`border-t border-line-soft py-[var(--spacing-section)] ${className}`}>
-      <div className="wrap">
+    <section
+      id={id}
+      className={`relative border-t border-line-soft py-[var(--spacing-section)]${background ? ' overflow-hidden' : ''} ${className}`}
+    >
+      {background && (
+        <div className="pointer-events-none absolute inset-0 isolate" aria-hidden="true">
+          {background}
+        </div>
+      )}
+      <div className="wrap relative z-10">
         <div className="flex items-start justify-between gap-8">
           <div className="flex items-baseline gap-4">
             <span className="num text-bone/70">{num}</span>
@@ -38,7 +48,7 @@ export function Section({ id, num, label, title, lede, className = '', children 
         )}
       </div>
 
-      <div className="wrap mt-14 sm:mt-16">{children}</div>
+      <div className="wrap relative z-10 mt-14 sm:mt-16">{children}</div>
     </section>
   );
 }
