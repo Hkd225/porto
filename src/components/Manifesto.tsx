@@ -30,29 +30,30 @@ import { AccordionGallery, LogoLoop, SplitText } from './reactbits';
 import { profile } from '../data/profile';
 
 /**
- * Panel photography — licensed frames downloaded from Wikimedia Commons
- * (public domain / CC0; see public/method/CREDITS.md). Keyed by the step
- * word so a data reorder can never desync a principle from its image.
- * Frames are chosen for texture in the mono system: a manuscript read
- * line by line, hand-etched copper, a crack driven through concrete, and
- * a real timestamped duty log.
+ * Panel plates — the gallery runs on the author's own artifacts: one
+ * family of screenshots of real work. The Evo² paper being read, the
+ * uncertainty_engine.py core being rebuilt by hand, a README of stress
+ * cases (leakage prevention, label-shuffling sanity check), and the
+ * public GitHub record (see public/method/CREDITS.md). Keyed by the
+ * step word so a data reorder can never desync a principle from its
+ * image.
  */
 const stepPhotos: Record<string, { src: string; alt: string }> = {
   Read: {
-    src: '/method/read.jpg',
-    alt: 'A 15th-century manuscript page with ruled rows of script — the original text, studied closely.',
+    src: '/method/read.png',
+    alt: 'The Evo² paper open on screen — Figure 1, weight-harness co-evolution, read line by line.',
   },
   Rebuild: {
-    src: '/method/rebuild.jpg',
-    alt: 'A hand-etched circuit board, copper traces reconstructing a circuit by hand.',
+    src: '/method/rebuild.png',
+    alt: 'uncertainty_engine.py in the editor — the entropy core re-implemented by hand, _clip01 through softmax.',
   },
   Push: {
-    src: '/method/push.webp',
-    alt: 'A crack driven through a concrete slab — the vague part, found under load.',
+    src: '/method/push.png',
+    alt: 'A README of stress cases — strict leakage prevention, group validation, labels shuffled to prove the accuracy is earned.',
   },
   Document: {
-    src: '/method/document.jpg',
-    alt: 'An open logbook of handwritten, timestamped entries — the record kept honestly.',
+    src: '/method/document.png',
+    alt: 'The public GitHub record — repositories described as they happened, a year of contributions on the graph.',
   },
 };
 
@@ -92,8 +93,8 @@ const belt: Array<{ name: string; icon: IconType }> = [
  * Manifesto — "The method": Read. Rebuild. Push the vague part. Document.
  *
  * SplitText introduces the headline word by word; AccordionGallery is the
- * interaction — four photographic panels (PD/CC0 frames, credits above)
- * that expand on hover/focus, while the active panel's chrome (meta,
+ * interaction — four panel plates (the author's own captures, credits
+ * above) that expand on hover/focus, while the active panel's chrome (meta,
  * title, detail, tags) re-renders below the row. The redundant four-card
  * grid is gone: the gallery IS the list now, so nothing is said twice.
  * The tool ticker runs as a LogoLoop — an icon-only belt of ML/DL

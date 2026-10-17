@@ -1,15 +1,20 @@
-# Method panel photography — sources & licenses
+# Method panel plates — sources
 
-Frames behind the four accordion panels in the Method section, downloaded
-from Wikimedia Commons. All are public domain or CC0 — attribution is not
-legally required; credited here as good practice.
+Frames behind the four accordion panels in the Method section. As of this
+batch the plates are the author's own artifacts — real screenshots of real
+work, one family. Nothing here is stock imagery.
 
 | File | Source | Author | License |
 | --- | --- | --- | --- |
-| `read.jpg` | *Book of Hours (Use of Metz), Fol. 27r* — `commons.wikimedia.org/wiki/File:Book_of_Hours_(Use_of_Metz)_Fol._27r,_Decorated_Initials.tif` | Unknown artist (Cleveland Museum of Art) | Public domain |
-| `rebuild.jpg` | *Etched circuit board after cleaning* — `commons.wikimedia.org/wiki/File:Etched_circuit_board_after_cleaning.jpg` | Tinux | CC0 1.0 |
-| `push.webp` | *Cracked concrete – Preview* — `commons.wikimedia.org/wiki/File:Cracked_concrete_-_Preview_(Dimitrios_Savva_via_Poly_Haven.webp` | Dimitrios Savva (via Poly Haven) | CC0 1.0 |
-| `document.jpg` | *Notebook with handwritten entries, July 31 2019* — `commons.wikimedia.org/wiki/File:EFTA00002061_-_Notebook_with_handwritten_entries_detailing_daily_tasks_and_activities_on_July_31_2019_including_work_hours_vessel_inspections_and_crew_assignments.jpg` | Federal Bureau of Investigation (US Gov work) | Public domain |
+| `read.png` | Screenshot of the Evo² paper — "Evolving the Evolver through Weight-Harness Co-Evolution", Figure 1 | Muhammad Auffa Hakim Aditya | own screenshot |
+| `rebuild.png` | Screenshot of `uncertainty_engine.py` in the editor — the entropy core re-implemented by hand | Muhammad Auffa Hakim Aditya | own screenshot |
+| `push.png` | Live capture of the public README, `github.com/Hkd225/Blood-Cell-Anomaly-Detection` — leakage prevention, group validation, label-shuffling sanity check | Muhammad Auffa Hakim Aditya | own repository, live capture |
+| `document.png` | Live capture of the public GitHub profile, `github.com/Hkd225` — pinned repositories and the contribution year | Muhammad Auffa Hakim Aditya | own profile, live capture |
 
-Licenses verified via the Commons API (`iiprop=extmetadata`) at retrieval
-time. Panels are displayed in uniform grayscale by design.
+Notes
+
+- The earlier Wikimedia Commons frames (`read.jpg`, `rebuild.jpg`,
+  `push.webp`, `document.jpg`) were retired in this batch.
+- Medium is Cloudflare-blocked from this machine, so the Document plate
+  uses the GitHub record, which the Document step text matches literally.
+- Panels are displayed in uniform grayscale by design (`.ag-mono`).
