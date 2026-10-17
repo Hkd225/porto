@@ -1,65 +1,43 @@
-import { GradientText, LightPillar, RotatingText, Silk, SplitText } from './reactbits';
+import { GradientText, LightPillar, RotatingText, SplitText } from './reactbits';
 import { profile } from '../data/profile';
 
 /**
- * Hero — one background layer (monochrome silk), one statement, one cue.
+ * Hero — one background layer (the monochrome light pillar), one statement,
+ * one cue.
  *
- * The silk shader is recoloured into the site's own tones ("ubah warna saja"):
- * graphite folds on ink, bone-white sheen, calm speed, edges melting into the
- * page. The statement rides over it in a slow monochrome gradient via
- * GradientText wrapping the masked SplitText reveal.
+ * The pillar is recoloured into the site's own tones ("ubah warna saja"):
+ * a dense bone core fading into graphite, slow rotation, edges melting into
+ * the page. The statement rides over it protected by an ink scrim, revealed
+ * via SplitText in a monochrome GradientText.
  */
 export function Hero() {
   return (
     <section id="index" className="relative flex min-h-svh flex-col overflow-hidden bg-ink">
-      {/* Backdrop: silk, then legibility overlays. Nothing else. */}
+      {/* Backdrop: the light pillar alone, then legibility overlays. */}
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <Silk
-          color="#4a4a50"
-          sheenColor="#f2f2ef"
-          speed={3.2}
-          scale={1.25}
-          rotation={-0.35}
-          sheen={0.55}
-          depth={0.66}
-          glow={0.25}
-          noiseIntensity={1.1}
-          wave={1}
-          ripple={1}
-          fade={0.45}
-          mouseInteraction
-          interactionStrength={0.8}
-          clickRipple={false}
+        <LightPillar
+          topColor="#f2f2ef"
+          bottomColor="#4a4a50"
+          intensity={1}
+          glowAmount={0.002}
+          bloom={0.5}
+          pillarWidth={2.8}
+          pillarHeight={0.4}
+          pillarRotation={20}
+          twist={0.4}
+          detail={4}
+          rotationSpeed={0.25}
+          flow={1}
+          noiseIntensity={0.5}
+          fade={0.55}
+          interactive
+          clickPulse
           intro
+          quality="high"
+          mixBlendMode="screen"
         />
-        {/* A monochrome light pillar stands in the open right half of the
-            silk — the hero's single focal object. Same recolour discipline:
-            dense bone core fading into graphite, no hue anywhere. */}
-        <div className="absolute inset-y-0 right-0 w-[54%]">
-          <LightPillar
-            topColor="#f2f2ef"
-            bottomColor="#4a4a50"
-            intensity={1}
-            glowAmount={0.002}
-            bloom={0.45}
-            pillarWidth={2.6}
-            pillarHeight={0.4}
-            pillarRotation={18}
-            twist={0.4}
-            detail={4}
-            rotationSpeed={0.22}
-            flow={0.9}
-            noiseIntensity={0.5}
-            fade={0.5}
-            interactive
-            clickPulse
-            intro
-            quality="high"
-            mixBlendMode="screen"
-          />
-        </div>
         {/* Ink scrim over the statement column — keeps the type legible
-            against bright silk crests while the right edge stays open. */}
+            where the pillar's halo crosses it; edges stay open. */}
         <div className="absolute inset-0 bg-[linear-gradient(78deg,rgba(10,10,10,0.66)_0%,rgba(10,10,10,0.4)_38%,transparent_66%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(88%_70%_at_50%_42%,transparent_30%,rgba(10,10,10,0.72)_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ink" />
