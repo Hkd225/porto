@@ -52,8 +52,8 @@ const outDir = path.join(os.tmpdir(), 'porto-audit');
     await page.screenshot({ path: path.join(outDir, 'focus-hover.png'), clip: { x: row.x - 220, y: Math.max(0, row.y - 140), width: 720, height: row.h + 240 } });
   }
 
-  /* Click row 3 — the menu should walk the scroller to chapter 3. */
-  await page.locator('.flowing-menu__link').nth(2).click();
+  /* Click row 1 — the menu should walk the scroller to chapter 1. */
+  await page.locator('.flowing-menu__link').first().click();
   await page.waitForTimeout(1800);
   await page.screenshot({ path: path.join(outDir, 'focus-click.png') });
   const counter = await page.evaluate(() => {

@@ -5,10 +5,10 @@
 // install path (MIT).
 //
 // Site deviations (documented):
-// - Scroll drive: when `activeIndex` changes, the band glides to that row
-//   (goTo). The pinned Focus scene owns the index through scroll; pointer
-//   interaction inside the menu still steers directly — whichever input
-//   came last wins, like the upstream demo.
+// - Scroll drive: when `activeIndex` changes and the pointer is NOT over
+//   the menu, the band glides to that row (goTo). The pinned Focus scene
+//   owns the index through scroll; pointer interaction inside the menu
+//   still wins while it hovers (pointerInside guard).
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
@@ -99,6 +99,7 @@ function FlowingMenu({
   const layerTracks = useRef([]);
   const roll = useRef({ current: 0, p: 1, dir: 1, slots: [-1, -1], fromOpacity: 0, fromOffset: 0 });
   const [slots, setSlots] = useState([-1, -1]);
+  const pointerInside = useRef(false);
 
   const settings = {
     speed: Math.max(0, speed),
@@ -437,12 +438,12 @@ function FlowingMenu({
   const releaseRef = useRef(release);
   releaseRef.current = release;
 
-  /* Scroll drive — the scene owns the band: when the active row changes,
-     glide to it. Pointer moves inside the menu still steer directly;
-     whichever input came last wins, like the upstream demo. */
+  /* Scroll drive — when the scene's active row changes and the pointer is
+     elsewhere, glide the band to that row so scrolling owns the menu. */
   useIsoLayoutEffect(() => {
     if (activeIndex === undefined) return undefined;
     if (activeIndex < 0 || activeIndex >= items.length) return undefined;
+    if (pointerInside.current) return undefined;
     if (band.current.index === activeIndex) return undefined;
     stopIntro();
     goToRef.current(activeIndex, 'top');
@@ -512,6 +513,7 @@ function FlowingMenu({
   const onPointerMove = event => {
     if (event.pointerType === 'touch') return;
     stopIntro();
+    pointerInside.current = true;
     const c = cursor.current;
     const now = performance.now();
     const gap = (now - c.t) / 1000;
@@ -530,6 +532,7 @@ function FlowingMenu({
 
   const onPointerLeave = event => {
     if (event.pointerType === 'touch') return;
+    pointerInside.current = false;
     const list = listRef.current;
     const b = band.current;
     if (!list || b.index < 0) return;

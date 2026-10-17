@@ -21,11 +21,11 @@ const menuItems = profile.focus.map((area, i) => ({
  *
  * Editorial composition first: a static chrome row ("Selected focus" / range
  * counter), a left text column whose title, blurb and metadata stagger in per
- * chapter, a ghost serif numeral that marks the active chapter, and a React
- * Bits FlowingMenu filling the scene's right half as a background layer
- * behind the type — scroll glides its ivory band row to row (activeIndex
- * drives it; pointer steers, last input wins), the other rows dim, and its
- * rows jump the Lenis scroller straight to a chapter. Scroll owns the
+ * chapter, a ghost serif numeral that marks the active chapter and serves as
+ * the swapping background, and the chapter navigator — a React Bits
+ * FlowingMenu whose band glides row to row with scroll (activeIndex drives
+ * it; pointer interaction inside the menu still wins while it hovers) and
+ * whose rows jump the Lenis scroller straight to a chapter. Scroll owns the
  * state. No autoplay or extra effects.
  *
  * Under reduced motion or on narrow viewports there is no pinning: the six
@@ -225,35 +225,38 @@ export function Focus() {
             );
           })}
 
-          {/* Chapter background — the FlowingMenu itself fills the scene's
-              right half behind the type: scroll glides the ivory band row
-              to row (last input wins), other rows dim, and the ghost
-              numeral keeps swapping behind it. Rows are buttons — each
-              walks the Lenis scroller to its chapter. */}
-          <div data-chapter-chrome className="absolute inset-y-0 right-0 z-[1] hidden w-1/2 lg:block">
-            <FlowingMenu
-              className="focus-menu"
-              items={menuItems}
-              activeIndex={active}
-              showArrow
-              dimInactive
-              bgColor="transparent"
-              textColor="#e9e6de"
-              marqueeBgColor="#e9e6de"
-              marqueeTextColor="#080808"
-              borderColor="rgba(233, 230, 222, 0.1)"
-              ariaLabel="Focus areas"
-              onItemClick={(_item, index) => jumpTo(index)}
-            />
-          </div>
-
-          {/* Live chapter counter — small chrome, bottom right. */}
-          <p
+          {/* Chapter navigator — React Bits FlowingMenu. Scroll owns the
+              band's position: the activeIndex effect glides it row to row
+              (with the other rows dimming to focus the current one), while
+              a pointer inside the menu still steers it directly. The ghost
+              numeral continues to swap behind as the chapter background.
+              Rows are buttons — each walks the Lenis scroller to its
+              chapter, so the rail's jump behaviour survives intact. */}
+          <div
             data-chapter-chrome
-            className="absolute right-5 bottom-8 z-20 hidden font-mono text-[10px] tabular-nums tracking-[0.3em] text-accent lg:block sm:right-8 lg:right-12"
+            className="absolute top-1/2 right-5 z-30 hidden w-[min(26vw,380px)] -translate-y-1/2 lg:block sm:right-8 lg:right-12"
           >
-            {String(active + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
-          </p>
+            <div className="h-[62vh] border-y border-line-soft">
+              <FlowingMenu
+                className="focus-menu"
+                items={menuItems}
+                activeIndex={active}
+                align="left"
+                showArrow
+                dimInactive
+                bgColor="transparent"
+                textColor="#e9e6de"
+                marqueeBgColor="#e9e6de"
+                marqueeTextColor="#080808"
+                borderColor="rgba(233, 230, 222, 0.1)"
+                ariaLabel="Focus areas"
+                onItemClick={(_item, index) => jumpTo(index)}
+              />
+            </div>
+            <p className="mt-3 text-right font-mono text-[10px] tabular-nums tracking-[0.3em] text-accent">
+              {String(active + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+            </p>
+          </div>
         </div>
       </div>
     </section>
