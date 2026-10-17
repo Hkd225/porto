@@ -56,6 +56,7 @@ export function Work() {
       label="Selected work"
       title="A selection of built work"
       lede={`${featuredProjects.length} flagships and ${archive.length} archived builds — every description taken from the repositories themselves.`}
+      className="pt-[calc(var(--spacing-section)*0.35)]"
       background={
         <>
           {/* Monochrome waves of light — same recolour discipline as the hero

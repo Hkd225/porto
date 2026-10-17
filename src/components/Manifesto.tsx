@@ -112,7 +112,7 @@ export function Manifesto() {
   }));
 
   return (
-    <section id="method" aria-label="The method" className="border-t border-line-soft py-[var(--spacing-section)]">
+    <section id="method" aria-label="The method" className="border-t border-line-soft pt-[var(--spacing-section)] pb-[clamp(1.75rem,4vw,3rem)]">
       <div className="wrap">
         <div className="flex items-baseline justify-between gap-8">
           <div className="flex items-baseline gap-4">
@@ -199,14 +199,14 @@ export function Manifesto() {
             and resumes on leave; the intro is the component's own staggered
             rise, played once when the row enters view. Draggable — fling
             the belt. */}
-        <div className="mt-16 border-y border-line-soft py-5">
+        <div className="mt-14 border-y border-line-soft py-6">
           <LogoLoop
             className="text-dim"
             labels="hover"
             logos={belt.map(({ name, icon: Icon }) => ({
               node: (
                 <span role="img" aria-label={name} className="inline-flex">
-                  <Icon size={22} aria-hidden />
+                  <Icon size={36} aria-hidden />
                 </span>
               ),
               title: name,
@@ -214,8 +214,8 @@ export function Manifesto() {
               hoverColor: '#e9e6de',
             }))}
             speed={34}
-            logoHeight={22}
-            gap={52}
+            logoHeight={36}
+            gap={64}
             fadeOutWidth={0.08}
             hoverSpeed={0}
             ariaLabel="Tools and methods used across machine learning work"

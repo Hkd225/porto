@@ -27,13 +27,34 @@ const outDir = path.join(os.tmpdir(), 'porto-audit');
   await page.waitForTimeout(2600); // let the intro rise play + drift
   await page.screenshot({ path: path.join(outDir, 'ticker-rest.png') });
 
-  /* Hover: the belt pauses; one entry lights to ivory. Raw mouse coords —
-     locator.hover fights the wrap padding and the fixed nav. */
-  const box = await page.locator('.logoloop').boundingBox();
-  if (box) {
-    await page.mouse.move(box.x + box.width * 0.5, box.y + box.height / 2);
-    await page.waitForTimeout(900);
-    await page.screenshot({ path: path.join(outDir, 'ticker-hover.png') });
+  /* Hover: the loop renders off-screen copies too — pick an item whose box
+     sits inside the viewport, hover it, probe the tip, clip a closeup. */
+  const boxes = await page
+    .locator('.logoloop__item')
+    .evaluateAll((els) =>
+      els.map((el) => {
+        const r = el.getBoundingClientRect();
+        return { x: r.x, y: r.y, w: r.width, h: r.height };
+      }),
+    );
+  const on = boxes.find((r) => r.h > 0 && r.x > 240 && r.x < 1100);
+  if (on) {
+    await page.mouse.move(on.x + on.w / 2, on.y + on.h / 2);
+    await page.waitForTimeout(500);
+    const probe = await page.evaluate(() => {
+      const hovered = document.querySelector('.logoloop__item:hover');
+      if (!hovered) return 'no :hover item';
+      const tip = hovered.querySelector('.logoloop__tip');
+      if (!tip) return 'no tip element';
+      const cs = getComputedStyle(tip);
+      const r = tip.getBoundingClientRect();
+      return { text: tip.textContent, opacity: cs.opacity, color: cs.color, visible: r.width > 0 && r.bottom <= innerHeight };
+    });
+    console.log('tip probe:', JSON.stringify(probe));
+    await page.screenshot({
+      path: path.join(outDir, 'ticker-hover.png'),
+      clip: { x: on.x - 160, y: Math.max(0, on.y - 70), width: 420, height: on.h + 130 },
+    });
   }
   await browser.close();
   console.log('ticker shots written');
