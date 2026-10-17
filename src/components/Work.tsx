@@ -52,7 +52,7 @@ export function Work() {
   return (
     <Section
       id="work"
-      num="02"
+      num="03"
       label="Selected work"
       title="A selection of built work"
       lede={`${featuredProjects.length} flagships and ${archive.length} archived builds — every description taken from the repositories themselves.`}

@@ -80,7 +80,11 @@ export function Focus() {
       <section aria-label="Focus areas" className="border-t border-line-soft">
         <div className="wrap py-[var(--spacing-section)]">
           <div className="flex items-baseline justify-between gap-8">
-            <span className="overline">Selected focus</span>
+            <div className="flex items-baseline gap-4">
+              <span className="num text-bone/70">01</span>
+              <span className="h-px w-10 translate-y-[-4px] bg-line-2" aria-hidden="true" />
+              <span className="overline">Selected focus</span>
+            </div>
             <span className="font-mono text-[11px] tracking-[0.3em] text-dim">
               01 — {String(total).padStart(2, '0')}
             </span>
@@ -124,7 +128,11 @@ export function Focus() {
             data-chapter-chrome
             className="absolute inset-x-0 top-0 z-20 flex items-baseline justify-between px-5 pt-24 sm:px-8 lg:px-12"
           >
-            <span className="overline">Selected focus</span>
+            <div className="flex items-baseline gap-4">
+              <span className="num text-bone/70">01</span>
+              <span className="h-px w-10 translate-y-[-4px] bg-line-2" aria-hidden="true" />
+              <span className="overline">Selected focus</span>
+            </div>
             <span className="font-mono text-[11px] tracking-[0.3em] text-dim">
               01 — {String(total).padStart(2, '0')}
             </span>

@@ -15,7 +15,7 @@ export function Writing() {
   return (
     <Section
       id="writing"
-      num="04"
+      num="05"
       label="Writing"
       title="Published notes"
       lede="Two long-form pieces on Medium so far — process, not tutorials."

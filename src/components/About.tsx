@@ -13,7 +13,7 @@ export function About() {
   return (
     <Section
       id="about"
-      num="05"
+      num="06"
       label="About"
       title="Independent projects, built and documented in public"
     >

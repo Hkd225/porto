@@ -26,8 +26,12 @@ export function Manifesto() {
   return (
     <section id="method" aria-label="The method" className="border-t border-line-soft py-[var(--spacing-section)]">
       <div className="wrap">
-        <div className="flex items-baseline justify-between gap-6">
-          <p className="overline">The method</p>
+        <div className="flex items-baseline justify-between gap-8">
+          <div className="flex items-baseline gap-4">
+            <span className="num text-bone/70">02</span>
+            <span className="h-px w-10 translate-y-[-4px] bg-line-2" aria-hidden="true" />
+            <p className="overline">The method</p>
+          </div>
           <p className="overline hidden md:block">How I work</p>
         </div>
 

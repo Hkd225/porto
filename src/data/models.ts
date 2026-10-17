@@ -62,7 +62,7 @@ export const hfArtifacts: HFArtifact[] = [
     summary:
       'A LoRA adapter over Qwen3 4B Instruct, trained for research-assistant behaviour. The tokenizer template carries Qwen3’s multi-step tool-calling format.',
     weights: 'adapter',
-    baseModel: 'unsloth/Qwen3-4B-Instruct-2507-bnb-4bit',
+    baseModel: 'unsloth/Qwen3-4B-Instruct-2507-unsloth-bnb-4bit',
     stack: ['LoRA', 'PEFT', 'Unsloth', 'TRL'],
     published: '2026-06',
   },
