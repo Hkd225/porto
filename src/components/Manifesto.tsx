@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AccordionGallery, ScrollVelocity, SplitText } from './reactbits';
+import { AccordionGallery, LogoLoop, SplitText } from './reactbits';
 import { profile } from '../data/profile';
 
 /**
@@ -37,7 +37,8 @@ const stepPhotos: Record<string, { src: string; alt: string }> = {
  * that expand on hover/focus, while the active panel's chrome (meta,
  * title, detail, tags) re-renders below the row. The redundant four-card
  * grid is gone: the gallery IS the list now, so nothing is said twice.
- * The tools ticker stays as the kinetic footer.
+ * The tool ticker runs as a LogoLoop — typographic nodes, draggable
+ * belt, no icon dependency.
  */
 export function Manifesto() {
   const steps = profile.method;
@@ -130,21 +131,26 @@ export function Manifesto() {
           </div>
         </div>
 
-        {/* Kinetic ticker of real tools — one continuous row (joined here, so
-            the velocity component renders a single row, not one per tool). */}
+        {/* Tool loop — each real tool as one typographic node (no icon wall:
+            half of these are agent methods, they have no logo). The loop
+            pauses on hover and resumes on leave; a hovered entry lights to
+            ivory; the intro is the component's own staggered rise, played
+            once when the row enters view. Draggable — fling the belt. */}
         <div className="mt-16 border-y border-line-soft py-5">
-          <ScrollVelocity
-            texts={[profile.ticker.join(' / ')]}
-            velocity={34}
-            numCopies={3}
-            fadeEdges
-            gap={92}
-            color="#5b5b58"
-            fontSize={15}
-            fontWeight={400}
-            pauseOnHover
+          <LogoLoop
+            className="text-dim"
+            logos={profile.ticker.map((tool) => ({
+              node: <span className="whitespace-nowrap font-mono uppercase tracking-[0.22em]">{tool}</span>,
+              title: tool,
+              hoverColor: '#e9e6de',
+            }))}
+            speed={34}
+            logoHeight={15}
+            gap={44}
+            fadeOutWidth={0.08}
+            hoverSpeed={0}
+            ariaLabel="Frequently used tools and methods"
           />
-          <p className="sr-only">Frequently used: {profile.ticker.join(', ')}.</p>
         </div>
       </div>
     </section>
