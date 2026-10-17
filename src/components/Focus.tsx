@@ -5,18 +5,28 @@ import { gsap, ScrollTrigger } from '../lib/gsap';
 import { profile } from '../data/profile';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { useMediaQuery } from '../hooks/useMediaQuery';
+import { FlowingMenu } from './reactbits';
 
 const PIN_PER_CHAPTER = 620;
+
+/** Chapter navigator rows — module-level so the item identity stays
+    stable across the scroll-driven re-renders the pinned scene emits. */
+const menuItems = profile.focus.map((area, i) => ({
+  text: area.label,
+  meta: String(i + 1).padStart(2, '0'),
+}));
 
 /**
  * Focus — six chapters in one pinned scene.
  *
  * Editorial composition first: a static chrome row ("Selected focus" / range
  * counter), a left text column whose title, blurb and metadata stagger in per
- * chapter, a ghost serif numeral that marks the active chapter on the right,
- * and the custom chapter rail — vertical progress plus six clickable chapter
- * labels. Scroll owns the state; clicking the rail walks the Lenis scroller
- * straight to a chapter. No autoplay, extra components, or effects.
+ * chapter, a ghost serif numeral that marks the active chapter and serves as
+ * the swapping background, and the chapter navigator — a React Bits
+ * FlowingMenu whose band glides row to row with scroll (activeIndex drives
+ * it; pointer interaction inside the menu still wins while it hovers) and
+ * whose rows jump the Lenis scroller straight to a chapter. Scroll owns the
+ * state. No autoplay or extra effects.
  *
  * Under reduced motion or on narrow viewports there is no pinning: the six
  * chapters stack and read like any other document.
@@ -215,58 +225,38 @@ export function Focus() {
             );
           })}
 
-          {/* Custom chapter rail — progress line, six labels, live counter.
-              Every row jumps the Lenis scroller straight to its chapter. */}
-          <nav
+          {/* Chapter navigator — React Bits FlowingMenu. Scroll owns the
+              band's position: the activeIndex effect glides it row to row
+              (with the other rows dimming to focus the current one), while
+              a pointer inside the menu still steers it directly. The ghost
+              numeral continues to swap behind as the chapter background.
+              Rows are buttons — each walks the Lenis scroller to its
+              chapter, so the rail's jump behaviour survives intact. */}
+          <div
             data-chapter-chrome
-            aria-label="Focus chapters"
-            className="absolute top-1/2 right-5 z-20 hidden -translate-y-1/2 lg:block sm:right-8 lg:right-12"
+            className="absolute top-1/2 right-5 z-30 hidden w-[min(26vw,380px)] -translate-y-1/2 lg:block sm:right-8 lg:right-12"
           >
-            <div className="flex items-stretch gap-6">
-              <div className="relative w-px bg-line-soft" aria-hidden="true">
-                <div
-                  className="absolute inset-x-0 top-0 bg-accent/80 transition-[height] duration-500 ease-out"
-                  style={{ height: `${((active + 1) / total) * 100}%` }}
-                />
-              </div>
-
-              <div className="flex flex-col items-end gap-3">
-                {areas.map((area, i) => (
-                  <button
-                    key={area.id}
-                    onClick={() => jumpTo(i)}
-                    aria-current={i === active ? 'true' : undefined}
-                    className="group flex cursor-pointer items-center gap-3"
-                  >
-                    <span
-                      className={`font-mono text-[10px] uppercase tracking-[0.22em] transition-colors duration-300 ${
-                        i === active ? 'text-bone' : 'text-dim group-hover:text-muted'
-                      }`}
-                    >
-                      {area.label}
-                    </span>
-                    <span
-                      aria-hidden="true"
-                      className={`h-px transition-all duration-300 ${
-                        i === active ? 'w-7 bg-accent' : 'w-3 bg-line-2 group-hover:w-5 group-hover:bg-line'
-                      }`}
-                    />
-                    <span
-                      className={`hidden font-mono text-[10px] tabular-nums tracking-[0.2em] transition-colors duration-300 xl:block ${
-                        i === active ? 'text-accent' : 'text-dim'
-                      }`}
-                    >
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                  </button>
-                ))}
-
-                <span className="mt-1 font-mono text-[10px] tabular-nums tracking-[0.3em] text-accent">
-                  {String(active + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
-                </span>
-              </div>
+            <div className="h-[62vh] border-y border-line-soft">
+              <FlowingMenu
+                className="focus-menu"
+                items={menuItems}
+                activeIndex={active}
+                align="left"
+                showArrow
+                dimInactive
+                bgColor="transparent"
+                textColor="#e9e6de"
+                marqueeBgColor="#e9e6de"
+                marqueeTextColor="#080808"
+                borderColor="rgba(233, 230, 222, 0.1)"
+                ariaLabel="Focus areas"
+                onItemClick={(_item, index) => jumpTo(index)}
+              />
             </div>
-          </nav>
+            <p className="mt-3 text-right font-mono text-[10px] tabular-nums tracking-[0.3em] text-accent">
+              {String(active + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+            </p>
+          </div>
         </div>
       </div>
     </section>

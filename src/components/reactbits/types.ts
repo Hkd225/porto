@@ -346,6 +346,53 @@ export interface LogoLoopProps {
   style?: React.CSSProperties;
 }
 
+export interface FlowingMenuItem {
+  text: string;
+  link?: string;
+  image?: string;
+  /** Text the moving band repeats; defaults to the row text. */
+  marquee?: string;
+  /** Small note at the row's end (e.g. a chapter number). */
+  meta?: string;
+}
+
+export interface FlowingMenuProps {
+  items: FlowingMenuItem[];
+  /** Marquee speed in px per second. */
+  speed?: number;
+  direction?: 'left' | 'right' | 'alternate';
+  /** How much sideways cursor motion pushes/pulls the marquee, 0–1. */
+  followCursor?: number;
+  /** Seconds the band takes to glide to a row. */
+  duration?: number;
+  /** Liquid stretch of the band while it moves, 0–1. */
+  stretch?: number;
+  /** How strongly the band leans toward the cursor inside a row, 0–1. */
+  magnet?: number;
+  bandInset?: number;
+  bandRadius?: number;
+  carryContent?: boolean;
+  textColor?: string;
+  bgColor?: string;
+  marqueeBgColor?: string;
+  marqueeTextColor?: string;
+  borderColor?: string;
+  dividers?: boolean;
+  dimInactive?: boolean;
+  align?: 'center' | 'left';
+  showIndex?: boolean;
+  showArrow?: boolean;
+  imageShape?: 'pill' | 'rounded' | 'circle';
+  intro?: boolean;
+  /** Site deviation: while the pointer is away, a scroll-driven index
+      glides the band to this row (scroll owns the scene). */
+  activeIndex?: number;
+  onItemClick?: (item: FlowingMenuItem, index: number, event: React.MouseEvent) => void;
+  ariaLabel?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
 export interface PixelSwapProps {
   firstContent?: React.ReactNode;
   secondContent?: React.ReactNode;

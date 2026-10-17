@@ -287,3 +287,26 @@
 .logoloop__item[data-active] .logoloop__tip {
   color: var(--color-bone);
 }
+
+/* Focus chapter menu (React Bits FlowingMenu) — the navigator is re-typed
+   to the house system: chapter names in the display serif italic, row
+   numbers and meta in the site's mono, band text mirroring the label. The
+   vendor files stay stock; these rules scope under .focus-menu to
+   out-specify the root class selectors. */
+.focus-menu .flowing-menu__label {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+.focus-menu .flowing-menu__index,
+.focus-menu .flowing-menu__meta {
+  font-family: var(--font-mono);
+  letter-spacing: 0.24em;
+}
+.focus-menu .flowing-menu__part-text {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.01em;
+}

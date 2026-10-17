@@ -22,6 +22,7 @@ import DecryptedTextImpl from './DecryptedText.jsx';
 import ScrollExpandImpl from './ScrollExpand.jsx';
 import FadeContentImpl from './FadeContent.jsx';
 import LogoLoopImpl from './LogoLoop.jsx';
+import FlowingMenuImpl from './FlowingMenu.jsx';
 import PixelSwapImpl from './PixelSwap.jsx';
 import CursorGridImpl from './CursorGrid.jsx';
 import FlexCarouselImpl from './FlexCarousel.jsx';
@@ -52,6 +53,7 @@ import type {
   ScrollExpandProps,
   FadeContentProps,
   LogoLoopProps,
+  FlowingMenuProps,
   PixelSwapProps,
   CursorGridProps,
   FlexCarouselProps,
@@ -82,6 +84,7 @@ export const DecryptedText = DecryptedTextImpl as ComponentType<DecryptedTextPro
 export const ScrollExpand = ScrollExpandImpl as ComponentType<ScrollExpandProps>;
 export const FadeContent = FadeContentImpl as ComponentType<FadeContentProps>;
 export const LogoLoop = LogoLoopImpl as ComponentType<LogoLoopProps>;
+export const FlowingMenu = FlowingMenuImpl as ComponentType<FlowingMenuProps>;
 export const PixelSwap = PixelSwapImpl as ComponentType<PixelSwapProps>;
 export const CursorGrid = CursorGridImpl as ComponentType<CursorGridProps>;
 export const FlexCarousel = FlexCarouselImpl as ComponentType<FlexCarouselProps>;
@@ -112,6 +115,7 @@ export type {
   ScrollExpandProps,
   FadeContentProps,
   LogoLoopProps,
+  FlowingMenuProps,
   PixelSwapProps,
   CursorGridProps,
   FlexCarouselProps,
