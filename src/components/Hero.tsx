@@ -15,27 +15,31 @@ export function Hero() {
     <section id="index" className="relative flex min-h-svh flex-col overflow-hidden bg-ink">
       {/* Backdrop: the light pillar alone, then legibility overlays. */}
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <LightPillar
-          topColor="#f2f2ef"
-          bottomColor="#4a4a50"
-          intensity={1}
-          glowAmount={0.002}
-          bloom={0.5}
-          pillarWidth={2.8}
-          pillarHeight={0.4}
-          pillarRotation={20}
-          twist={0.4}
-          detail={4}
-          rotationSpeed={0.25}
-          flow={1}
-          noiseIntensity={0.5}
-          fade={0.55}
-          interactive
-          clickPulse
-          intro
-          quality="high"
-          mixBlendMode="screen"
-        />
+        {/* A leaner pillar, nudged 11% right so it rides the open half of
+            the page clear of the statement column. */}
+        <div className="absolute inset-0 translate-x-[11%]">
+          <LightPillar
+            topColor="#f2f2ef"
+            bottomColor="#4a4a50"
+            intensity={1}
+            glowAmount={0.0017}
+            bloom={0.45}
+            pillarWidth={2.3}
+            pillarHeight={0.4}
+            pillarRotation={20}
+            twist={0.4}
+            detail={4}
+            rotationSpeed={0.25}
+            flow={1}
+            noiseIntensity={0.5}
+            fade={0.55}
+            interactive
+            clickPulse
+            intro
+            quality="high"
+            mixBlendMode="screen"
+          />
+        </div>
         {/* Ink scrim over the statement column — keeps the type legible
             where the pillar's halo crosses it; edges stay open. */}
         <div className="absolute inset-0 bg-[linear-gradient(78deg,rgba(10,10,10,0.66)_0%,rgba(10,10,10,0.4)_38%,transparent_66%)]" />
