@@ -39,31 +39,6 @@ export const profile = {
 
   availability: 'INDEPENDENT AI PROJECTS — BUILT AND DOCUMENTED IN PUBLIC',
 
-  /** Real tools from the public repositories — not a logo wall of aspirations. */
-  ticker: [
-    'ReAct',
-    'Reflexion',
-    'Tree-of-Thoughts',
-    'FAISS',
-    'BM25',
-    'PyTorch',
-    'TensorFlow',
-    'Keras',
-    'YOLOv8',
-    'ONNX',
-    'SHAP',
-    'LangChain',
-    'Langflow',
-    'ChromaDB',
-    'IndoBERT',
-    'Jensen–Shannon',
-    'Calibration',
-    'Agent Memory',
-    'Self-verification',
-    'Jupyter',
-    'Google Colab',
-  ],
-
   links: {
     github: 'https://github.com/Hkd225',
     /** Capitalised handle — the HF API is case-sensitive. */

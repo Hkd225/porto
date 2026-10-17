@@ -1,15 +1,30 @@
 import { useState } from 'react';
 import type { IconType } from 'react-icons';
 import {
+  SiArxiv,
   SiGooglecolab,
+  SiHuggingface,
   SiJupyter,
+  SiKaggle,
   SiKeras,
   SiLangchain,
   SiLangflow,
+  SiMilvus,
+  SiMlflow,
+  SiNumpy,
+  SiNvidia,
+  SiOllama,
   SiOnnx,
+  SiOpencv,
+  SiPandas,
   SiPytorch,
+  SiQdrant,
+  SiRoboflow,
+  SiScikitlearn,
+  SiStreamlit,
   SiTensorflow,
   SiUltralytics,
+  SiWeightsandbiases,
 } from 'react-icons/si';
 import { AccordionGallery, LogoLoop, SplitText } from './reactbits';
 import { profile } from '../data/profile';
@@ -41,21 +56,37 @@ const stepPhotos: Record<string, { src: string; alt: string }> = {
   },
 };
 
-/* Belt entry visuals — a monochrome mark where a real brand icon exists
-   (react-icons, rendered in currentColor so the icons inherit the belt's
-   dim grey and light to ivory on hover — no spot colour), typographic
-   nodes for agent methods and algorithms, which have no logo to borrow. */
-const toolIcon: Record<string, IconType> = {
-  PyTorch: SiPytorch,
-  TensorFlow: SiTensorflow,
-  Keras: SiKeras,
-  YOLOv8: SiUltralytics,
-  ONNX: SiOnnx,
-  LangChain: SiLangchain,
-  Langflow: SiLangflow,
-  Jupyter: SiJupyter,
-  'Google Colab': SiGooglecolab,
-};
+/* Belt entry visuals — a pure mark for every entry, no words on the belt.
+   Each entry is an ML/DL technology with a real brand icon, rendered in
+   currentColor so it inherits the belt's dim grey and lights to ivory on
+   hover — no spot colour. Names live in the accessible labels and the
+   hover tip, so the glyphs stay legible to people and screen readers. */
+const belt: Array<{ name: string; icon: IconType }> = [
+  { name: 'PyTorch', icon: SiPytorch },
+  { name: 'TensorFlow', icon: SiTensorflow },
+  { name: 'Keras', icon: SiKeras },
+  { name: 'OpenCV', icon: SiOpencv },
+  { name: 'Ultralytics YOLO', icon: SiUltralytics },
+  { name: 'ONNX', icon: SiOnnx },
+  { name: 'NVIDIA', icon: SiNvidia },
+  { name: 'scikit-learn', icon: SiScikitlearn },
+  { name: 'NumPy', icon: SiNumpy },
+  { name: 'pandas', icon: SiPandas },
+  { name: 'Hugging Face', icon: SiHuggingface },
+  { name: 'Ollama', icon: SiOllama },
+  { name: 'LangChain', icon: SiLangchain },
+  { name: 'Langflow', icon: SiLangflow },
+  { name: 'Qdrant', icon: SiQdrant },
+  { name: 'Milvus', icon: SiMilvus },
+  { name: 'MLflow', icon: SiMlflow },
+  { name: 'Weights & Biases', icon: SiWeightsandbiases },
+  { name: 'Kaggle', icon: SiKaggle },
+  { name: 'arXiv', icon: SiArxiv },
+  { name: 'Jupyter', icon: SiJupyter },
+  { name: 'Google Colab', icon: SiGooglecolab },
+  { name: 'Streamlit', icon: SiStreamlit },
+  { name: 'Roboflow', icon: SiRoboflow },
+];
 
 /**
  * Manifesto — "The method": Read. Rebuild. Push the vague part. Document.
@@ -65,8 +96,9 @@ const toolIcon: Record<string, IconType> = {
  * that expand on hover/focus, while the active panel's chrome (meta,
  * title, detail, tags) re-renders below the row. The redundant four-card
  * grid is gone: the gallery IS the list now, so nothing is said twice.
- * The tool ticker runs as a LogoLoop — a mixed belt of monochrome brand
- * icons and typographic nodes, draggable, no spot colour.
+ * The tool ticker runs as a LogoLoop — an icon-only belt of ML/DL
+ * technology marks (the belt constant names each one), draggable, no
+ * spot colour; names surface as hover tips and in the access tree only.
  */
 export function Manifesto() {
   const steps = profile.method;
@@ -159,37 +191,34 @@ export function Manifesto() {
           </div>
         </div>
 
-        {/* Tool loop — a mixed belt: brand icons in currentColor wherever a
-            real mark exists (they inherit the belt's dim grey and light to
-            ivory on hover — no spot colour), typographic nodes for agent
-            methods and algorithms that have no logo. The loop pauses on
-            hover and resumes on leave; the intro is the component's own
-            staggered rise, played once when the row enters view. Draggable
-            — fling the belt. */}
+        {/* Tool loop — icons only, no text on the belt. Every entry is an
+            ML/DL technology mark in currentColor (inherits the dim grey,
+            lights to ivory on hover — no spot colour). Names ride in the
+            accessible labels and the vendor's hover tip, which renders the
+            tool's name in the site's mono chrome. The loop pauses on hover
+            and resumes on leave; the intro is the component's own staggered
+            rise, played once when the row enters view. Draggable — fling
+            the belt. */}
         <div className="mt-16 border-y border-line-soft py-5">
           <LogoLoop
             className="text-dim"
-            logos={profile.ticker.map((tool) => {
-              const Icon = toolIcon[tool];
-              return Icon
-                ? {
-                    node: <Icon size={17} aria-hidden />,
-                    title: tool,
-                    ariaLabel: tool,
-                    hoverColor: '#e9e6de',
-                  }
-                : {
-                    node: <span className="whitespace-nowrap font-mono uppercase tracking-[0.22em]">{tool}</span>,
-                    title: tool,
-                    hoverColor: '#e9e6de',
-                  };
-            })}
+            labels="hover"
+            logos={belt.map(({ name, icon: Icon }) => ({
+              node: (
+                <span role="img" aria-label={name} className="inline-flex">
+                  <Icon size={22} aria-hidden />
+                </span>
+              ),
+              title: name,
+              ariaLabel: name,
+              hoverColor: '#e9e6de',
+            }))}
             speed={34}
-            logoHeight={15}
-            gap={44}
+            logoHeight={22}
+            gap={52}
             fadeOutWidth={0.08}
             hoverSpeed={0}
-            ariaLabel="Frequently used tools and methods"
+            ariaLabel="Tools and methods used across machine learning work"
           />
         </div>
       </div>

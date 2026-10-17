@@ -269,3 +269,21 @@
 .ag-mono .ag-panel--active .ag-panel__media {
   filter: grayscale(1) brightness(1.08);
 }
+
+/* Icon-only tool belt — the hover tip (vendor `labels='hover'`) prints the
+   tool's real name in the site's mono chrome instead of the belt's default
+   sans label, so the glyph wall stays legible on hover without ever
+   putting words on the belt itself. */
+.logoloop[data-labels='hover'] .logoloop__tip {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--color-dim);
+}
+.logoloop__item:hover .logoloop__tip,
+.logoloop__item:focus-within .logoloop__tip,
+.logoloop__item[data-active] .logoloop__tip {
+  color: var(--color-bone);
+}
