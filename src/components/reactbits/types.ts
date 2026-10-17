@@ -882,3 +882,52 @@ export interface SlicedWavesProps {
   dpr?: number;
   className?: string;
 }
+
+/* ------------------------------------------------------------------ */
+/* Galleries — accordion                                               */
+/* ------------------------------------------------------------------ */
+
+export interface AccordionGalleryItem {
+  /** Image inside the panel — any <img> src, including data URIs. */
+  image: string;
+  /** Caption revealed on the expanded panel; doubles as the panel aria-label. */
+  label?: string;
+  /** Wraps the panel in an anchor when set; hover/focus still expands it. */
+  link?: string;
+  alt?: string;
+}
+
+export interface AccordionGalleryProps {
+  items?: AccordionGalleryItem[];
+  /** Panel expanded on load, so the row never hangs dead. */
+  defaultIndex?: number;
+  /** Caption bar and focus-ring colour. */
+  accentColor?: string;
+  /** Legibility gradient at the panel foot + collapse dim colour. */
+  overlayColor?: string;
+  textColor?: string;
+  /** Desaturate collapsed panels; the expanded one returns to full colour. */
+  grayscale?: boolean;
+  showLabels?: boolean;
+  /** Expand / collapse duration, seconds. */
+  duration?: number;
+  /** GSAP ease string. */
+  ease?: string;
+  /** Internal image drift while panels resize; 0 disables. */
+  parallax?: number;
+  /** Degrees of 3D tilt on collapsed panels. */
+  tilt?: number;
+  /** Seconds between the caption bar and its text. */
+  stagger?: number;
+  trigger?: 'hover' | 'click';
+  /** Row height in px (column width when vertical). */
+  height?: number;
+  gap?: number;
+  radius?: number;
+  /** Share of the row the expanded panel takes, 0.2–0.9. */
+  expandRatio?: number;
+  orientation?: 'horizontal' | 'vertical';
+  /** Site extension — fires whenever the expanded panel changes. */
+  onChange?: (index: number) => void;
+  className?: string;
+}

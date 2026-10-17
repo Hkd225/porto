@@ -11,6 +11,7 @@
 
 import type { ComponentType } from 'react';
 
+import AccordionGalleryImpl from './AccordionGallery.jsx';
 import BlurTextImpl from './BlurText.jsx';
 import MagnetImpl from './Magnet.jsx';
 import DotGridImpl from './DotGrid.jsx';
@@ -40,6 +41,7 @@ import SlicedWavesImpl from './SlicedWaves.jsx';
 import LightPillarImpl from './LightPillar.jsx';
 
 import type {
+  AccordionGalleryProps,
   BlurTextProps,
   DotGridProps,
   MagnetProps,
@@ -69,6 +71,7 @@ import type {
   LightPillarProps
 } from './types';
 
+export const AccordionGallery = AccordionGalleryImpl as ComponentType<AccordionGalleryProps>;
 export const BlurText = BlurTextImpl as ComponentType<BlurTextProps>;
 export const Magnet = MagnetImpl as ComponentType<MagnetProps>;
 export const DotGrid = DotGridImpl as ComponentType<DotGridProps>;
@@ -98,6 +101,7 @@ export const SlicedWaves = SlicedWavesImpl as ComponentType<SlicedWavesProps>;
 export const LightPillar = LightPillarImpl as ComponentType<LightPillarProps>;
 
 export type {
+  AccordionGalleryProps,
   BlurTextProps,
   DotGridProps,
   MagnetProps,

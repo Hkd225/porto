@@ -118,10 +118,42 @@ export const profile = {
    * manifesto section.
    */
   method: [
-    { n: '01', word: 'Read', desc: 'Start from a paper, not a trend.' },
-    { n: '02', word: 'Rebuild', desc: 'Reconstruct the idea by hand until it runs.' },
-    { n: '03', word: 'Push', desc: 'Attack whatever the paper left vague.' },
-    { n: '04', word: 'Document', desc: 'Publish what actually happened, honestly.' },
+    {
+      n: '01',
+      word: 'Read',
+      desc: 'Start from a paper, not a trend.',
+      title: 'Start from the source.',
+      detail:
+        'Find the paper, isolate its central claim, and separate the method the authors actually ran from the assumptions they carried in.',
+      tags: ['Research', 'Close reading', 'Extraction'],
+    },
+    {
+      n: '02',
+      word: 'Rebuild',
+      desc: 'Reconstruct the idea by hand until it runs.',
+      title: 'Rebuild it from zero.',
+      detail:
+        'No skimming ahead to the conclusions — the components are re-implemented by hand until the pipeline runs end to end on its own.',
+      tags: ['From scratch', 'PyTorch', 'Iteration'],
+    },
+    {
+      n: '03',
+      word: 'Push',
+      desc: 'Attack whatever the paper left vague.',
+      title: 'Attack the vague part.',
+      detail:
+        'Benchmarks, ablations and stress cases aimed exactly at the section the original work left vague — that is where the interesting failures live.',
+      tags: ['Baselines', 'Ablations', 'Stress cases'],
+    },
+    {
+      n: '04',
+      word: 'Document',
+      desc: 'Publish what actually happened, honestly.',
+      title: 'Write down what happened.',
+      detail:
+        'Results, failures and dead ends go into the repo as they happened — the history stays honest, and the work stays reproducible.',
+      tags: ['Write-ups', 'Reproducibility', 'Honest history'],
+    },
   ] as MethodStep[],
 };
 
@@ -135,5 +167,12 @@ export interface FocusArea {
 export interface MethodStep {
   n: string;
   word: string;
+  /** One-line gloss — sits in the right column of the active panel chrome. */
   desc: string;
+  /** Headline of the active panel detail block. */
+  title: string;
+  /** Body copy of the active panel detail block. */
+  detail: string;
+  /** Tool / discipline tags for the step. */
+  tags: string[];
 }
