@@ -1,32 +1,33 @@
 import { useEffect, useState } from 'react';
 
 /**
- * Returns the id of the tracked section most visible in the viewport.
+ * Returns the id of the tracked section carrying the most viewport mass.
  *
  * Deliberately intersection-ratio-based rather than scroll-offset-based: the
- * pinned focus carousel and the manifesto bridge are not tracked items, so a
- * scroll-offset approach would highlight nothing while passing through them.
- * With ratios, the last visited tracked section simply keeps the highlight
- * until the next tracked section carries real mass in the viewport — the same
- * place the visual reading advances anyway.
+ * pinned focus scene and the manifesto bridge are not tracked items — while
+ * they hold the screen, no tracked section has mass, and the highlight keeps
+ * the last chapter that did (empty over the index, where nothing has been
+ * read yet). Navigation and links stay functional regardless of this state.
  */
 export function useActiveSection(ids: readonly string[]): string {
-  const [active, setActive] = useState<string>(ids[0] ?? '');
+  // Empty until the first tracked section actually carries the viewport.
+  const [active, setActive] = useState<string>('');
 
   useEffect(() => {
     const ratios = new Map<string, number>();
     const pick = () => {
-      let best = ids[0] ?? '';
-      let bestRatio = -1;
+      let best = '';
+      let bestRatio = 0;
       for (const id of ids) {
         const ratio = ratios.get(id) ?? 0;
-        // `>=` so a later id wins ties at zero mass — matches reading direction.
-        if (ratio >= bestRatio) {
+        if (ratio > bestRatio) {
           bestRatio = ratio;
           best = id;
         }
       }
-      setActive(best);
+      // Zero mass everywhere (pinned scene, manifesto bridge) — hold the
+      // last visited chapter rather than inventing a highlight.
+      if (best) setActive(best);
     };
 
     const observer = new IntersectionObserver(

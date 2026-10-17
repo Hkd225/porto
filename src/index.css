@@ -4,16 +4,19 @@
    DESIGN TOKENS — monochrome, one world, one light
    ============================================================ */
 @theme {
-  --color-ink: #0a0a0a;
-  --color-ink-2: #0d0d0d;
-  --color-surface: #121212;
-  --color-surface-2: #171717;
-  --color-bone: #f2f2ef;
-  --color-muted: #91918d;
-  --color-dim: #62625e;
-  --color-line: rgba(242, 242, 239, 0.1);
-  --color-line-2: rgba(242, 242, 239, 0.18);
-  --color-line-soft: rgba(242, 242, 239, 0.05);
+  /* The four working colours — Void, Surface, Ivory, Accent — plus the
+     derived neutrals and hairlines built from Ivory. */
+  --color-ink: #080808; /* Void — the page ground */
+  --color-ink-2: #0b0b0a;
+  --color-surface: #171717; /* Surface — raised panels, hover fills */
+  --color-surface-2: #1d1d1b;
+  --color-bone: #e9e6de; /* Ivory — type */
+  --color-muted: #8e8c84;
+  --color-dim: #5f5d55;
+  --color-accent: #a4aa9b; /* Accent — one sage note, for state and marks */
+  --color-line: rgba(233, 230, 222, 0.1);
+  --color-line-2: rgba(233, 230, 222, 0.18);
+  --color-line-soft: rgba(233, 230, 222, 0.05);
 
   --font-display: 'Instrument Serif', ui-serif, Georgia, serif;
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
@@ -92,12 +95,12 @@
     background: var(--color-ink);
   }
   ::-webkit-scrollbar-thumb {
-    background: #232323;
+    background: #1d1d1b;
     border-radius: 999px;
     border: 3px solid var(--color-ink);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #333333;
+    background: #2a2a27;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -118,6 +121,21 @@
 
 .wrap {
   @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12;
+}
+
+/* One grain layer for the whole page — static, soft-light, sitting above
+   every surface including the WebGL scenes so the entire site shares the
+   same film. Pointer-events off; the skip link (z-100) stays clean. */
+.grain-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+  opacity: 0.5;
+  background-repeat: repeat;
+  background-size: 220px 220px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E");
 }
 
 .overline {

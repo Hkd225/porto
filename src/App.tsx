@@ -1,6 +1,6 @@
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { FocusCarousel } from './components/FocusCarousel';
+import { Focus } from './components/Focus';
 import { Manifesto } from './components/Manifesto';
 import { Work } from './components/Work';
 import { Models } from './components/Models';
@@ -25,7 +25,7 @@ export default function App() {
 
       <main>
         <Hero />
-        <FocusCarousel />
+        <Focus />
         <Manifesto />
         <Work />
         <Models />
@@ -33,6 +33,9 @@ export default function App() {
         <About />
         <Contact />
       </main>
+
+      {/* The one grain layer — shared film over every section and scene. */}
+      <div aria-hidden="true" className="grain-layer" />
     </div>
   );
 }
