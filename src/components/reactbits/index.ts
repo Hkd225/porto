@@ -37,6 +37,7 @@ import ScrollFloatImpl from './ScrollFloat';
 import TextPressureImpl from './TextPressure';
 import SilkImpl from './Silk.jsx';
 import SlicedWavesImpl from './SlicedWaves.jsx';
+import LightPillarImpl from './LightPillar.jsx';
 
 import type {
   BlurTextProps,
@@ -64,7 +65,8 @@ import type {
   ScrollFloatProps,
   TextPressureProps,
   SilkProps,
-  SlicedWavesProps
+  SlicedWavesProps,
+  LightPillarProps
 } from './types';
 
 export const BlurText = BlurTextImpl as ComponentType<BlurTextProps>;
@@ -93,6 +95,7 @@ export const ScrollFloat = ScrollFloatImpl as ComponentType<ScrollFloatProps>;
 export const TextPressure = TextPressureImpl as ComponentType<TextPressureProps>;
 export const Silk = SilkImpl as ComponentType<SilkProps>;
 export const SlicedWaves = SlicedWavesImpl as ComponentType<SlicedWavesProps>;
+export const LightPillar = LightPillarImpl as ComponentType<LightPillarProps>;
 
 export type {
   BlurTextProps,
@@ -120,5 +123,6 @@ export type {
   ScrollFloatProps,
   TextPressureProps,
   SilkProps,
-  SlicedWavesProps
+  SlicedWavesProps,
+  LightPillarProps
 };

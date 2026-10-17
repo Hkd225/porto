@@ -1,4 +1,4 @@
-import { GradientText, RotatingText, Silk, SplitText } from './reactbits';
+import { GradientText, LightPillar, RotatingText, Silk, SplitText } from './reactbits';
 import { profile } from '../data/profile';
 
 /**
@@ -32,6 +32,32 @@ export function Hero() {
           clickRipple={false}
           intro
         />
+        {/* A monochrome light pillar stands in the open right half of the
+            silk — the hero's single focal object. Same recolour discipline:
+            dense bone core fading into graphite, no hue anywhere. */}
+        <div className="absolute inset-y-0 right-0 w-[54%]">
+          <LightPillar
+            topColor="#f2f2ef"
+            bottomColor="#4a4a50"
+            intensity={1}
+            glowAmount={0.002}
+            bloom={0.45}
+            pillarWidth={2.6}
+            pillarHeight={0.4}
+            pillarRotation={18}
+            twist={0.4}
+            detail={4}
+            rotationSpeed={0.22}
+            flow={0.9}
+            noiseIntensity={0.5}
+            fade={0.5}
+            interactive
+            clickPulse
+            intro
+            quality="high"
+            mixBlendMode="screen"
+          />
+        </div>
         {/* Ink scrim over the statement column — keeps the type legible
             against bright silk crests while the right edge stays open. */}
         <div className="absolute inset-0 bg-[linear-gradient(78deg,rgba(10,10,10,0.66)_0%,rgba(10,10,10,0.4)_38%,transparent_66%)]" />

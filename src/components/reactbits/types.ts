@@ -785,6 +785,54 @@ export interface SilkProps {
   style?: React.CSSProperties;
 }
 
+export interface LightPillarProps {
+  /** Colour of the lower, denser part of the pillar. */
+  topColor?: string;
+  /** Colour the light fades into toward the top. */
+  bottomColor?: string;
+  /** Overall brightness. */
+  intensity?: number;
+  /** How much light the strands gather; higher burns brighter and whiter. */
+  glowAmount?: number;
+  /** Soft halo around the brightest strands, 0–1. */
+  bloom?: number;
+  /** Width of the pillar. */
+  pillarWidth?: number;
+  /** Vertical stretch of the strands; higher packs them tighter. */
+  pillarHeight?: number;
+  /** Pillar tilt in degrees. */
+  pillarRotation?: number;
+  /** How much the strands swirl around each other. */
+  twist?: number;
+  /** Turbulence layers, 1–6. Fewer is smoother and faster. */
+  detail?: number;
+  /** Turn speed; also drives overall animation speed. */
+  rotationSpeed?: number;
+  /** Light stream speed along the pillar, relative to the rotation. */
+  flow?: number;
+  /** Film grain strength. */
+  noiseIntensity?: number;
+  /** The pillar leans, drifts and turns toward the cursor. */
+  interactive?: boolean;
+  /** Clicking sends a surge of light racing up the pillar. */
+  clickPulse?: boolean;
+  /** The pillar ignites from the bottom and widens on first appear. */
+  intro?: boolean;
+  /** Edge fade into the page, 0–1. */
+  fade?: number;
+  /** Render resolution preset: low, medium or high. */
+  quality?: 'low' | 'medium' | 'high';
+  /** Exact render scale, 0.25–2. Overrides quality. */
+  resolution?: number;
+  /** CSS blend mode for the canvas. */
+  mixBlendMode?: string;
+  /** Draw as coloured ink for light backgrounds. */
+  lightMode?: boolean;
+  paused?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
 export interface SlicedWavesProps {
   color1?: string;
   color2?: string;
