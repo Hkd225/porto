@@ -700,3 +700,59 @@ export interface FuzzyTextProps {
   colorSplit?: number;
   className?: string;
 }
+
+/* ------------------------------------------------------------------ */
+/* Monochrome rebuild additions (TS implementations)                    */
+/* ------------------------------------------------------------------ */
+
+export type { ParticlesProps } from './Particles';
+export type { RotatingTextProps, RotatingTextRef } from './RotatingText';
+
+export interface ScrollFloatProps {
+  children: React.ReactNode;
+  scrollContainerRef?: React.RefObject<HTMLElement | null>;
+  containerClassName?: string;
+  textClassName?: string;
+  effect?: 'float' | 'flip' | 'scatter' | 'blur' | 'wave';
+  splitBy?: 'chars' | 'words';
+  direction?: 'up' | 'down';
+  order?: 'start' | 'end' | 'center' | 'edges' | 'random';
+  fromColor?: string;
+  /** Seconds. */
+  animationDuration?: number;
+  ease?: string;
+  scrollStart?: string;
+  scrollEnd?: string;
+  stagger?: number;
+  distance?: number;
+  stretch?: number;
+  /** Number smoothing for scrub; > 0 enables fractional scrub. */
+  smoothing?: number;
+}
+
+export interface TextPressureProps {
+  text?: string;
+  /** A variable font is required for wght/wdth to react. */
+  fontFamily?: string;
+  fontUrl?: string;
+  width?: boolean;
+  weight?: boolean;
+  italic?: boolean;
+  alpha?: boolean;
+  flex?: boolean;
+  stroke?: boolean;
+  scale?: boolean;
+  /** Pressure radius as a fraction of the title width, 0–1. */
+  radius?: number;
+  /** Pointer-follow smoothing, 0–1. */
+  smoothing?: number;
+  idle?: 'none' | 'wave' | 'pulse';
+  idleSpeed?: number;
+  clickRipple?: boolean;
+  textColor?: string;
+  pressureColor?: string;
+  strokeColor?: string;
+  strokeWidth?: number;
+  className?: string;
+  minFontSize?: number;
+}

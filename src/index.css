@@ -1,40 +1,30 @@
 @import 'tailwindcss';
 
-@import './components/reactbits/DotGrid.css';
-
-/*
- * The hero has room for its live panel only when it is both wide enough and tall
- * enough — at 1280x800, a very common laptop size, the panel fits the width but
- * pushes the scroll cue off screen. A width breakpoint alone is not sufficient.
- */
-@custom-variant panel-room (@media (min-width: 1280px) and (min-height: 880px));
-
 /* ============================================================
-   DESIGN TOKENS
+   DESIGN TOKENS — monochrome, one world, one light
    ============================================================ */
 @theme {
-  --color-ink: #090a09;
-  --color-ink-2: #111310;
-  --color-surface: #171a16;
-  --color-surface-2: #1e221d;
-  --color-bone: #f0f0e8;
-  --color-muted: #969a90;
-  --color-dim: #6a6e66;
-  --color-acid: #c8ff4d;
-  --color-acid-dim: #9dc73a;
-  --color-line: rgba(240, 240, 232, 0.12);
-  --color-line-soft: rgba(240, 240, 232, 0.055);
+  --color-ink: #0a0a0a;
+  --color-ink-2: #0d0d0d;
+  --color-surface: #121212;
+  --color-surface-2: #171717;
+  --color-bone: #f2f2ef;
+  --color-muted: #91918d;
+  --color-dim: #62625e;
+  --color-line: rgba(242, 242, 239, 0.1);
+  --color-line-2: rgba(242, 242, 239, 0.18);
+  --color-line-soft: rgba(242, 242, 239, 0.05);
 
-  --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Instrument Serif', ui-serif, Georgia, serif;
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
 
   /* Height-aware so the hero always clears the fold on short viewports. */
-  --text-display: clamp(3.5rem, min(11vw, 15.5vh), 10rem);
-  --text-h1: clamp(2.4rem, 6.4vw, 5.4rem);
-  --text-h2: clamp(1.85rem, 4.2vw, 3.4rem);
-  --text-h3: clamp(1.25rem, 2vw, 1.75rem);
-  --text-lead: clamp(1.08rem, 1.55vw, 1.42rem);
+  --text-display: clamp(3.2rem, min(10.5vw, 14vh), 8.75rem);
+  --text-h1: clamp(2.4rem, 6.4vw, 5.2rem);
+  --text-h2: clamp(1.9rem, 4.2vw, 3.4rem);
+  --text-h3: clamp(1.3rem, 2vw, 1.75rem);
+  --text-lead: clamp(1.06rem, 1.55vw, 1.4rem);
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
@@ -61,7 +51,7 @@
     font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.6;
-    font-weight: 400;
+    font-weight: 350;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: clip;
@@ -72,518 +62,108 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    font-weight: 500;
-    letter-spacing: -0.035em;
-    line-height: 0.98;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
     text-wrap: balance;
   }
 
-  p {
-    text-wrap: pretty;
-  }
-
   ::selection {
-    background: var(--color-acid);
+    background-color: var(--color-bone);
     color: var(--color-ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-acid);
+    outline: 1px solid var(--color-bone);
     outline-offset: 3px;
-    border-radius: 2px;
   }
 
-  /* Keyboard users must never lose the site to a custom cursor */
-  html.custom-cursor-active,
-  html.custom-cursor-active * {
-    cursor: none !important;
+  button,
+  a {
+    cursor: pointer;
   }
 
+  /* Thin, quiet scrollbar in the page's own tones. */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: #000;
+    background: var(--color-ink);
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(240, 240, 232, 0.2);
-    border: 2px solid #000;
-    background-clip: padding-box;
+    background: #232323;
     border-radius: 999px;
+    border: 3px solid var(--color-ink);
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(240, 240, 232, 0.38);
+    background: #333333;
   }
 
-  html {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(240, 240, 232, 0.24) #000;
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
 /* ============================================================
-   UTILITIES
+   SHARED PIECES
    ============================================================ */
-@utility container-x {
-  width: min(100% - 2.5rem, 92rem);
-  margin-inline: auto;
 
-  @media (min-width: 768px) {
-    width: min(100% - 5rem, 92rem);
-  }
+.wrap {
+  @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12;
 }
 
-/* Small uppercase technical metadata */
-@utility mono-label {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-muted);
+.overline {
+  @apply font-mono text-[11px] uppercase tracking-[0.28em] text-muted;
 }
 
-/* Underline that grows from the centre outward, for the small mono labels.
-   The directional variant is kept above for anything that reads as a
-   left-to-right line of text. */
-@utility link-underline-center {
-  position: relative;
-  display: inline-block;
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    width: 100%;
-    height: 1px;
-    background: currentColor;
-    transform: scaleX(0);
-    transform-origin: 50% 50%;
-    transition: transform 0.5s var(--ease-out-expo);
-  }
-
-  &:hover::after {
-    transform: scaleX(1);
-  }
+.num {
+  @apply font-mono text-[11px] tracking-[0.2em] text-dim;
 }
 
-@utility hairline {
-  border-top: 1px solid var(--color-line);
+.chip {
+  @apply inline-flex items-center rounded-full border border-line px-2.5 py-[3px] font-mono text-[10px] uppercase tracking-[0.14em] text-dim;
 }
 
-/* Oversized section numeral, sits behind content */
-@utility section-numeral {
-  font-family: var(--font-mono);
-  font-size: clamp(4.5rem, 13vw, 13rem);
-  line-height: 0.9;
-  font-weight: 500;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(240, 240, 232, 0.13);
-  user-select: none;
-  letter-spacing: -0.04em;
-  /* clearance so the label below never collides with the descender */
-  margin-bottom: 1.75rem;
+.link-caret {
+  @apply inline-block transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)];
+}
+.group:hover .link-caret,
+.link-caret:hover {
+  @apply translate-x-[2px] -translate-y-[2px];
 }
 
-/* Accent as an outline rather than a solid block — keeps acid present in
-   headings without tipping the whole page into neon. */
-@utility text-outline-acid {
-  color: transparent;
-  -webkit-text-stroke: 1.5px var(--color-acid);
+/* Scroll cue — a single line that drops, holds, and exits. */
+.cue-line {
+  animation: cue-drop 2.4s cubic-bezier(0.76, 0, 0.24, 1) infinite;
 }
-
-@utility link-underline {
-  position: relative;
-  display: inline-block;
-
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    width: 100%;
-    height: 1px;
-    background: currentColor;
-    transform: scaleX(0);
-    transform-origin: 100% 50%;
-    transition: transform 0.45s var(--ease-out-expo);
-  }
-
-  &:hover::after {
-    transform: scaleX(1);
-    transform-origin: 0 50%;
-  }
-}
-
-/* Reveal primitives — GSAP takes over from these */
-@utility reveal-up {
-  opacity: 0;
-  transform: translate3d(0, 28px, 0);
-}
-
-@utility reveal-fade {
-  opacity: 0;
-}
-
-@utility reveal-clip {
-  clip-path: inset(0 0 100% 0);
-}
-
-/* Cover wipe — the inverse of reveal-clip. Starts fully covering and is clipped
-   away upwards, so a panel reads as being drawn in rather than fading out. */
-@utility cover-wipe {
-  clip-path: inset(0 0 0 0);
-}
-
-/* ============================================================
-   KEYFRAMES
-   ============================================================ */
-@keyframes grain-shift {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-  20% {
-    transform: translate(-1.5%, 2%);
-  }
-  40% {
-    transform: translate(2%, -1%);
-  }
-  60% {
-    transform: translate(-1%, -2%);
-  }
-  80% {
-    transform: translate(1.5%, 1.5%);
-  }
-}
-
-@keyframes marquee-slide {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-@keyframes status-pulse {
+@keyframes cue-drop {
   0% {
-    box-shadow: 0 0 0 0 rgba(200, 255, 77, 0.55);
+    transform: scaleY(0);
+    transform-origin: top;
   }
-  70% {
-    box-shadow: 0 0 0 7px rgba(200, 255, 77, 0);
+  42% {
+    transform: scaleY(1);
+    transform-origin: top;
   }
-  100% {
-    box-shadow: 0 0 0 0 rgba(200, 255, 77, 0);
-  }
-}
-
-@keyframes scan-line {
-  0% {
-    transform: translateY(-100%);
+  58% {
+    transform: scaleY(1);
+    transform-origin: bottom;
   }
   100% {
-    transform: translateY(1000%);
+    transform: scaleY(0);
+    transform-origin: bottom;
   }
 }
-
-@keyframes flash-ring {
-  0% {
-    box-shadow: 0 0 0 0 rgba(200, 255, 77, 0.55);
-    background-color: rgba(200, 255, 77, 0.09);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(200, 255, 77, 0);
-    background-color: rgba(200, 255, 77, 0.02);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(200, 255, 77, 0);
-    background-color: rgba(200, 255, 77, 0);
-  }
-}
-
-/*
- * Idle motion.
-
- * Two very slow orbs that never stop. The point is not decoration: when the
- * reader stops scrolling, something is still moving, so the page reads as a
- * system that is running rather than a document being passed by. Transform
- * only, so they stay off the compositor's paint path.
- */
-@keyframes orb-drift-a {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  33% {
-    transform: translate3d(6vw, -4vh, 0) scale(1.12);
-  }
-  66% {
-    transform: translate3d(-4vw, 5vh, 0) scale(0.94);
-  }
-}
-
-@keyframes orb-drift-b {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1.05);
-  }
-  50% {
-    transform: translate3d(-7vw, 6vh, 0) scale(0.9);
-  }
-}
-
-.orb-a {
-  animation: orb-drift-a 38s ease-in-out infinite;
-}
-
-.orb-b {
-  animation: orb-drift-b 52s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .orb-a,
-  .orb-b {
+  .cue-line {
     animation: none;
-  }
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@utility flash-target {
-  animation: flash-ring 1.9s var(--ease-out-expo) 1;
-}
-
-@utility animate-marquee {
-  animation: marquee-slide linear infinite;
-}
-
-@utility status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--color-acid);
-  animation: status-pulse 2.6s infinite;
-}
-
-/* ============================================================
-   HERO FIELD
-   ============================================================
-   The hero's background texture. Three layers: a static dot grid, a glow that
-   follows the pointer, and a very slow drift that keeps the grid from reading
-   as a printed texture.
-
-   Deliberately CSS rather than WebGL. The field is the hero's only texture,
-   and a canvas can fail in ways that produce no error and no fallback — no
-   WebGL2 context, or a compositor that drops a layer nobody is drawing to any
-   more. Gradients cannot do that. */
-
-/* 26px matches the pitch the WebGL field used, so the swap is not a redesign. */
-.hero-field__dots {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(
-    circle,
-    rgb(146 170 130 / 0.62) 1.15px,
-    transparent 1.5px
-  );
-  background-size: 26px 26px;
-  /* Fade the grid out toward the corners so it never fights the type. */
-  -webkit-mask-image: radial-gradient(88% 72% at 50% 45%, #000 42%, transparent 100%);
-  mask-image: radial-gradient(88% 72% at 50% 45%, #000 42%, transparent 100%);
-}
-
-/* The pointer light. Centred on --field-x/--field-y via a negative margin
-   equal to half its size, so it tracks the cursor without a transform that
-   would cost a repaint of the whole layer. */
-.hero-field__glow {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(
-    420px 420px at var(--field-x, 50%) var(--field-y, 50%),
-    rgb(200 255 77 / 0.16),
-    rgb(200 255 77 / 0.05) 42%,
-    transparent 68%
-  );
-  opacity: var(--field-alpha, 0);
-  transition: opacity 700ms ease;
-}
-
-/*
-  A second, much larger and slower light that breathes across the hero on its
-  own. Gives the background movement when the pointer is idle or absent —
-  without it, the field is completely static until someone moves a mouse.
-*/
-.hero-field__drift {
-  position: absolute;
-  inset: -20%;
-  background-image: radial-gradient(
-    52vmax 52vmax at 30% 40%,
-    rgb(140 200 255 / 0.055),
-    transparent 62%
-  ),
-    radial-gradient(
-      44vmax 44vmax at 74% 62%,
-      rgb(200 255 77 / 0.045),
-      transparent 60%
-    );
-  animation: hero-field-drift 26s ease-in-out infinite alternate;
-}
-
-@keyframes hero-field-drift {
-  from {
-    transform: translate3d(-2%, -1%, 0) scale(1);
-  }
-  to {
-    transform: translate3d(3%, 2%, 0) scale(1.08);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-field__drift {
-    animation: none;
-  }
-  .hero-field__glow {
-    transition: none;
-  }
-}
-
-/* ============================================================
-   BACKDROP HELPERS
-   ============================================================ */
-
-/* Structural grid — hairline vertical rules, faded at both ends */
-.grid-lines {
-  background-image:
-    repeating-linear-gradient(
-      to right,
-      rgba(240, 240, 232, 0.055) 0 1px,
-      transparent 1px 12.5%
-    );
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
-}
-
-/*
- * Film grain.
-
- * The layer is sized to the viewport and drifts a few percent, and it carries
- * no blend mode on purpose. `mix-blend-overlay` on a full-screen animated layer
- * forces the whole stacking context to re-composite every frame; measured at
- * roughly a third of the frame budget on a fast scroll, for an effect that is
- * four percent opacity noise. Plain low-opacity noise reads the same and costs
- * nothing.
- */
-.grain-layer {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: grain-shift 7s steps(5) infinite;
-  will-change: transform;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .grain-layer {
-    animation: none;
-  }
-}
-
-/* Cursor trail. Each dot shrinks and fades along the chain via --i, which is
-   set once when the dots are created — no per-frame style writes from the
-   scroll path. */
-.cursor-trail-dot {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: calc(5px - var(--i) * 0.4px);
-  height: calc(5px - var(--i) * 0.4px);
-  margin: calc(-1 * (5px - var(--i) * 0.4px) / 2) 0 0 calc(-1 * (5px - var(--i) * 0.4px) / 2);
-  border-radius: 999px;
-  background: var(--color-acid);
-  opacity: calc(0.5 - var(--i) * 0.05);
-  will-change: transform;
-}
-
-/* Custom cursor ring states */
-.cursor-ring {
-  transition:
-    width 0.3s var(--ease-out-expo),
-    height 0.3s var(--ease-out-expo),
-    border-color 0.3s ease,
-    background-color 0.3s ease;
-}
-
-.cursor-ring.is-active {
-  width: 3.25rem;
-  height: 3.25rem;
-  background: rgba(200, 255, 77, 0.12);
-  border-color: rgba(200, 255, 77, 0.6);
-}
-
-.cursor-ring.is-down {
-  width: 1.75rem;
-  height: 1.75rem;
-}
-
-/* Labelled ring: a pill that the word sits inside, inverting to acid-on-dark. */
-.cursor-ring.has-label {
-  width: auto;
-  height: 2.1rem;
-  min-width: 2.1rem;
-  padding-inline: 0.85rem;
-  background: var(--color-acid);
-  border-color: var(--color-acid);
-  color: var(--color-ink);
-}
-
-.cursor-ring.has-label.is-down {
-  height: 1.9rem;
-}
-
-.cursor-label {
-  opacity: 0;
-  white-space: nowrap;
-  transition: opacity 0.2s ease;
-}
-
-.cursor-ring.has-label .cursor-label {
-  opacity: 1;
-}
-
-/* ============================================================
-   REDUCED MOTION — kill everything non-essential
-   ============================================================ */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .reveal-up,
-  .reveal-fade {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .reveal-clip,
-  .cover-wipe {
-    clip-path: none !important;
-  }
-
-  .flash-target {
-    animation: none !important;
   }
 }

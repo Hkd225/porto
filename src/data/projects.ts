@@ -1,15 +1,12 @@
 /**
  * Project archive.
  *
- * Every field below is grounded in public repository data (GitHub API metadata,
- * README content, and for qwen-autonomous-agent the actual requirements.txt and
- * source tree). Nothing here is estimated: no fake metrics, no user counts,
- * no invented deployments.
- *
- * `demoUrl` is only set where a live URL was confirmed to resolve (HTTP 200).
+ * Every field is grounded in public repository data (GitHub API metadata,
+ * README content, dependency lists). Nothing estimated: no fake metrics, no
+ * invented deployments. `demoUrl` appears only where a live URL resolved.
  */
 
-export type ProjectCategory = 'Agentic AI' | 'Machine Learning' | 'Computer Vision' | 'Frontend';
+export type Category = 'Agentic AI' | 'Machine Learning' | 'Computer Vision' | 'Frontend';
 
 export interface Project {
   slug: string;
@@ -17,19 +14,14 @@ export interface Project {
   /** Short descriptor rendered in the italic display face. */
   kicker: string;
   summary: string;
-  category: ProjectCategory;
-  /** Only when confirmed. */
+  category: Category;
   status?: string;
   year: string;
   stack: string[];
   repoUrl: string;
   demoUrl?: string;
-  license?: string;
-  language?: string;
-  /** Rendered as a large index number on the card. */
+  /** Rendered as a large index numeral on the card. */
   index: string;
-  /** Drives the generated cover artwork. */
-  art: { hue: number; hue2: number; motif: 'nodes' | 'loop' | 'grid' | 'wave' | 'stack' };
 }
 
 export const featuredProjects: Project[] = [
@@ -42,28 +34,22 @@ export const featuredProjects: Project[] = [
     category: 'Agentic AI',
     status: 'Research prototype',
     year: '2026',
-    stack: ['Python', 'Shannon / binary entropy', 'Jensen-Shannon divergence', 'ECE', 'Brier score', 'Bayesian Beta posterior', 'Platt calibration'],
+    stack: ['Python', 'Entropy', 'Jensen–Shannon', 'ECE', 'Brier score', 'Platt calibration'],
     repoUrl: 'https://github.com/Hkd225/Uncertainly-Engine',
     demoUrl: 'https://hkd225.github.io/Uncertainly-Engine/',
-    license: 'Apache-2.0',
-    language: 'Python',
     index: '01',
-    art: { hue: 88, hue2: 166, motif: 'wave' },
   },
   {
     slug: 'cognimemory',
     title: 'CogniMemory',
-    kicker: 'Cognitive Memory System',
+    kicker: 'Cognitive memory system',
     summary:
       'A multi-tiered agent memory architecture — working, episodic, semantic and goal-driven — with hybrid FAISS + BM25 retrieval, automatic consolidation of raw logs into rules, and a contradiction gate that penalises hallucinated memories.',
     category: 'Agentic AI',
     year: '2026',
-    stack: ['Python', 'FAISS', 'BM25', 'Hierarchical goal tree', 'Memory consolidation', 'RWLock concurrency', 'LangChain'],
+    stack: ['Python', 'FAISS', 'BM25', 'Goal tree', 'Consolidation', 'LangChain'],
     repoUrl: 'https://github.com/Hkd225/CogniMemory',
-    license: 'MIT',
-    language: 'Python',
     index: '02',
-    art: { hue: 102, hue2: 88, motif: 'nodes' },
   },
   {
     slug: 'qwen-autonomous-agent',
@@ -73,12 +59,9 @@ export const featuredProjects: Project[] = [
       'An autonomous agent built on Qwen 2.5 7B that combines a ReAct think–act–observe loop with Tree-of-Thoughts planning, hierarchical memory, and post-action self-reflection. Tools include web search and sandboxed Python execution.',
     category: 'Agentic AI',
     year: '2026',
-    stack: ['Python', 'Qwen 2.5 7B', 'PyTorch', 'Transformers', 'ChromaDB', 'FAISS', 'sentence-transformers', 'Tree-of-Thoughts'],
+    stack: ['Python', 'Qwen 2.5 7B', 'PyTorch', 'ChromaDB', 'Tree-of-Thoughts'],
     repoUrl: 'https://github.com/Hkd225/qwen-autonomous-agent',
-    license: 'MIT',
-    language: 'Python',
     index: '03',
-    art: { hue: 116, hue2: 172, motif: 'loop' },
   },
   {
     slug: 'yolov8-smoke-fire-detection',
@@ -88,12 +71,9 @@ export const featuredProjects: Project[] = [
       'A training and inference pipeline for smoke and fire detection on the D-Fire dataset. The interesting part is infrastructure: the script intercepts and rewrites data.yaml at runtime to strip hardcoded local paths, so it runs unchanged in Colab or locally.',
     category: 'Computer Vision',
     year: '2026',
-    stack: ['YOLOv8 Nano', 'D-Fire dataset', 'KaggleHub', 'Dynamic YAML patching', 'Colab'],
+    stack: ['YOLOv8 Nano', 'D-Fire', 'KaggleHub', 'Dynamic YAML patching'],
     repoUrl: 'https://github.com/Hkd225/yolov8-smoke-fire-detection',
-    license: 'MIT',
-    language: 'Jupyter Notebook',
     index: '04',
-    art: { hue: 130, hue2: 88, motif: 'grid' },
   },
   {
     slug: 'digital-payment-fraud-benchmark',
@@ -103,12 +83,9 @@ export const featuredProjects: Project[] = [
       'A comparative study of gradient-boosted ensembles for digital payment fraud, with SHAP used to explain model behaviour rather than to report a single accuracy number.',
     category: 'Machine Learning',
     year: '2026',
-    stack: ['LightGBM', 'CatBoost', 'XGBoost', 'SHAP', 'Ensemble learning'],
+    stack: ['LightGBM', 'CatBoost', 'XGBoost', 'SHAP'],
     repoUrl: 'https://github.com/Hkd225/Digital-Payment-Fraud-Detection-Benchmark',
-    license: 'MIT',
-    language: 'Jupyter Notebook',
     index: '05',
-    art: { hue: 94, hue2: 130, motif: 'stack' },
   },
   {
     slug: 'crc-gut-microbiome',
@@ -118,27 +95,20 @@ export const featuredProjects: Project[] = [
       'An end-to-end classification pipeline over gut microbiome sequencing data, covering preprocessing, feature selection, model comparison across Random Forest, XGBoost and logistic regression, and biomarker extraction.',
     category: 'Machine Learning',
     year: '2026',
-    stack: ['Random Forest', 'XGBoost', 'Logistic Regression', 'Feature selection', 'Biomarker analysis'],
+    stack: ['Random Forest', 'XGBoost', 'Logistic Regression', 'Biomarkers'],
     repoUrl: 'https://github.com/Hkd225/crc-gut-microbiome-ml-classification',
-    license: 'Apache-2.0',
-    language: 'Jupyter Notebook',
     index: '06',
-    art: { hue: 78, hue2: 118, motif: 'nodes' },
   },
 ];
 
 /**
- * Secondary archive. Verified repository metadata, lower editorial weight.
- *
- * `slug` and `category` are the two fields the on-page explorer needs in order to
- * deep-link and filter. They are assigned here rather than derived at runtime so
- * they can be checked against the repository itself.
+ * Secondary archive — verified repository metadata with lower editorial weight.
  */
 export interface ArchiveItem {
   slug: string;
   title: string;
   note: string;
-  category: ProjectCategory;
+  category: Category;
   repoUrl: string;
   demoUrl?: string;
   year: string;
@@ -216,7 +186,7 @@ export const archive: ArchiveItem[] = [
     category: 'Computer Vision',
     repoUrl: 'https://github.com/Hkd225/Animals10-full-classification-mobilenetv2',
     year: '2026',
-    stack: ['MobileNetV2', 'TFLite', 'TensorFlow.js'],
+    stack: ['MobileNetV2', 'TFLite', 'TF.js'],
   },
   {
     slug: 'indonesia-weather-prediction',
@@ -256,78 +226,29 @@ export const archive: ArchiveItem[] = [
     year: '2026',
     stack: ['HTML'],
   },
-] satisfies ArchiveItem[];
-
-/**
- * One flat view over every repository on the site.
- *
- * The featured six and the archive twelve are stored separately because they are
- * presented differently — the featured set is editorial, the archive is a list.
- * The explorer at the bottom of the Work section needs both, so they are joined
- * here once rather than in the component.
- */
-export interface ProjectIndexEntry {
-  slug: string;
-  title: string;
-  kicker?: string;
-  note: string;
-  category: ProjectCategory;
-  year: string;
-  stack: string[];
-  repoUrl: string;
-  demoUrl?: string;
-  featured: boolean;
-}
-
-export const projectIndex: ProjectIndexEntry[] = [
-  ...featuredProjects.map(
-    (p): ProjectIndexEntry => ({
-      slug: p.slug,
-      title: p.title,
-      kicker: p.kicker,
-      note: p.summary,
-      category: p.category,
-      year: p.year,
-      stack: p.stack,
-      repoUrl: p.repoUrl,
-      demoUrl: p.demoUrl,
-      featured: true,
-    }),
-  ),
-  ...archive.map(
-    (a): ProjectIndexEntry => ({
-      slug: a.slug,
-      title: a.title,
-      note: a.note,
-      category: a.category,
-      year: a.year,
-      stack: a.stack,
-      repoUrl: a.repoUrl,
-      demoUrl: a.demoUrl,
-      featured: false,
-    }),
-  ),
 ];
 
-/** Distinct categories in a stable order, derived from the data rather than hard-coded. */
-export const projectCategories: ProjectCategory[] = [
-  'Agentic AI',
-  'Machine Learning',
-  'Computer Vision',
-  'Frontend',
-];
+/** Distinct categories in a stable order. */
+export const categories: Category[] = ['Agentic AI', 'Machine Learning', 'Computer Vision', 'Frontend'];
+
+/** Count per category over featured + archive, validated against the data. */
+export const categoryCounts: Record<string, number> = (() => {
+  const counts: Record<string, number> = {};
+  for (const c of categories) counts[c] = 0;
+  for (const p of [...featuredProjects, ...archive]) counts[p.category] += 1;
+  return counts;
+})();
 
 export interface Writing {
   title: string;
   url: string;
   published: string;
-  /** Verified word count derived from the Medium RSS feed. */
+  /** Word count verified against the Medium RSS feed. */
   words: number;
   summary: string;
   tags: string[];
-  /** Decorative atmospheric texture (never an article screenshot); treated
-      to the site's duotone in the card. Sources credited in public/img. */
-  art?: string;
+  /** Decorative texture, treated greyscale; credited in public/img/CREDITS.md. */
+  art: string;
 }
 
 export const writing: Writing[] = [
@@ -352,51 +273,5 @@ export const writing: Writing[] = [
       'On governance structures for systems that modify themselves, and why self-evolution needs constraints defined outside the thing being constrained.',
     tags: ['AI Safety', 'Self-improvement'],
     art: '/img/writing-glass.jpg',
-  },
-];
-
-/** Agent loop diagram — conceptual architecture, clearly labelled as such. */
-export const agentLoop: string[] = [
-  'INPUT',
-  'REASON',
-  'SELECT ACTION',
-  'EXECUTE TOOL',
-  'OBSERVE RESULT',
-  'VERIFY',
-  'UPDATE MEMORY',
-  'CONTINUE / STOP',
-];
-
-/**
- * One line per stage, shown while the pinned diagram is scrubbed through.
- *
- * Scroll has to *tell* you something, not just move something — otherwise the
- * whole thing plays as a video. Each note is a single claim about what that
- * stage is responsible for.
- */
-export const agentLoopDetail: { note: string }[] = [
-  {
-    note: 'Prompt, tool result or goal tick enters the loop. Nothing else can start a turn.',
-  },
-  {
-    note: 'The model writes its reasoning into the scratchpad before anything is decided.',
-  },
-  {
-    note: 'A decision layer turns that reasoning into one tool call, or into a refusal.',
-  },
-  {
-    note: 'Web search and sandboxed Python sit behind one base class, so the action space stays narrow.',
-  },
-  {
-    note: 'Results come back as text, parsed and handed to the next stage rather than parsed into state.',
-  },
-  {
-    note: 'A self-check pass runs on the output. This is the stage most systems skip.',
-  },
-  {
-    note: 'Episodic, semantic and goal memory are updated with what actually happened.',
-  },
-  {
-    note: 'The planner decides whether the goal is met. If yes, the loop exits — otherwise it returns to step one.',
   },
 ];

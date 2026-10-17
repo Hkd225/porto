@@ -1,147 +1,80 @@
-import { ArrowUpRight, BookOpen } from 'lucide-react';
-import { writing, type Writing } from '../data/projects';
-import { Reveal } from './Reveal';
-import { Cascade } from './Cascade';
-import { useHoverPreview, artFor } from '../hooks/useProjectPreview';
-import { ScrambleText } from './ScrambleText';
-import { MaskLines } from './MaskLines';
-import { GlareHover } from './reactbits';
+import { ArrowUpRight } from 'lucide-react';
 
-/** Rough reading time from the verified word count. ~220 wpm. */
-const readingTime = (words: number) => Math.max(1, Math.round(words / 220));
+import { Section } from './Section';
+import { DecryptedText } from './reactbits';
+import { writing } from '../data/projects';
 
-function WritingCard({ post, index }: { post: Writing; index: number }) {
-  /* No repository metadata to draw from, so the cover is derived from the
-     title — deterministic, so a given piece keeps the same cover forever. */
-  const preview = useHoverPreview({
-    id: post.url,
-    title: post.title,
-    eyebrow: post.tags[0],
-    meta: `${readingTime(post.words)} min read`,
-    art: artFor(post.title),
-    index: String(index + 1).padStart(2, '0'),
-  });
-
-  return (
-    /* React Bits: GlareHover — a bone sheen travels the card on approach.
-        The wrapper renders inline-grid with place-items center, so the card
-        must own w-full; its own bg and hover tint stay untouched because the
-        glare layer sits above the content. */
-    <GlareHover
-      width="100%"
-      background="transparent"
-      borderColor="transparent"
-      borderRadius="0px"
-      glareColor="#f0f0e8"
-      glareOpacity={0.32}
-      glareAngle={-35}
-      glareSize={30}
-      softness={0.55}
-      variant="streak"
-      mode="follow"
-      transitionDuration={700}
-      className="w-full"
-    >
-      <a
-        href={post.url}
-        target="_blank"
-        rel="noreferrer noopener"
-        data-cursor-label="Read"
-        className="group relative flex w-full flex-col justify-between gap-10 overflow-hidden bg-ink p-7 md:p-9"
-        {...preview}
-      >
-        {post.art && (
-          /* Photographic underlay — an atmospheric texture, never a fake
-              article screenshot. It rests under a heavy scrim and surfaces
-              as the pointer arrives: the hover that bg-surface used to be. */
-          <div aria-hidden="true" className="absolute inset-0">
-            <img
-              src={post.art}
-              alt=""
-              loading="lazy"
-              className="h-full w-full object-cover grayscale contrast-[1.06] brightness-[.52] transition-[transform,filter] duration-[1200ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.04] group-hover:brightness-[.7]"
-            />
-            <div className="absolute inset-0 bg-ink/75 transition-colors duration-700 group-hover:bg-ink/55" />
-          </div>
-        )}
-        <div className="relative">
-          <div
-            data-cascade
-            className="flex flex-wrap items-center gap-3 font-mono text-[0.62rem] tracking-[0.16em] text-muted uppercase"
-          >
-            <span className="text-acid">{post.tags[0]}</span>
-            <span aria-hidden="true">/</span>
-            <span>{post.published}</span>
-            <span aria-hidden="true">/</span>
-            <span className="inline-flex items-center gap-1.5">
-              <BookOpen size={11} aria-hidden="true" />
-              {readingTime(post.words)} min read
-            </span>
-          </div>
-
-          <h3
-            data-cascade
-            className="mt-6 max-w-[24ch] font-display text-h3 leading-[1.1] tracking-[-0.035em] text-bone transition-colors duration-500 group-hover:text-acid"
-          >
-            {post.title}
-          </h3>
-
-          <p data-cascade className="mt-4 max-w-[46ch] leading-relaxed text-muted">
-            {post.summary}
-          </p>
-        </div>
-
-        <div data-cascade className="relative flex items-center justify-between">
-          <span className="mono-label">{String(index + 1).padStart(2, '0')}</span>
-          <span className="flex items-center gap-2 font-mono text-[0.62rem] tracking-[0.16em] text-muted uppercase transition-colors duration-500 group-hover:text-acid">
-            Read on Medium
-            <ArrowUpRight
-              size={14}
-              aria-hidden="true"
-              className="transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-            />
-          </span>
-        </div>
-      </a>
-    </GlareHover>
-  );
-}
-
+/**
+ * Writing — published notes on Medium.
+ *
+ * Titles decrypt on first view (a quiet nod to the subject matter); textures
+ * are treated to the site's greyscale so the section stays inside the
+ * monochrome world. Word counts and dates come from the RSS feed, not memory.
+ */
 export function Writing() {
   return (
-    <section
+    <Section
       id="writing"
-      className="relative z-10 border-t border-line py-section"
-      aria-labelledby="writing-title"
+      num="04"
+      label="Writing"
+      title="Published notes"
+      lede="Two long-form pieces on Medium so far — process, not tutorials."
     >
-      <div className="container-x">
-        <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-          <div>
-            <p className="mono-label mb-5"><ScrambleText text="006 / Notes & writing" /></p>
-            <MaskLines as="h2" id="writing-title" className="max-w-[16ch] text-h1" step={0.11}>
-              Reasoning <span className="italic text-acid">written down.</span>
-            </MaskLines>
-          </div>
-          <p className="max-w-[36ch] text-[0.95rem] leading-relaxed text-muted">
-            Two published pieces. Both are listed with their real titles and dates — nothing here
-            is padded with placeholder articles.
-          </p>
-        </div>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        {writing.map((w) => (
+          <a
+            key={w.title}
+            href={w.url}
+            target="_blank"
+            rel="noreferrer"
+            className="group flex flex-col border border-line-soft bg-ink transition-colors duration-300 hover:border-line-2"
+          >
+            {/* Texture plate — greyscale, credited in public/img/CREDITS.md. */}
+            <div className="relative h-44 overflow-hidden" aria-hidden="true">
+              <img
+                src={w.art}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-cover opacity-70 grayscale transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.035]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
+            </div>
 
-        <Cascade step={0.12} className="mt-16 grid gap-px border border-line md:grid-cols-2">
-          {writing.map((post, i) => (
-            <WritingCard key={post.url} post={post} index={i} />
-          ))}
-        </Cascade>
+            <div className="flex flex-1 flex-col gap-5 p-7 sm:p-9">
+              <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.22em] text-dim">
+                <span>{w.published}</span>
+                <span>{w.words} words</span>
+              </div>
 
-        <Reveal mode="fade" delay={0.1} className="mt-8">
-          <p className="max-w-[62ch] border border-line-soft px-5 py-4 text-sm leading-relaxed text-dim">
-            More notes are in progress — mostly on memory consolidation and on measuring whether
-            an agent’s self-reported confidence means anything. They will appear here as they
-            are published.
-          </p>
-        </Reveal>
+              <h3 className="font-display text-[clamp(1.4rem,1.9vw,1.8rem)] leading-[1.12]">
+                <DecryptedText
+                  text={w.title}
+                  effect="scramble"
+                  animateOn="view"
+                  speed={22}
+                  maxIterations={9}
+                  revealDirection="start"
+                  characters="01:<>/#—"
+                  encryptedClassName="text-dim/70"
+                />
+              </h3>
+
+              <p className="text-sm leading-relaxed text-muted">{w.summary}</p>
+
+              <div className="mt-auto flex items-center justify-between border-t border-line-soft pt-5">
+                <div className="flex gap-2">
+                  {w.tags.map((t) => (
+                    <span key={t} className="chip">{t}</span>
+                  ))}
+                </div>
+                <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-dim transition-colors duration-200 group-hover:text-bone">
+                  Read <ArrowUpRight size={12} strokeWidth={1.5} className="link-caret" />
+                </span>
+              </div>
+            </div>
+          </a>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }

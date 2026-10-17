@@ -1,74 +1,45 @@
 /**
  * Central profile configuration.
- * Every external link here was verified to resolve during research.
  *
- * VERIFICATION NOTES
- * - GitHub       : https://github.com/Hkd225 — verified via GitHub API. Public profile.
- * - Hugging Face : https://huggingface.co/Hakid — verified, HTTP 200, 5 public models.
- *                  (Note: the handle is capitalised `Hakid`; the HF API is case-sensitive,
- *                  so `author=hkd225` returns 404.)
- * - Medium       : https://medium.com/@hakid19 — verified via the profile RSS feed (2 posts).
- * - LinkedIn     : supplied by the site owner; LinkedIn blocks automated verification,
- *                  so this link is self-declared rather than machine-checked.
- *                  The slug still reads "auffa" — that is the real profile path and
- *                  must not be rewritten. The on-screen handle is set separately in
- *                  components/Contact.tsx.
- * - Email        : muhammadaufahakimaditya@gmail.com — supplied by the site owner.
- *                  Published as a mailto plus a copy-to-clipboard control, so the
- *                  section has a route that actually works without a form
- *                  backend.
+ * Ground rules carried over from the previous build: every external link was
+ * verified against the live profile (GitHub API, Hugging Face API, Medium RSS
+ * feed). Nothing decorative is invented — no location, no certifications, no
+ * false availability claims.
  */
 
 export const profile = {
   name: 'Muhammad Auffa Hakim Aditya',
-  /** Left side of the nav — the public-facing brand mark. */
+  /** The public-facing brand mark, top-left of the nav. */
   navMark: 'Hakid.',
-  /** Secondary mark shown beside the nav wordmark. */
-  altMark: 'MA',
-  monogram: 'MA',
-
-  roles: [
-    'AI/ML Engineer',
-    'Independent AI Systems Researcher',
-    'Agentic AI Developer',
-  ],
+  roles: ['AI/ML Engineer', 'Agentic AI Developer', 'AI Systems Researcher'],
 
   /**
-   * Draft brand statement. This is original copy written for this site,
-   * not a quotation from the person it describes.
+   * The statement the whole site is organized around. Rendered by the hero as
+   * big masked lines.
    */
-  statement:
-    'Build systems that reason, remember, adapt, and know when they might be wrong.',
+  statement: 'Build systems that reason, remember, adapt, and know when they might be wrong.',
+
+  manifesto: 'Read. Rebuild. Push the vague part. Document honestly.',
 
   bio: "I build and experiment with AI systems, autonomous agents, and machine learning architectures. My work explores how software can reason through tasks, retain useful memories, evaluate uncertainty, and make better decisions.",
 
   longBio: [
     "I'm interested in building AI systems that do more than generate responses. I explore how models can use tools, organize memory, reason through complex tasks, estimate uncertainty, and improve through structured evaluation.",
     'Most of my work is self-directed: reading a paper, rebuilding the idea, and then pushing on the part that was left vague. The agentic projects are extracted from larger cognitive architectures I was designing, which is why they are structured as standalone modules rather than demos.',
-    'This site documents that work honestly. Project descriptions are taken from the repositories themselves, including the README, file structure and dependency list — not from aspiration.',
+    'This site documents that work honestly. Project descriptions are taken from the repositories themselves — the README, the file structure, the dependency list — not from aspiration.',
   ],
 
-  /**
-   * Deliberately conservative: the public GitHub profile has no location and
-   * no website, so nothing is invented here.
-   */
+  /** Verified numbers from the GitHub and Hugging Face APIs. */
   meta: {
-    /** Shown in the hero — real numbers from the GitHub API. */
     publicRepos: 37,
     followers: 2,
-    /** GitHub account created — verified from the API. */
     githubSince: '2025',
-    /** Public models on the Hugging Face profile — verified from the HF API. */
     hfModels: 5,
   },
 
-  /** Neutral availability copy (no unverified claims). */
-  availability: 'INDEPENDENT AI PROJECTS',
+  availability: 'INDEPENDENT AI PROJECTS — BUILT AND DOCUMENTED IN PUBLIC',
 
-  /**
-   * Ticker under the hero. Real tools from the repositories on this site, not
-   * a logo wall of things that were never actually used.
-   */
+  /** Real tools from the public repositories — not a logo wall of aspirations. */
   ticker: [
     'ReAct',
     'Reflexion',
@@ -82,7 +53,7 @@ export const profile = {
     'LangChain',
     'ChromaDB',
     'IndoBERT',
-    'Jensen-Shannon',
+    'Jensen–Shannon',
     'Calibration',
     'Agent Memory',
     'Self-verification',
@@ -90,22 +61,18 @@ export const profile = {
 
   links: {
     github: 'https://github.com/Hkd225',
-    /** Capitalised handle — verified. */
+    /** Capitalised handle — the HF API is case-sensitive. */
     huggingface: 'https://huggingface.co/Hakid',
-    /** Still linked from the Notes section, which cites the real published posts. */
     medium: 'https://medium.com/@hakid19',
-    /** Real, immutable LinkedIn slug — kept verbatim. Display name lives in Contact.tsx. */
+    /** Real profile slug, kept verbatim. */
     linkedin: 'https://id.linkedin.com/in/muhammad-auffa-hakim-aditya',
-    /**
-     * Published address. There is no contact form because there is no
-     * submission endpoint — a form that silently drops messages is worse than
-     * no form, so the address is offered directly plus a copy control.
-     */
+    /** Offered directly plus a copy control — no form that silently drops mail. */
     email: 'muhammadaufahakimaditya@gmail.com',
   },
 
   /**
-   * Areas of work and interest. Explicitly NOT certifications or proficiency scores.
+   * Areas of work, in the order the focus carousel walks through them.
+   * Deliberately NOT certifications or fake proficiency scores.
    */
   focus: [
     {
@@ -123,8 +90,8 @@ export const profile = {
     {
       id: 'ml',
       label: 'Machine Learning',
-      blurb: 'Tabular pipelines, leakage-aware validation, and model comparison.',
-      items: ['scikit-learn', 'XGBoost', 'LightGBM', 'CatBoost', 'SHAP', 'leakage control'],
+      blurb: 'Tabular pipelines, leakage-aware validation, and honest model comparison.',
+      items: ['scikit-learn', 'XGBoost', 'LightGBM', 'CatBoost', 'SHAP'],
     },
     {
       id: 'cv',
@@ -134,9 +101,9 @@ export const profile = {
     },
     {
       id: 'eval',
-      label: 'Uncertainty & Evaluation',
-      blurb: 'Calibration, disagreement and risk-aware decision gating.',
-      items: ['ECE', 'Brier score', 'Jensen-Shannon divergence', 'Beta posterior', 'Hallucination control'],
+      label: 'Uncertainty & Eval',
+      blurb: 'Calibration, disagreement, and risk-aware decision gating.',
+      items: ['ECE', 'Brier score', 'Jensen–Shannon', 'Beta posterior', 'Hallucination control'],
     },
     {
       id: 'fe',
@@ -144,7 +111,29 @@ export const profile = {
       blurb: 'Interfaces that make model behaviour inspectable rather than magic.',
       items: ['React', 'TypeScript', 'GSAP', 'Canvas', 'WebGL'],
     },
-  ],
-} as const;
+  ] as FocusArea[],
 
-export type Profile = typeof profile;
+  /**
+   * The method — the four-step loop behind every project, shown in the
+   * manifesto section.
+   */
+  method: [
+    { n: '01', word: 'Read', desc: 'Start from a paper, not a trend.' },
+    { n: '02', word: 'Rebuild', desc: 'Reconstruct the idea by hand until it runs.' },
+    { n: '03', word: 'Push', desc: 'Attack whatever the paper left vague.' },
+    { n: '04', word: 'Document', desc: 'Publish what actually happened, honestly.' },
+  ] as MethodStep[],
+};
+
+export interface FocusArea {
+  id: string;
+  label: string;
+  blurb: string;
+  items: string[];
+}
+
+export interface MethodStep {
+  n: string;
+  word: string;
+  desc: string;
+}

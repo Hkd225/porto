@@ -31,6 +31,10 @@ import VariableProximityImpl from './VariableProximity.jsx';
 import SplitTextImpl from './SplitText.jsx';
 import ScrollVelocityImpl from './ScrollVelocity.jsx';
 import FuzzyTextImpl from './FuzzyText.jsx';
+import ParticlesImpl from './Particles';
+import RotatingTextImpl from './RotatingText';
+import ScrollFloatImpl from './ScrollFloat';
+import TextPressureImpl from './TextPressure';
 
 import type {
   BlurTextProps,
@@ -52,7 +56,11 @@ import type {
   VariableProximityProps,
   SplitTextProps,
   ScrollVelocityProps,
-  FuzzyTextProps
+  FuzzyTextProps,
+  ParticlesProps,
+  RotatingTextProps,
+  ScrollFloatProps,
+  TextPressureProps
 } from './types';
 
 export const BlurText = BlurTextImpl as ComponentType<BlurTextProps>;
@@ -75,6 +83,10 @@ export const VariableProximity = VariableProximityImpl as ComponentType<Variable
 export const SplitText = SplitTextImpl as ComponentType<SplitTextProps>;
 export const ScrollVelocity = ScrollVelocityImpl as ComponentType<ScrollVelocityProps>;
 export const FuzzyText = FuzzyTextImpl as ComponentType<FuzzyTextProps>;
+export const Particles = ParticlesImpl as ComponentType<ParticlesProps>;
+export const RotatingText = RotatingTextImpl as ComponentType<RotatingTextProps>;
+export const ScrollFloat = ScrollFloatImpl as ComponentType<ScrollFloatProps>;
+export const TextPressure = TextPressureImpl as ComponentType<TextPressureProps>;
 
 export type {
   BlurTextProps,
@@ -96,5 +108,9 @@ export type {
   VariableProximityProps,
   SplitTextProps,
   ScrollVelocityProps,
-  FuzzyTextProps
+  FuzzyTextProps,
+  ParticlesProps,
+  RotatingTextProps,
+  ScrollFloatProps,
+  TextPressureProps
 };

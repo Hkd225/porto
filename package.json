@@ -1,17 +1,14 @@
 {
   "name": "hakid-portfolio",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "serve": "tsc -b && vite build && vite preview --port 4173 --strictPort",
-    "audit": "node scripts/visual-audit.cjs",
-    "assets": "node scripts/generate-assets.cjs",
-    "probe": "node scripts/probe.cjs"
+    "serve": "tsc -b && vite build && vite preview --port 4173 --strictPort"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -30,7 +27,6 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "oxlint": "^1.81.0",
-    "playwright": "^1.64.0",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",
     "vite": "^8.3.0"
