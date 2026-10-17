@@ -253,8 +253,26 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .detail-in {
+  .detail-in,
+  .work-board-in {
     animation: none;
+  }
+}
+
+/* Work board — a filter change recomposes the board with one soft rise
+   while the frame glides to its new height (FLIP in Work.tsx), so the
+   page below follows the change instead of lurching. */
+.work-board-in {
+  animation: board-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes board-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
