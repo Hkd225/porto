@@ -1,0 +1,50 @@
+[
+  {
+    "family": "Instrument Serif",
+    "style": "italic",
+    "weight": "400",
+    "file": "instrument-serif-400-italic.woff2",
+    "bytes": 22128,
+    "source": "google"
+  },
+  {
+    "family": "Instrument Serif",
+    "style": "normal",
+    "weight": "400",
+    "file": "instrument-serif-400.woff2",
+    "bytes": 21032,
+    "source": "google"
+  },
+  {
+    "family": "Inter",
+    "style": "normal",
+    "weight": "300 700",
+    "file": "inter-var.woff2",
+    "bytes": 48256,
+    "source": "google"
+  },
+  {
+    "family": "JetBrains Mono",
+    "style": "normal",
+    "weight": "400",
+    "file": "jetbrains-mono-400.woff2",
+    "bytes": 31432,
+    "source": "google"
+  },
+  {
+    "family": "JetBrains Mono",
+    "style": "normal",
+    "weight": "500",
+    "file": "jetbrains-mono-500.woff2",
+    "bytes": 31432,
+    "source": "google"
+  },
+  {
+    "family": "Roboto Flex",
+    "style": "normal",
+    "weight": "100 1000",
+    "file": "roboto-flex-var.woff2",
+    "bytes": 195288,
+    "source": "google"
+  }
+]

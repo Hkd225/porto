@@ -1,0 +1,12 @@
+/* Local Roboto Flex face — the css sidecar referenced by the vendored
+   TextPressure's injected @import (default fontUrl). The woff2 is
+   downloaded by scripts/fonts-selfhost.cjs; index.css declares the same
+   face globally, and both declarations share one cache entry. */
+@font-face {
+  font-family: 'Roboto Flex';
+  src: url('/fonts/roboto-flex-var.woff2') format('woff2');
+  font-weight: 100 1000;
+  font-stretch: 25% 151%;
+  font-style: normal;
+  font-display: swap;
+}

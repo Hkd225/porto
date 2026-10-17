@@ -3,6 +3,10 @@
 // React Bits — https://github.com/DavidHDev/react-bits (MIT)
 // Vendored as source, per the React Bits recommended install path.
 // Component ported from https://codepen.io/JuanFuentes/full/rgXKGQ
+// Site deviation: the default font list is self-hosted — Roboto Flex
+// ships as /fonts/roboto-flex-var.woff2 with its css sidecar in
+// /fonts/roboto-flex.css, so the injected @import resolves locally
+// and the page keeps zero external font requests.
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 
 type IdleMode = 'none' | 'wave' | 'pulse';
@@ -108,7 +112,7 @@ const getRipplePressure = (ripples: Ripple[], point: Point, now: number, span: n
 const TextPressure: React.FC<TextPressureProps> = ({
   text = 'Compressa',
   fontFamily = 'Roboto Flex',
-  fontUrl = 'https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap',
+  fontUrl = '/fonts/roboto-flex.css',
 
   width = true,
   weight = true,
