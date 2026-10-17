@@ -35,6 +35,7 @@ import ParticlesImpl from './Particles';
 import RotatingTextImpl from './RotatingText';
 import ScrollFloatImpl from './ScrollFloat';
 import TextPressureImpl from './TextPressure';
+import SilkImpl from './Silk.jsx';
 
 import type {
   BlurTextProps,
@@ -60,7 +61,8 @@ import type {
   ParticlesProps,
   RotatingTextProps,
   ScrollFloatProps,
-  TextPressureProps
+  TextPressureProps,
+  SilkProps
 } from './types';
 
 export const BlurText = BlurTextImpl as ComponentType<BlurTextProps>;
@@ -87,6 +89,7 @@ export const Particles = ParticlesImpl as ComponentType<ParticlesProps>;
 export const RotatingText = RotatingTextImpl as ComponentType<RotatingTextProps>;
 export const ScrollFloat = ScrollFloatImpl as ComponentType<ScrollFloatProps>;
 export const TextPressure = TextPressureImpl as ComponentType<TextPressureProps>;
+export const Silk = SilkImpl as ComponentType<SilkProps>;
 
 export type {
   BlurTextProps,
@@ -112,5 +115,6 @@ export type {
   ParticlesProps,
   RotatingTextProps,
   ScrollFloatProps,
-  TextPressureProps
+  TextPressureProps,
+  SilkProps
 };

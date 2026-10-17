@@ -25,7 +25,7 @@ export function Manifesto() {
             scrollStart="top bottom-=16%"
             scrollEnd="center center+=14%"
             containerClassName="my-0"
-            textClassName="font-display text-[clamp(2rem,5.6vw,4.6rem)] font-normal text-left leading-[1.06] tracking-[-0.02em] text-bone"
+            textClassName="!font-display !text-[clamp(2rem,5.6vw,4.6rem)] !font-normal !text-left !leading-[1.06] tracking-[-0.02em] text-bone"
           >
             {profile.manifesto}
           </ScrollFloat>

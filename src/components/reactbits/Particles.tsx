@@ -937,7 +937,9 @@ const Particles = ({
       [corners, positionBuffer, randomBuffer, colorBuffer, lineBuffer].forEach(buffer => gl.deleteBuffer(buffer));
       gl.deleteVertexArray(dotVao);
       gl.deleteVertexArray(lineVao);
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      // No WEBGL_lose_context.loseContext() here: under React StrictMode (dev)
+      // effects remount on the SAME canvas, and a lost context would stay lost,
+      // leaving the second mount permanently dead and spamming GL warnings.
     };
   }, []);
 

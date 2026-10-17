@@ -1,57 +1,68 @@
-import { Particles, RotatingText, SplitText } from './reactbits';
+import { GradientText, RotatingText, Silk, SplitText } from './reactbits';
 import { profile } from '../data/profile';
 
 /**
- * Hero — one background layer (sparse particles), one statement, one cue.
+ * Hero — one background layer (monochrome silk), one statement, one cue.
  *
- * LPAS's opening move is a statement, not a self-portrait: the site opens with
- * what it believes, then invites the scroll. Same grammar here — the statement
- * is in profile.statement and the name lives quietly in the overline.
+ * The silk shader is recoloured into the site's own tones ("ubah warna saja"):
+ * graphite folds on ink, bone-white sheen, calm speed, edges melting into the
+ * page. The statement rides over it in a slow monochrome gradient via
+ * GradientText wrapping the masked SplitText reveal.
  */
 export function Hero() {
   return (
-    <section id="index" className="relative flex min-h-svh flex-col overflow-hidden">
-      {/* Backdrop: one animated layer only — everything else stays quiet. */}
+    <section id="index" className="relative flex min-h-svh flex-col overflow-hidden bg-ink">
+      {/* Backdrop: silk, then legibility overlays. Nothing else. */}
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <Particles
-          className="h-full w-full"
-          particleCount={140}
-          particleSpread={9}
-          speed={0.08}
-          particleColors={['#f2f2ef']}
-          alphaParticles
-          particleBaseSize={80}
-          sizeRandomness={1}
-          glow={0.16}
-          twinkle={0.55}
-          hoverEffect="parallax"
-          particleHoverFactor={0.45}
-          clickBurst={false}
-          disableRotation
-          opacity={0.5}
+        <Silk
+          color="#4a4a50"
+          sheenColor="#f2f2ef"
+          speed={3.2}
+          scale={1.25}
+          rotation={-0.35}
+          sheen={0.55}
+          depth={0.66}
+          glow={0.25}
+          noiseIntensity={1.1}
+          wave={1}
+          ripple={1}
+          fade={0.45}
+          mouseInteraction
+          interactionStrength={0.8}
+          clickRipple={false}
+          intro
         />
-        <div className="absolute inset-0 bg-[radial-gradient(85%_65%_at_50%_40%,transparent_35%,rgba(10,10,10,0.85)_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-ink" />
+        <div className="absolute inset-0 bg-[radial-gradient(88%_70%_at_50%_42%,transparent_30%,rgba(10,10,10,0.72)_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ink" />
       </div>
 
-      <div className="wrap relative z-10 flex flex-1 flex-col justify-center pb-44 pt-36">
+      <div className="wrap relative z-10 flex flex-1 flex-col justify-center pb-36 pt-32">
         <p className="overline">{profile.name} — Portfolio</p>
 
-        <div className="mt-10 max-w-[19ch]">
-          <SplitText
-            text={profile.statement}
-            tag="h1"
-            splitType="lines"
-            mask
-            trigger="load"
-            delay={160}
-            duration={1.5}
-            ease="expo.out"
-            textAlign="left"
-            from={{ yPercent: 116, opacity: 0 }}
-            to={{ yPercent: 0, opacity: 1 }}
-            className="font-display text-display font-normal leading-[0.99] tracking-[-0.015em]"
-          />
+        <div className="mt-10">
+          <GradientText
+            colors={['#f6f6f3', '#a3a39d', '#f6f6f3']}
+            variant="flow"
+            animationSpeed={13}
+            scale={3}
+            yoyo
+            glow={0}
+          >
+            <SplitText
+              text={profile.statement}
+              tag="h1"
+              splitType="lines"
+              mask
+              trigger="load"
+              delay={160}
+              duration={1.5}
+              ease="expo.out"
+              textAlign="left"
+              from={{ yPercent: 116, opacity: 0 }}
+              to={{ yPercent: 0, opacity: 1 }}
+              className="font-display max-w-[16ch] text-display font-normal leading-[0.99] tracking-[-0.015em]"
+            />
+          </GradientText>
         </div>
 
         <div className="mt-12 flex flex-wrap items-baseline gap-x-4 gap-y-3">

@@ -20,7 +20,7 @@
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
 
   /* Height-aware so the hero always clears the fold on short viewports. */
-  --text-display: clamp(3.2rem, min(10.5vw, 14vh), 8.75rem);
+  --text-display: clamp(2.5rem, min(8.4vw, 10.5vh), 6.2rem);
   --text-h1: clamp(2.4rem, 6.4vw, 5.2rem);
   --text-h2: clamp(1.9rem, 4.2vw, 3.4rem);
   --text-h3: clamp(1.3rem, 2vw, 1.75rem);

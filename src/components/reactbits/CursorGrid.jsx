@@ -577,7 +577,9 @@ const CursorGrid = ({
       gl.deleteTexture(stateTexture);
       gl.deleteVertexArray(vao);
       gl.deleteProgram(shader.program);
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      // No WEBGL_lose_context.loseContext() here: under React StrictMode (dev)
+      // effects remount on the SAME canvas, and a lost context would stay lost,
+      // leaving the second mount permanently dead and spamming GL warnings.
     };
   }, []);
 

@@ -756,3 +756,31 @@ export interface TextPressureProps {
   className?: string;
   minFontSize?: number;
 }
+
+export interface SilkProps {
+  color?: string;
+  sheenColor?: string;
+  /** Fold flow speed. */
+  speed?: number;
+  scale?: number;
+  /** Fold direction in radians. */
+  rotation?: number;
+  noiseIntensity?: number;
+  sheen?: number;
+  depth?: number;
+  glow?: number;
+  ripple?: number;
+  wave?: number;
+  variation?: number;
+  mouseInteraction?: boolean;
+  interactionStrength?: number;
+  clickRipple?: boolean;
+  intro?: boolean;
+  /** Edge fade into the page, 0–1. */
+  fade?: number;
+  lightMode?: boolean;
+  paused?: boolean;
+  dpr?: number;
+  className?: string;
+  style?: React.CSSProperties;
+}

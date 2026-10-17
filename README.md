@@ -40,6 +40,23 @@ npm run lint     # oxlint (warnings confined to unmodified vendored sources)
 npm run preview  # serve dist
 ```
 
+Audit tooling (Playwright, dev-dependency):
+
+```bash
+node scripts/console-audit.cjs http://localhost:4173/   # console/page errors +
+                                                        # failure requests +
+                                                        # scroll-stop screenshots
+node scripts/silk-probe.cjs                             # hero WebGL presence +
+                                                        # brightness check
+```
+
+The hero background is the React Bits `Silk` shader recoloured into the site's
+own monochrome (graphite `#4a4a50` folds, bone `#f2f2ef` sheen — "ubah warna
+saja" — nothing else changed). One known StrictMode/[[GL]] pitfall while
+vendoring: never call `WEBGL_lose_context.loseContext()` in an effect cleanup —
+dev remounts reuse the same canvas, and a lost WebGL context stays lost,
+silently killing the background and spamming the console.
+
 ## Known follow-ups
 
 - `public/og.png` and the PNG icon rasterisations still carry the old green

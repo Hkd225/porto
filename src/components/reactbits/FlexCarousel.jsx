@@ -1230,7 +1230,9 @@ const FlexCarousel = ({
       document.removeEventListener('visibilitychange', onVisibility);
       slots.forEach(slot => slot.dispose());
       slots = [];
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      // No WEBGL_lose_context.loseContext() here: under React StrictMode (dev)
+      // effects remount on the SAME canvas, and a lost context would stay lost.
+      // The canvas is removed immediately after this anyway.
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
   }, []);
