@@ -8,8 +8,8 @@ work, one family. Nothing here is stock imagery.
 | --- | --- | --- | --- |
 | `read.png` | Screenshot of the Evo² paper — "Evolving the Evolver through Weight-Harness Co-Evolution", Figure 1 | Muhammad Auffa Hakim Aditya | own screenshot |
 | `rebuild.png` | Screenshot of `uncertainty_engine.py` in the editor — the entropy core re-implemented by hand | Muhammad Auffa Hakim Aditya | own screenshot |
-| `push.png` | Live capture of the public README, `github.com/Hkd225/Blood-Cell-Anomaly-Detection` — leakage prevention, group validation, label-shuffling sanity check | Muhammad Auffa Hakim Aditya | own repository, live capture |
-| `document.png` | Live capture of the public GitHub profile, `github.com/Hkd225` — pinned repositories and the contribution year | Muhammad Auffa Hakim Aditya | own profile, live capture |
+| `push.png` | Live capture of the public GitHub profile, `github.com/Hkd225` — pinned repositories and the contribution year | Muhammad Auffa Hakim Aditya | own profile, live capture |
+| `document.png` | Live capture of the public README, `github.com/Hkd225/Blood-Cell-Anomaly-Detection` — leakage prevention, group validation, label-shuffling sanity check | Muhammad Auffa Hakim Aditya | own repository, live capture |
 
 Notes
 

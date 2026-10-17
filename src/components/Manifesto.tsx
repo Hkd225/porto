@@ -49,11 +49,11 @@ const stepPhotos: Record<string, { src: string; alt: string }> = {
   },
   Push: {
     src: '/method/push.png',
-    alt: 'A README of stress cases — strict leakage prevention, group validation, labels shuffled to prove the accuracy is earned.',
+    alt: 'The public GitHub profile — repositories pushed as they happened, a year of contributions on the graph.',
   },
   Document: {
     src: '/method/document.png',
-    alt: 'The public GitHub record — repositories described as they happened, a year of contributions on the graph.',
+    alt: 'A README of stress cases — strict leakage prevention, group validation, labels shuffled to prove the accuracy is earned.',
   },
 };
 
