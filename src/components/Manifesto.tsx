@@ -1,26 +1,53 @@
 import { useState } from 'react';
 import { AccordionGallery, ScrollVelocity, SplitText } from './reactbits';
 import { profile } from '../data/profile';
-import { stepVisuals } from '../lib/stepVisuals';
+
+/**
+ * Panel photography — licensed frames downloaded from Wikimedia Commons
+ * (public domain / CC0; see public/method/CREDITS.md). Keyed by the step
+ * word so a data reorder can never desync a principle from its image.
+ * Frames are chosen for texture in the mono system: a manuscript read
+ * line by line, hand-etched copper, a crack driven through concrete, and
+ * a real timestamped duty log.
+ */
+const stepPhotos: Record<string, { src: string; alt: string }> = {
+  Read: {
+    src: '/method/read.jpg',
+    alt: 'A 15th-century manuscript page with ruled rows of script — the original text, studied closely.',
+  },
+  Rebuild: {
+    src: '/method/rebuild.jpg',
+    alt: 'A hand-etched circuit board, copper traces reconstructing a circuit by hand.',
+  },
+  Push: {
+    src: '/method/push.webp',
+    alt: 'A crack driven through a concrete slab — the vague part, found under load.',
+  },
+  Document: {
+    src: '/method/document.jpg',
+    alt: 'An open logbook of handwritten, timestamped entries — the record kept honestly.',
+  },
+};
 
 /**
  * Manifesto — "The method": Read. Rebuild. Push the vague part. Document.
  *
  * SplitText introduces the headline word by word; AccordionGallery is the
- * interaction — four hairline-inked panels that expand on hover/focus, while
- * the active panel's chrome (meta, title, detail, tags) re-renders below the
- * row. The redundant four-card grid is gone: the gallery IS the list now, so
- * nothing is said twice. The tools ticker stays as the kinetic footer.
+ * interaction — four photographic panels (PD/CC0 frames, credits above)
+ * that expand on hover/focus, while the active panel's chrome (meta,
+ * title, detail, tags) re-renders below the row. The redundant four-card
+ * grid is gone: the gallery IS the list now, so nothing is said twice.
+ * The tools ticker stays as the kinetic footer.
  */
 export function Manifesto() {
   const steps = profile.method;
   const [active, setActive] = useState(0);
   const step = steps[active] ?? steps[0];
 
-  const items = steps.map((s, i) => ({
-    image: stepVisuals[i % stepVisuals.length],
+  const items = steps.map((s) => ({
+    image: stepPhotos[s.word]?.src ?? '',
     label: s.word,
-    alt: `${s.n} ${s.word} — method step`,
+    alt: stepPhotos[s.word]?.alt ?? `${s.n} ${s.word} — method step`,
   }));
 
   return (
@@ -58,6 +85,7 @@ export function Manifesto() {
 
         <div className="mt-12 md:mt-16">
           <AccordionGallery
+            className="ag-mono"
             items={items}
             defaultIndex={0}
             accentColor="#a4aa9b"

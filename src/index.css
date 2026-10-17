@@ -206,3 +206,15 @@
     animation: none;
   }
 }
+
+/* Method gallery photographs — the panels always print grayscale, so the
+   frames stay inside the mono ink system (accent stays a state colour).
+   Hierarchy comes from the vendor dim overlay plus a small brightness
+   lift on the active frame; the pinned filter also out-specifies the
+   vendor's animated --ag-gray, which therefore has no visual effect. */
+.ag-mono .ag-panel__media {
+  filter: grayscale(1);
+}
+.ag-mono .ag-panel--active .ag-panel__media {
+  filter: grayscale(1) brightness(1.08);
+}
