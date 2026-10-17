@@ -1,4 +1,16 @@
 import { useState } from 'react';
+import type { IconType } from 'react-icons';
+import {
+  SiGooglecolab,
+  SiJupyter,
+  SiKeras,
+  SiLangchain,
+  SiLangflow,
+  SiOnnx,
+  SiPytorch,
+  SiTensorflow,
+  SiUltralytics,
+} from 'react-icons/si';
 import { AccordionGallery, LogoLoop, SplitText } from './reactbits';
 import { profile } from '../data/profile';
 
@@ -29,6 +41,22 @@ const stepPhotos: Record<string, { src: string; alt: string }> = {
   },
 };
 
+/* Belt entry visuals — a monochrome mark where a real brand icon exists
+   (react-icons, rendered in currentColor so the icons inherit the belt's
+   dim grey and light to ivory on hover — no spot colour), typographic
+   nodes for agent methods and algorithms, which have no logo to borrow. */
+const toolIcon: Record<string, IconType> = {
+  PyTorch: SiPytorch,
+  TensorFlow: SiTensorflow,
+  Keras: SiKeras,
+  YOLOv8: SiUltralytics,
+  ONNX: SiOnnx,
+  LangChain: SiLangchain,
+  Langflow: SiLangflow,
+  Jupyter: SiJupyter,
+  'Google Colab': SiGooglecolab,
+};
+
 /**
  * Manifesto — "The method": Read. Rebuild. Push the vague part. Document.
  *
@@ -37,8 +65,8 @@ const stepPhotos: Record<string, { src: string; alt: string }> = {
  * that expand on hover/focus, while the active panel's chrome (meta,
  * title, detail, tags) re-renders below the row. The redundant four-card
  * grid is gone: the gallery IS the list now, so nothing is said twice.
- * The tool ticker runs as a LogoLoop — typographic nodes, draggable
- * belt, no icon dependency.
+ * The tool ticker runs as a LogoLoop — a mixed belt of monochrome brand
+ * icons and typographic nodes, draggable, no spot colour.
  */
 export function Manifesto() {
   const steps = profile.method;
@@ -131,19 +159,31 @@ export function Manifesto() {
           </div>
         </div>
 
-        {/* Tool loop — each real tool as one typographic node (no icon wall:
-            half of these are agent methods, they have no logo). The loop
-            pauses on hover and resumes on leave; a hovered entry lights to
-            ivory; the intro is the component's own staggered rise, played
-            once when the row enters view. Draggable — fling the belt. */}
+        {/* Tool loop — a mixed belt: brand icons in currentColor wherever a
+            real mark exists (they inherit the belt's dim grey and light to
+            ivory on hover — no spot colour), typographic nodes for agent
+            methods and algorithms that have no logo. The loop pauses on
+            hover and resumes on leave; the intro is the component's own
+            staggered rise, played once when the row enters view. Draggable
+            — fling the belt. */}
         <div className="mt-16 border-y border-line-soft py-5">
           <LogoLoop
             className="text-dim"
-            logos={profile.ticker.map((tool) => ({
-              node: <span className="whitespace-nowrap font-mono uppercase tracking-[0.22em]">{tool}</span>,
-              title: tool,
-              hoverColor: '#e9e6de',
-            }))}
+            logos={profile.ticker.map((tool) => {
+              const Icon = toolIcon[tool];
+              return Icon
+                ? {
+                    node: <Icon size={17} aria-hidden />,
+                    title: tool,
+                    ariaLabel: tool,
+                    hoverColor: '#e9e6de',
+                  }
+                : {
+                    node: <span className="whitespace-nowrap font-mono uppercase tracking-[0.22em]">{tool}</span>,
+                    title: tool,
+                    hoverColor: '#e9e6de',
+                  };
+            })}
             speed={34}
             logoHeight={15}
             gap={44}
