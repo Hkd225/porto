@@ -32,11 +32,21 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
-        scrolled || open ? 'border-b border-line bg-ink/80 backdrop-blur-md' : 'border-b border-transparent'
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-500 ${
+        scrolled || open ? 'border-line' : 'border-transparent'
       }`}
     >
-      <div className="wrap flex h-16 items-center justify-between">
+      {/* The blur lives on the inner bar, not the header itself: a
+          backdrop-filter on the header would turn it into the containing
+          block for the fixed-positioned menu overlay below, collapsing the
+          overlay's background to the 64px bar box (page content bled
+          straight through). When the menu is open the bar is solid ink. */}
+      <div
+        className={`transition-colors duration-500 ${
+          open ? 'bg-ink' : scrolled ? 'bg-ink/80 backdrop-blur-md' : 'bg-transparent'
+        }`}
+      >
+        <div className="wrap flex h-16 items-center justify-between">
         <button
           type="button"
           onClick={() => go('index')}
@@ -85,10 +95,10 @@ export function Navbar() {
             {open ? <X size={17} strokeWidth={1.5} /> : <Menu size={17} strokeWidth={1.5} />}
           </button>
         </div>
+        </div>
       </div>
 
-      {open && (
-        <div className="fixed inset-0 top-16 z-[45] bg-ink/[0.98] md:hidden">
+      {open && (        <div className="fixed inset-0 top-16 z-[45] bg-ink md:hidden">
           <nav className="wrap flex flex-col py-14" aria-label="Sections, mobile">
             {NAV_ITEMS.map((item, i) => (
               <button

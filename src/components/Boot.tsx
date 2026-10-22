@@ -158,7 +158,7 @@ export function Boot({ onArm, onDone }: { onArm: () => void; onDone: () => void 
     >
       {/* frame corners of the veil's own chrome */}
       <div ref={stageRef} className="relative flex flex-1 flex-col">
-        <p className="overline absolute left-5 top-5 sm:left-7 sm:top-6">Portfolio — v2.0</p>
+        <p className="kicker absolute left-5 top-5 sm:left-7 sm:top-6">Portfolio — v2.0</p>
         <p className="num absolute right-5 top-5 sm:right-7 sm:top-6">2026</p>
 
         {/* the mark */}

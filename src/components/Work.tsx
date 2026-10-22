@@ -249,7 +249,7 @@ export function Work() {
           {/* Archive rows. */}
           {visArchive.length > 0 && (
             <div className="mt-16">
-              <p className="overline">Archive — {visArchive.length} more</p>
+              <p className="kicker">Archive — {visArchive.length} more</p>
               <ul className="mt-6 divide-y divide-line-soft border-b border-line-soft">
                 {visArchive.map((p) => (
                   <li key={p.slug}>

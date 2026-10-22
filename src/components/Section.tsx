@@ -36,7 +36,7 @@ export function Section({ id, num, label, title, lede, className = '', backgroun
           <div className="flex items-baseline gap-4">
             <span className="num text-bone/70">{num}</span>
             <span className="h-px w-10 translate-y-[-4px] bg-line-2" aria-hidden="true" />
-            <span className="overline">{label}</span>
+            <span className="kicker">{label}</span>
           </div>
           {lede && <p className="hidden max-w-[300px] text-right text-sm leading-relaxed text-dim md:block">{lede}</p>}
         </div>

@@ -45,7 +45,7 @@ export function Contact() {
           <div className="flex items-baseline gap-4">
             <span className="num text-bone/70">06</span>
             <span className="h-px w-10 translate-y-[-4px] bg-line-2" aria-hidden="true" />
-            <span className="overline">Contact</span>
+            <span className="kicker">Contact</span>
           </div>
           <p className="hidden max-w-[300px] text-right text-sm leading-relaxed text-dim md:block">
             Open to research collaboration, agent infrastructure work, and interesting ML problems.

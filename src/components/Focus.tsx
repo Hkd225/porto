@@ -93,7 +93,7 @@ export function Focus() {
             <div className="flex items-baseline gap-4">
               <span className="num text-bone/70">01</span>
               <span className="h-px w-10 translate-y-[-4px] bg-line-2" aria-hidden="true" />
-              <span className="overline">Selected focus</span>
+              <span className="kicker">Selected focus</span>
             </div>
             <span className="font-mono text-[11px] tracking-[0.3em] text-dim">
               01 — {String(total).padStart(2, '0')}
@@ -141,7 +141,7 @@ export function Focus() {
             <div className="flex items-baseline gap-4">
               <span className="num text-bone/70">01</span>
               <span className="h-px w-10 translate-y-[-4px] bg-line-2" aria-hidden="true" />
-              <span className="overline">Selected focus</span>
+              <span className="kicker">Selected focus</span>
             </div>
             <span className="font-mono text-[11px] tracking-[0.3em] text-dim">
               01 — {String(total).padStart(2, '0')}

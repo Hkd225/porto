@@ -48,7 +48,7 @@ export function Hero({ statementArmed = true }: { statementArmed?: boolean }) {
       </div>
 
       <div className="wrap relative z-10 flex flex-1 flex-col justify-center pb-36 pt-32">
-        <p className="overline">{profile.name} — Portfolio</p>
+        <p className="kicker">{profile.name} — Portfolio</p>
 
         <div className="mt-10">
           <GradientText

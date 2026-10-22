@@ -33,7 +33,7 @@ export function Writing() {
         {/* Stat ledger — small print, carried honestly. */}
         <aside className="h-fit border border-line-soft lg:sticky lg:top-28">
           <div className="border-b border-line-soft px-6 py-5">
-            <p className="overline">Reading ledger</p>
+            <p className="kicker">Reading ledger</p>
           </div>
           <dl className="flex flex-col divide-y divide-line-soft">
             <div className="flex items-baseline justify-between gap-6 px-6 py-5">

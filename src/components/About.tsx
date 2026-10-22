@@ -37,7 +37,7 @@ export function About() {
         {/* Verified facts rail */}
         <aside className="flex flex-col gap-8 border border-line-soft p-7 sm:p-9">
           <div>
-            <p className="overline">Verified</p>
+            <p className="kicker">Verified</p>
             <dl className="mt-6 grid gap-4 font-mono text-[11px] tracking-[0.12em]">
               <div className="flex items-baseline justify-between gap-4 border-b border-line-soft pb-4">
                 <dt className="uppercase tracking-[0.2em] text-dim">GitHub</dt>
@@ -59,7 +59,7 @@ export function About() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <p className="overline">Where the work lives</p>
+            <p className="kicker">Where the work lives</p>
             <p className="text-sm leading-relaxed text-muted">
               Code on GitHub, weights and model cards on Hugging Face, long-form notes on Medium.
               Descriptions here mirror the repositories — if a project changes, the README is the

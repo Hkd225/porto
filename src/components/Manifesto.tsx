@@ -109,14 +109,30 @@ function MethodSnap({
   onChange: (i: number) => void;
 }) {
   const refs = useRef<Array<HTMLButtonElement | null>>([]);
+  const rowRef = useRef<HTMLDivElement | null>(null);
+  /* tap-driven only: on mount this effect must NOT run — recentering on
+     load drags the whole page to the Method section while the boot veil is
+     still up (the reader un-veils mid-document instead of at the hero). The
+     pure scrollLeft centering keeps the correction strictly horizontal. */
+  const settled = useRef(false);
   useEffect(() => {
-    /* keep the tapped card centered — `block: nearest` never moves the
-       page's vertical scroll, so lenis stays out of the way */
-    refs.current[active]?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    if (!settled.current) {
+      settled.current = true;
+      return;
+    }
+    const card = refs.current[active];
+    const row = rowRef.current;
+    if (card && row) {
+      row.scrollTo({
+        left: card.offsetLeft - (row.clientWidth - card.clientWidth) / 2,
+        behavior: 'smooth',
+      });
+    }
   }, [active]);
 
   return (
     <div
+      ref={rowRef}
       className="no-bar -mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2"
       data-lenis-prevent
       aria-label="The method, one panel per principle"
@@ -191,9 +207,9 @@ export function Manifesto() {
           <div className="flex items-baseline gap-4">
             <span className="num text-bone/70">02</span>
             <span className="h-px w-10 translate-y-[-4px] bg-line-2" aria-hidden="true" />
-            <p className="overline">The method</p>
+            <p className="kicker">The method</p>
           </div>
-          <p className="overline hidden md:block">How I work</p>
+          <p className="kicker hidden md:block">How I work</p>
         </div>
 
         <div className="mt-10 md:mt-14">
