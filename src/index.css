@@ -382,6 +382,16 @@
 .ai-scroll::-webkit-scrollbar-thumb {
   background: var(--color-line-2);
 }
+
+/* The mobile gallery scroller keeps its chrome out of the design:
+   full-bleed swipe, no scrollbar at all. */
+.no-bar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-bar::-webkit-scrollbar {
+  display: none;
+}
 @media (prefers-reduced-motion: reduce) {
   .ai-rise,
   .ai-line,

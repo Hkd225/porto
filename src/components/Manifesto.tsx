@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { IconType } from 'react-icons';
 import {
   SiArxiv,
@@ -90,6 +90,77 @@ const belt: Array<{ name: string; icon: IconType }> = [
 ];
 
 /**
+ * MethodSnap — the mobile face of the gallery.
+ *
+ * AccordionGallery's four panels turn into vertical slivers on a phone
+ * (390px wide ÷ 4 panels ≈ 90px each showing full-width captures) and
+ * touch has no hover, so below `md` the same four plates render as a
+ * horizontal snap scroller instead: one full card per artifact, tap to
+ * activate. Same data, same active-panel chrome underneath — the
+ * desktop accordion above `md` is untouched.
+ */
+function MethodSnap({
+  items,
+  active,
+  onChange,
+}: {
+  items: Array<{ image: string; label: string; alt: string }>;
+  active: number;
+  onChange: (i: number) => void;
+}) {
+  const refs = useRef<Array<HTMLButtonElement | null>>([]);
+  useEffect(() => {
+    /* keep the tapped card centered — `block: nearest` never moves the
+       page's vertical scroll, so lenis stays out of the way */
+    refs.current[active]?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }, [active]);
+
+  return (
+    <div
+      className="no-bar -mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2"
+      data-lenis-prevent
+      aria-label="The method, one panel per principle"
+    >
+      {items.map((item, i) => {
+        const isActive = i === active;
+        return (
+          <button
+            key={item.label}
+            ref={(el) => {
+              refs.current[i] = el;
+            }}
+            type="button"
+            aria-pressed={isActive}
+            onClick={() => onChange(i)}
+            className={`relative w-[76vw] max-w-[340px] shrink-0 snap-center overflow-hidden rounded-[3px] border text-left transition-colors duration-300 ${
+              isActive ? 'border-accent/35' : 'border-line-soft'
+            }`}
+          >
+            <span className="block aspect-[3/2] w-full bg-surface">
+              {item.image && (
+                <img
+                  src={item.image}
+                  alt={item.alt}
+                  loading="lazy"
+                  className={`h-full w-full object-cover transition-[filter,opacity] duration-300 ${
+                    isActive ? 'opacity-100' : 'grayscale opacity-55'
+                  }`}
+                />
+              )}
+            </span>
+            <span className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.22em] text-bone">
+              <span className={isActive ? 'text-accent' : 'text-dim'}>{String(i + 1).padStart(2, '0')}</span>
+              <span className="px-2 text-dim">·</span>
+              {item.label}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
  * Manifesto — "The method": Read. Rebuild. Push the vague part. Document.
  *
  * SplitText introduces the headline word by word; AccordionGallery is the
@@ -97,6 +168,7 @@ const belt: Array<{ name: string; icon: IconType }> = [
  * above) that expand on hover/focus, while the active panel's chrome (meta,
  * title, detail, tags) re-renders below the row. The redundant four-card
  * grid is gone: the gallery IS the list now, so nothing is said twice.
+ * On phones the accordion becomes the MethodSnap scroller (see above).
  * The tool ticker runs as a LogoLoop — an icon-only belt of ML/DL
  * technology marks (the belt constant names each one), draggable, no
  * spot colour; names surface as hover tips and in the access tree only.
@@ -146,23 +218,30 @@ export function Manifesto() {
         </div>
 
         <div className="mt-12 md:mt-16">
-          <AccordionGallery
-            className="ag-mono"
-            items={items}
-            defaultIndex={0}
-            accentColor="#a4aa9b"
-            overlayColor="#080808"
-            textColor="#e9e6de"
-            height={440}
-            gap={8}
-            radius={3}
-            expandRatio={0.52}
-            tilt={5}
-            parallax={0.4}
-            duration={0.65}
-            trigger="hover"
-            onChange={setActive}
-          />
+          {/* The one interaction, two faces: vendor accordion on desktop,
+              snap scroller on phones (same items, same active index). */}
+          <div className="hidden md:block">
+            <AccordionGallery
+              className="ag-mono"
+              items={items}
+              defaultIndex={0}
+              accentColor="#a4aa9b"
+              overlayColor="#080808"
+              textColor="#e9e6de"
+              height={440}
+              gap={8}
+              radius={3}
+              expandRatio={0.52}
+              tilt={5}
+              parallax={0.4}
+              duration={0.65}
+              trigger="hover"
+              onChange={setActive}
+            />
+          </div>
+          <div className="md:hidden">
+            <MethodSnap items={items} active={active} onChange={setActive} />
+          </div>
         </div>
 
         {/* Active panel chrome — keyed by the active index so each swap plays
