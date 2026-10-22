@@ -184,14 +184,14 @@ export function Assistant() {
         onClick={open ? close : () => setOpen(true)}
         aria-expanded={open}
         aria-controls="ai-panel"
-        className="group fixed bottom-5 right-5 z-[95] grid size-12 cursor-pointer place-items-center rounded-full border border-line-2 bg-ink/90 text-bone backdrop-blur-sm transition-colors duration-300 hover:border-bone"
+        className="group fixed bottom-5 right-5 z-[95] grid size-12 cursor-pointer place-items-center rounded-full border border-line-2 bg-ink/90 text-bone backdrop-blur-sm transition-colors duration-300 hover:border-bone sm:bottom-7 sm:right-7 sm:size-14"
       >
-        <span className="font-mono text-[11px] tracking-widest">{open ? '×' : 'AI'}</span>
+        <span className="font-mono text-[11px] tracking-widest sm:text-xs">{open ? '×' : 'AI'}</span>
         {!open && <span aria-hidden="true" className="absolute right-2.5 top-2.5 size-1.5 rounded-full bg-accent" />}
         {!open && (
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute right-14 border border-line bg-ink px-2 py-1 font-mono text-[10px] tracking-widest text-muted opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+            className="pointer-events-none absolute right-14 sm:right-16 border border-line bg-ink px-2 py-1 font-mono text-[10px] tracking-widest text-muted opacity-0 transition-opacity duration-200 group-hover:opacity-100"
           >
             ask the assistant
           </span>
@@ -203,7 +203,7 @@ export function Assistant() {
           id="ai-panel"
           role="dialog"
           aria-label="Portfolio assistant"
-          className="ai-rise fixed bottom-[5.5rem] right-5 z-[95] flex h-[min(560px,72svh)] w-[min(380px,calc(100svw-2.5rem))] flex-col border border-line-2 bg-ink-2/95 backdrop-blur-md"
+          className="ai-rise fixed bottom-[5.5rem] right-5 z-[95] flex h-[min(560px,72svh)] w-[min(380px,calc(100svw-2.5rem))] flex-col border border-line-2 bg-ink-2/95 backdrop-blur-md sm:bottom-[6.75rem] sm:right-7 sm:w-[min(400px,calc(100svw-3.5rem))]"
         >
           <header className="flex items-start justify-between border-b border-line px-4 py-3">
             <div>
