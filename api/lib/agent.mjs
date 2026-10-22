@@ -7,16 +7,39 @@
  *
  * Pipeline per turn:
  *   1. guard the door     — CORS, method, rate limit, body sanity
- *   2. recover knowledge  — RAG: embed the question, cosine over
- *                           api/rag-index.json (the site's own data);
- *                           a static syllabus covers every fallback
- *   3. generate           — Gemini streaming; the model may call the
+ *   2. match memory       — embed the question (one cheap embedding
+ *                           call), consult the SEMANTIC CACHE: a twin
+ *                           question replays its grounded reply with
+ *                           zero model calls (api/lib/semcache.mjs)
+ *   3. assemble the turn  — history + question, riding the static
+ *                           prefix (rules + site notes + tools) that
+ *                           becomes the KV prompt cache
+ *   4. generate           — Gemini streaming; the model may call the
  *                           web_search tool (DuckDuckGo scrape, official
  *                           Instant Answer API as second path) mid-
  *                           stream; function responses feed the next
  *                           round
- *   4. stream back        — SSE frames: meta / text / tool / done /
+ *   5. stream back        — SSE frames: meta / text / tool / done /
  *                           error
+ *
+ * The caching ladder (fresh question → full price, twin → free):
+ *   - KV PROMPT CACHE: everything that never changes between visitors —
+ *     the rules, the web_search tool and every rag-index chunk (the
+ *     whole site syllabus, ~90 entries ≈ 5k tokens) — is cached as one
+ *     Gemini cachedContent with a 600s TTL, refreshed on use. On this
+ *     key's FREE TIER the cachedContent storage quota is 0 tokens, so
+ *     the create fails and the same prefix ships INLINE inside the
+ *     system instruction instead: an identical giant prefix on every
+ *     round that the server's IMPLICIT caching discounts on its own.
+ *     The explicit path stays in the code — a quota upgrade lights it
+ *     up for free. usageMetadata is logged per round so the discount
+ *     is verifiable from the server console.
+ *   - The site notes live in the cached prefix, so unknown facts are
+ *     available without a per-turn retrieval step: fresh questions
+ *     cost one embedding (semantic cache gate) plus the model calls.
+ *   - The embedding PROMPT cache question applies to text-embedding
+ *     models only under retrievers; here embeddings run once per turn
+ *     for the semantic gate, not per tool round.
  *
  * The Google AI Studio key lives only in server env (GEMINI_API_KEY) —
  * nothing lands in the SPA bundle. Everything degrades honestly: no key
@@ -29,17 +52,20 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 import { SYLLABUS } from './knowledge.mjs';
+import { lookup as semLookup, store as semStore } from './semcache.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(here, '..', 'rag-index.json');
 
-const MODEL = 'gemini-2.0-flash';
+const MODEL = 'gemini-3.5-flash-lite';
+const EMBED_MODEL = 'gemini-embedding-001';
+const EMBED_DIMS = 768; /* Matryoshka truncation — tiny corpus, cheap vectors */
 const MAX_HISTORY = 8; // turns we keep server-side
 const MAX_ROUNDS = 3; // tool loop depth
 const MAX_TOKENS = 900;
-const RAG_TOP_K = 4;
 const RATE_WINDOW_MS = 60_000;
 const RATE_MAX = 12;
+const CACHE_TTL = '600s'; // KV cache lifetime, refreshed on use
 
 const WEB_TOOLS = [
   {
@@ -47,7 +73,7 @@ const WEB_TOOLS = [
       {
         name: 'web_search',
         description:
-          'Search the public web via DuckDuckGo for facts outside the syllabus: recent events, library versions, paper details, external links. Never use it for facts the syllabus already contains.',
+          'Search the public web via DuckDuckGo for facts outside the site notes: recent events, library versions, paper details, external links. Never use it for facts the site notes already contain.',
         parameters: {
           type: 'OBJECT',
           properties: {
@@ -59,6 +85,20 @@ const WEB_TOOLS = [
     ],
   },
 ];
+
+const SYSTEM_RULES = [
+  'You are the assistant embedded in the portfolio site of Muhammad Auffa Hakim Aditya ("Hakid") — a machine-learning engineering student who builds, documents and ships models end to end.',
+  'Visitors ask you about his projects, models, writing, methods, stack and how to reach him.',
+  '',
+  'RULES',
+  '- Ground every claim about Hakid in the SITE NOTES below or in web_search results. If something is not there, say plainly that you do not know and point to his GitHub profile (github.com/Hkd225).',
+  '- Never invent projects, models, metrics or links.',
+  '- Reply in the language the visitor writes in; default to English.',
+  '- Keep answers short and concrete (2-5 sentences unless depth is asked). No emojis. Plain text and simple lists only, no markdown headings.',
+  '- Use the web_search tool at most once per question: when a question reaches beyond the site notes, or when the visitor asks you to check the web.',
+  '- If web_search is unavailable, say so honestly and answer from what you know.',
+  '- Stay inside the portfolio room by default: unrelated topics get a brief, friendly reply and a steer back to Hakid and his work — unless the visitor explicitly asks you to check the web, then honor that once and answer honestly.',
+].join('\n');
 
 let aiPromise = null;
 function gemini() {
@@ -72,15 +112,16 @@ function gemini() {
 }
 
 /* ------------------------------------------------------------------ *
- * RAG — the site's own syllabus                                        *
+ * the site's own syllabus — loaded once, shipped as cache contents    *
  * ------------------------------------------------------------------ */
 
 let indexPromise = null;
-function loadIndex() {
+function siteIndex() {
   if (!indexPromise) {
     indexPromise = new Promise((resolve) => {
       try {
-        resolve(JSON.parse(readFileSync(INDEX_PATH, 'utf8')));
+        const idx = JSON.parse(readFileSync(INDEX_PATH, 'utf8'));
+        resolve(Array.isArray(idx.chunks) && idx.chunks.length > 0 ? idx : null);
       } catch {
         resolve(null);
       }
@@ -89,59 +130,71 @@ function loadIndex() {
   return indexPromise;
 }
 
-const cosine = (a, b) => {
-  if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return -1;
-  let dot = 0;
-  let na = 0;
-  let nb = 0;
-  for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i];
-    na += a[i] * a[i];
-    nb += b[i] * b[i];
-  }
-  return dot / (Math.sqrt(na) * Math.sqrt(nb) || 1);
-};
+async function siteNotes() {
+  const idx = await siteIndex();
+  if (!idx) return SYLLABUS; /* static syllabus covers every fallback */
+  return idx.chunks.map((c) => `[${c.meta}]\n${c.text}`).join('\n\n');
+}
 
-async function retrieve(query) {
+async function embedQuery(query) {
   const ai = await gemini();
-  if (!ai) return SYLLABUS;
-  const idx = await loadIndex();
-  if (!idx || !Array.isArray(idx.chunks) || idx.chunks.length === 0) return SYLLABUS;
+  if (!ai) return null;
   try {
-    const res = await ai.models.embed({
-      model: 'text-embedding-004',
+    const res = await ai.models.embedContent({
+      model: EMBED_MODEL,
       contents: String(query).slice(0, 400),
+      config: { outputDimensionality: EMBED_DIMS, taskType: 'RETRIEVAL_QUERY' },
     });
-    const qv = res.embeddings?.[0]?.values;
-    if (!qv) return SYLLABUS;
-    const top = idx.chunks
-      .map((chunk) => ({ chunk, s: cosine(qv, chunk.vec) }))
-      .sort((x, y) => y.s - x.s)
-      .slice(0, RAG_TOP_K);
-    return top.map((t) => `[${t.chunk.meta}]\n${t.chunk.text}`).join('\n\n');
+    return res.embeddings?.[0]?.values ?? null;
   } catch {
-    /* embedding quota hiccup — the static syllabus still knows */
-    return SYLLABUS;
+    /* embedding hiccup — the semantic gate just stays closed this turn */
+    return null;
   }
 }
 
-function systemPrompt(syllabus) {
-  return [
-    'You are the assistant embedded in the portfolio site of Muhammad Auffa Hakim Aditya ("Hakid") — a machine-learning engineering student who builds, documents and ships models end to end.',
-    'Visitors ask you about his projects, models, writing, methods, stack and how to reach him.',
-    '',
-    'RULES',
-    '- Ground every claim about Hakid in the SYLLABUS below or in web_search results. If something is not there, say plainly that you do not know and point to his GitHub profile (github.com/Hkd225).',
-    '- Never invent projects, models, metrics or links.',
-    '- Reply in the language the visitor writes in; default to English.',
-    '- Keep answers short and concrete (2-5 sentences unless depth is asked). No emojis. Plain text and simple lists only, no markdown headings.',
-    '- Use the web_search tool at most once per question, only when a question reaches beyond the syllabus.',
-    '- If web_search is unavailable, say so honestly and answer from what you know.',
-    '- Stay inside the portfolio room: unrelated topics get a brief, friendly reply and a steer back to Hakid and his work.',
-    '',
-    'SYLLABUS',
-    syllabus,
-  ].join('\n');
+/* ------------------------------------------------------------------ *
+ * KV prompt cache — one cachedContent per warm instance               *
+ * ------------------------------------------------------------------ */
+
+let kv = null; /* { name, fingerprint, refreshedAt, failed: bool } */
+
+async function kvCache(ai, notes, log) {
+  const fingerprint = notes.length;
+  if (!kv || kv.fingerprint !== fingerprint) {
+    kv = { name: null, fingerprint, refreshedAt: 0, failed: false };
+  }
+  if (kv.failed || !kv.name) {
+    if (kv.failed) return null;
+    try {
+      const created = await ai.caches.create({
+        model: MODEL,
+        config: {
+          systemInstruction: SYSTEM_RULES,
+          tools: WEB_TOOLS,
+          contents: [
+            { role: 'user', parts: [{ text: `SITE NOTES (always in force):\n\n${notes}\n\n(end of notes)` }] },
+          ],
+          ttl: CACHE_TTL,
+          displayName: 'hakid-agent-kv',
+        },
+      });
+      kv.name = created.name;
+      kv.refreshedAt = Date.now();
+      log(`kv cache created ${kv.name} (ttl ${CACHE_TTL}) — explicit discounts active`);
+      return kv.name;
+    } catch (err) {
+      /* free tier storage quota = 0 → the notes ride inline; the
+         server's implicit caching discounts the identical prefix */
+      kv.failed = true;
+      log(`kv cache unavailable (${String(err?.message).slice(0, 140)}) — inline prefix + implicit caching`);
+      return null;
+    }
+  }
+  if (Date.now() - kv.refreshedAt > 60_000) {
+    kv.refreshedAt = Date.now();
+    ai.caches.update({ name: kv.name, config: { ttl: CACHE_TTL } }).catch(() => {});
+  }
+  return kv.name;
 }
 
 /* ------------------------------------------------------------------ *
@@ -244,6 +297,8 @@ function json(res, code, payload) {
  * ------------------------------------------------------------------ */
 
 export async function handleChat(req, res) {
+  const log = (m) => console.info(`[agent] ${m}`);
+
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -278,6 +333,8 @@ export async function handleChat(req, res) {
     return json(res, 400, { error: 'empty conversation' });
   }
 
+  const question = messages[messages.length - 1].content;
+
   res.writeHead(200, {
     'content-type': 'text/event-stream; charset=utf-8',
     'cache-control': 'no-cache, no-transform',
@@ -303,31 +360,83 @@ export async function handleChat(req, res) {
         return;
       }
 
-      send({ t: 'meta', v: 'reading the syllabus…' });
-      const syllabus = await retrieve(messages[messages.length - 1].content);
+      /* the semantic gate — one embedding, twin questions never bill */
+      send({ t: 'meta', v: 'matching memory…' });
+      const vector = await embedQuery(question);
+      const hit = semLookup(vector);
+      if (hit) {
+        log(`semantic HIT score ${hit.score} — replaying, 0 model calls`);
+        send({ t: 'meta', v: 'memory hit (semantic cache)' });
+        send({ t: 'text', v: hit.reply });
+        send({ t: 'done', sources: hit.sources, cached: true });
+        return;
+      }
 
+      /* assemble the turn — history first, question last. When the
+         visitor explicitly asks for a web check, a directive part
+         precedes the question: the smaller model still obeys the
+         portfolio room unless it sees the visitor asked for it. */
+      const asksWeb =
+        /\b(check|search|look ?up|verify|google)\b[^.?!]{0,40}\b(web|internet|online)\b|\bweb search\b|\bsearch the web\b|\bcheck the web\b/i.test(
+          question,
+        );
       const contents = messages.map((m) => ({ role: m.role, parts: [{ text: m.content }] }));
-      const config = {
-        systemInstruction: systemPrompt(syllabus),
-        tools: WEB_TOOLS,
-        temperature: 0.5,
-        maxOutputTokens: MAX_TOKENS,
-      };
+      if (asksWeb) {
+        contents[contents.length - 1].parts.unshift({
+          text: 'The visitor explicitly asked you to check the web for this one. Call web_search once, then answer honestly and steer back.',
+        });
+      }
       const sources = [];
+      let reply = '';
+      let toolUsed = false;
+
+      const notes = await siteNotes();
+      let config = null;
+      const cacheName = await kvCache(ai, notes, log);
+      if (cacheName) {
+        /* tools live inside the cached prefix */
+        config = { cachedContent: cacheName, temperature: 0.5, maxOutputTokens: MAX_TOKENS };
+      } else {
+        /* the identical giant prefix — implicit caching's breadcrumb */
+        config = {
+          systemInstruction: `${SYSTEM_RULES}\n\nSITE NOTES\n${notes}`,
+          tools: WEB_TOOLS,
+          temperature: 0.5,
+          maxOutputTokens: MAX_TOKENS,
+        };
+      }
+
+      log(`turn start q="${question.slice(0, 80)}" mode=${cacheName ? 'kv-cache' : 'inline-prefix'}`);
+      send({ t: 'meta', v: 'reading the site\u2019s notes…' });
 
       for (let round = 0; round < MAX_ROUNDS; round++) {
         const stream = await ai.models.generateContentStream({ model: MODEL, contents, config });
+        const rawParts = [];
         const calls = [];
         for await (const chunk of stream) {
           const parts = chunk.candidates?.[0]?.content?.parts ?? [];
           for (const p of parts) {
-            if (p.text) send({ t: 'text', v: p.text });
-            else if (p.functionCall) calls.push(p.functionCall);
+            if (p.thought) continue; /* thinking summaries never ship */
+            rawParts.push(p);
+            if (p.text) {
+              send({ t: 'text', v: p.text });
+              reply += p.text;
+            } else if (p.functionCall) calls.push(p.functionCall);
+          }
+          if (chunk.usageMetadata) {
+            const u = chunk.usageMetadata;
+            log(
+              `round ${round} usage in=${u.promptTokenCount} kv-cached=${u.cachedContentTokenCount ?? 0} out=${u.candidatesTokenCount ?? 0}`,
+            );
           }
         }
         if (calls.length === 0) break;
 
-        contents.push({ role: 'model', parts: calls.map((c) => ({ functionCall: { name: c.name, args: c.args ?? {} } })) });
+        toolUsed = true;
+        /* replay the model turn AS RECEIVED — Gemini 3.x function calls
+           carry a thought_signature the API requires back on the next
+           round ("Function call is missing a thought_signature") */
+        contents.push({ role: 'model', parts: rawParts });
         const responses = [];
         for (const c of calls) {
           if (c.name === 'web_search') {
@@ -347,8 +456,16 @@ export async function handleChat(req, res) {
         contents.push({ role: 'user', parts: responses });
       }
 
-      send({ t: 'done', sources: sources.slice(0, 5) });
+      send({ t: 'done', sources: sources.slice(0, 5), cached: false });
+
+      /* a grounded, tool-free answer becomes tomorrow's memory hit —
+         refusals never do */
+      const refusal = /^.{0,120}\b(can only|cannot|can't|unable)\b/i.test(reply);
+      if (!toolUsed && !refusal && reply.length >= 60) {
+        semStore(question, vector, reply, sources.slice(0, 5));
+      }
     } catch (err) {
+      log(`turn failed — ${String(err?.stack || err?.message || err).slice(0, 400)}`);
       send({ t: 'error', v: userMessage(err) });
       send({ t: 'done', sources: [] });
     } finally {

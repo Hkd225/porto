@@ -3,9 +3,14 @@
  *
  * Reads src/data/*.ts (bundled with esbuild at runtime, so the truth
  * lives only in the TS the site itself ships), flattens every section
- * into syllabus entries and embeds them with text-embedding-004.
+ * into syllabus entries and embeds them with gemini-embedding-001
+ * (768-d Matryoshka truncation).
  * Output: api/rag-index.json — committed, so the deployed function
  * never needs the key to answer.
+ *
+ * The vectors serve the semantic cache (twin-question matching); the
+ * chunk TEXT is shipped whole through the KV prompt cache (see
+ * api/lib/agent.mjs), so no retrieval step runs at request time.
  *
  * Needs GEMINI_API_KEY (shell env or .env.local). Usage: npm run rag:index
  */
@@ -98,13 +103,14 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`[rag] embedding ${entries.length} entries (text-embedding-004)…`);
+  console.log(`[rag] embedding ${entries.length} entries (gemini-embedding-001 · 768d)…`);
   const chunks = [];
   for (let i = 0; i < entries.length; i += 50) {
     const batch = entries.slice(i, i + 50);
-    const res = await ai.models.embed({
-      model: 'text-embedding-004',
+    const res = await ai.models.embedContent({
+      model: 'gemini-embedding-001',
       contents: batch.map((e) => `${e.meta} ${e.text}`),
+      config: { outputDimensionality: 768, taskType: 'RETRIEVAL_DOCUMENT' },
     });
     (res.embeddings || []).forEach((emb, j) => {
       if (!emb?.values) return;
@@ -119,7 +125,7 @@ async function main() {
 
   const payload = {
     builtAt: new Date().toISOString(),
-    model: 'text-embedding-004',
+    model: 'gemini-embedding-001:768',
     chunks,
   };
   const out = path.join(root, 'api', 'rag-index.json');

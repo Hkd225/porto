@@ -25,3 +25,6 @@ dist-ssr
 
 # Generated audit artifacts (screenshots from scripts/visual-audit.cjs)
 audit
+
+# Runtime caches (best-effort semantic memory; Vercel uses /tmp instead)
+api/sem-cache.json
