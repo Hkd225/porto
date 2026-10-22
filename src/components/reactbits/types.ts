@@ -674,6 +674,12 @@ export interface SplitTextProps {
   effect?: 'rise' | 'fade' | 'blur' | 'flip' | 'pop' | 'skew' | 'wave';
   /** 'load' = run at mount; 'view' = wait for the element; 'hover' / 'click' replay. */
   trigger?: 'load' | 'view' | 'hover' | 'click';
+  /**
+   * SITE DEVIATION — hold the reveal invisible until this flips true
+   * (the boot veil re-arms the element as its curtain lifts). Default
+   * true keeps every other usage stock.
+   */
+  armed?: boolean;
   loop?: boolean;
   loopDelay?: number;
   /** Pointer lift / wave applied after the reveal. */

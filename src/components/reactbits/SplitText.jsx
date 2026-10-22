@@ -70,6 +70,14 @@ const SplitText = ({
   mask = false,
   effect = 'rise',
   trigger = 'view',
+  /*
+   * SITE DEVIATION (Hakid portfolio): optional `armed` gate. When the
+   * boot veil (Boot.tsx) still covers the page, the element is held at
+   * opacity 0; the moment the gate opens the effect re-runs and the
+   * reveal joins the curtain lift instead of playing unseen behind it.
+   * Default `true` keeps every other usage stock.
+   */
+  armed = true,
   loop = false,
   loopDelay = 1.5,
   hoverEffect = 'none',
@@ -120,6 +128,15 @@ const SplitText = ({
         setReady(true);
         finish();
         return;
+      }
+
+      /* SITE DEVIATION — hold the reveal while the boot veil is up. The
+         element is kept invisible (layout untouched); when `armed` flips
+         this effect re-runs and the intro plays with the curtain lift. */
+      if (!armed) {
+        setReady(true);
+        gsap.set(el, { opacity: 0 });
+        return () => gsap.set(el, { clearProps: 'opacity' });
       }
 
       const startPct = (1 - threshold) * 100;
@@ -391,6 +408,7 @@ const SplitText = ({
         mask,
         effect,
         trigger,
+        armed,
         loop,
         loopDelay,
         fontsLoaded

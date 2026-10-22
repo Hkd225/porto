@@ -10,7 +10,7 @@ import { profile } from '../data/profile';
  * the page. The statement rides over it protected by an ink scrim, revealed
  * via SplitText in a monochrome GradientText.
  */
-export function Hero() {
+export function Hero({ statementArmed = true }: { statementArmed?: boolean }) {
   return (
     <section id="index" className="relative flex min-h-svh flex-col overflow-hidden bg-ink">
       {/* Backdrop: the light pillar alone, then legibility overlays. */}
@@ -65,6 +65,7 @@ export function Hero() {
               splitType="lines"
               mask
               trigger="load"
+              armed={statementArmed}
               delay={160}
               duration={1.5}
               ease="expo.out"
