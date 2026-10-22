@@ -1,4 +1,5 @@
 import { Navbar } from './components/Navbar';
+import { Assistant } from './components/Assistant';
 import { Hero } from './components/Hero';
 import { Focus } from './components/Focus';
 import { Manifesto } from './components/Manifesto';
@@ -33,6 +34,9 @@ export default function App() {
         <About />
         <Contact />
       </main>
+
+      {/* The resident Q&A agent — dock + ledger; the key stays server-side. */}
+      <Assistant />
 
       {/* The one grain layer — shared film over every section and scene. */}
       <div aria-hidden="true" className="grain-layer" />

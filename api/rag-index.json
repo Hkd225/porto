@@ -1,0 +1,6 @@
+{
+  "builtAt": null,
+  "model": "text-embedding-004",
+  "note": "Run `npm run rag:index` with GEMINI_API_KEY to build the syllabus index from the site's own data. Until then the agent speaks from the static syllabus in api/lib/knowledge.mjs.",
+  "chunks": []
+}

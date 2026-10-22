@@ -4,6 +4,14 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    // The chat agent runs as a sibling Node process (`npm run chat:dev`,
+    // http://localhost:8787) and Vite forwards /api to it — the same
+    // shape the deployed Vercel function serves.
+    proxy: {
+      '/api': 'http://localhost:8787',
+    },
+  },
   build: {
     target: 'es2022',
     cssCodeSplit: true,
