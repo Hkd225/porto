@@ -43,6 +43,11 @@ export const SEM_THRESHOLD = 0.88;
 const TWIN_DEDUPE = 0.93;
 const MAX_ENTRIES = 200;
 const TTL_MS = 24 * 60 * 60 * 1000;
+/* a recently served twin stands down for a minute — a visitor asking the
+   same question right after someone else (or testing in a row) falls to
+   the live model, whose phrasing now varies; the cache still earns its
+   discount whenever anyone asks again after the cooldown */
+const SERVE_COOLDOWN_MS = 60_000;
 
 const cosine = (a, b) => {
   if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return -1;
@@ -110,20 +115,26 @@ export function lookup(vector, question) {
   const script = scriptOf(question);
   const store = load();
   const now = Date.now();
-  let best = null;
+  /* NOTE: the winner is mutated IN PLACE inside store.entries — copying it
+     out first (best = {...e}) keeps the copy's served/at flags out of
+     persist() and the cooldown silently stops working */
+  let bestEntry = null;
+  let bestScore = 0;
   for (const e of store.entries) {
     if (now - e.at > TTL_MS) continue;
     if (e.script && e.script !== script) continue;
+    if (e.served && now - e.served < SERVE_COOLDOWN_MS) continue;
     const score = cosine(vector, e.vec);
-    if (score > SEM_THRESHOLD && (!best || score > best.score)) {
-      best = { ...e, score };
+    if (score > bestScore) {
+      bestEntry = e;
+      bestScore = score;
     }
   }
-  if (!best) return null;
-  best.at = now; /* LRU — twins keep the entry young */
-  best.script = script; /* keep the entry's identity current */
+  if (!bestEntry || bestScore <= SEM_THRESHOLD) return null;
+  bestEntry.at = now; /* LRU — twins keep the entry young */
+  bestEntry.served = now; /* enrollment into the cooldown */
   persist(store);
-  return { reply: best.reply, sources: best.sources || [], score: Number(best.score.toFixed(3)) };
+  return { reply: bestEntry.reply, sources: bestEntry.sources || [], score: Number(bestScore.toFixed(3)) };
 }
 
 export function store(question, vector, reply, sources) {
@@ -132,7 +143,9 @@ export function store(question, vector, reply, sources) {
   const now = Date.now();
   store.entries = store.entries.filter((e) => now - e.at < TTL_MS);
 
-  /* a near-identical twin already stored — nothing new to remember */
+  /* a near-identical twin already stored — nothing new to remember, only
+     the freshness beats on; `served` is left untouched so the cooldown
+     does not get extended by regeneration attempts */
   const script = scriptOf(question);
   const twin = store.entries.find((e) => e.script === script && cosine(vector, e.vec) >= TWIN_DEDUPE);
   if (twin) {
@@ -148,6 +161,7 @@ export function store(question, vector, reply, sources) {
     reply: String(reply).slice(0, 1500),
     sources: (sources || []).slice(0, 5),
     at: now,
+    served: now, /* the cooldown starts at birth: immediate repeats go live */
   });
 
   /* keep the floor small: newest MAX_ENTRIES survive */
