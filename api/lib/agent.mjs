@@ -88,16 +88,26 @@ const WEB_TOOLS = [
 
 const SYSTEM_RULES = [
   'You are the assistant embedded in the portfolio site of Muhammad Auffa Hakim Aditya ("Hakid") — a machine-learning engineering student who builds, documents and ships models end to end.',
-  'Visitors ask you about his projects, models, writing, methods, stack and how to reach him.',
   '',
   'RULES',
-  '- Ground every claim about Hakid in the SITE NOTES below or in web_search results. If something is not there, say plainly that you do not know and point to his GitHub profile (github.com/Hkd225).',
-  '- Never invent projects, models, metrics or links.',
+  '- Answer the exact question the visitor asked. Do not re-introduce yourself unless they ask who or what you are. Vary your openers and wording from turn to turn — never reuse the same opening sentence within one conversation.',
+  '- Ground every claim about Hakid in the SITE NOTES below or in web_search results. If something is not there, say plainly that you do not know and point to his GitHub profile (github.com/Hkd225). Never invent projects, models, metrics or links.',
   '- Reply in the language the visitor writes in; default to English.',
   '- Keep answers short and concrete (2-5 sentences unless depth is asked). No emojis. Plain text and simple lists only, no markdown headings.',
+  '- Greetings and small talk ("hi", "hoi", "tes", "siapa kamu?") get one short natural sentence plus one open question — no formal introduction, no capability list, no bio dump.',
   '- Use the web_search tool at most once per question: when a question reaches beyond the site notes, or when the visitor asks you to check the web.',
   '- If web_search is unavailable, say so honestly and answer from what you know.',
   '- Stay inside the portfolio room by default: unrelated topics get a brief, friendly reply and a steer back to Hakid and his work — unless the visitor explicitly asks you to check the web, then honor that once and answer honestly.',
+].join('\n');
+
+/* The Method section's story lives partly OUTSIDE the data-file toolkit —
+   in image alt texts and public/method/CREDITS.md — so the RAG index never
+   saw it. Shipped as a static handbook instead; rides the same static
+   prefix, so the caching ladder is untouched. */
+const METHOD_HANDBOOK = [
+  'SITE HANDBOOK',
+  '- "Evo2" (without the superscript) refers to Evo² — "Evolving the Evolver through Weight-Harness Co-Evolution", the paper in the method section. Figure 1: a shared Proposer–Reflector policy evolves the agent harness; harness edits and execution outcomes provide training experience for the policy; crossover searching transfers useful strategies between branches.',
+  '- The four method panels, in order: Read — the Evo² paper open on screen (Figure 1, weight-harness co-evolution), read line by line. Rebuild — uncertainty_engine.py in the editor, the entropy core re-implemented by hand, _clip01 through softmax. Push — the public GitHub profile (github.com/Hkd225), repositories pushed as they happened. Document — the public README of stress cases (github.com/Hkd225/Blood-Cell-Anomaly-Detection): strict leakage prevention, group validation, and labels shuffled to prove the accuracy is earned.',
 ].join('\n');
 
 let aiPromise = null;
@@ -132,8 +142,8 @@ function siteIndex() {
 
 async function siteNotes() {
   const idx = await siteIndex();
-  if (!idx) return SYLLABUS; /* static syllabus covers every fallback */
-  return idx.chunks.map((c) => `[${c.meta}]\n${c.text}`).join('\n\n');
+  if (!idx) return `${SYLLABUS}\n\n${METHOD_HANDBOOK}`; /* static syllabus covers every fallback */
+  return `${idx.chunks.map((c) => `[${c.meta}]\n${c.text}`).join('\n\n')}\n\n${METHOD_HANDBOOK}`;
 }
 
 async function embedQuery(query) {
@@ -395,13 +405,13 @@ export async function handleChat(req, res) {
       const cacheName = await kvCache(ai, notes, log);
       if (cacheName) {
         /* tools live inside the cached prefix */
-        config = { cachedContent: cacheName, temperature: 0.5, maxOutputTokens: MAX_TOKENS };
+        config = { cachedContent: cacheName, temperature: 0.65, maxOutputTokens: MAX_TOKENS };
       } else {
         /* the identical giant prefix — implicit caching's breadcrumb */
         config = {
           systemInstruction: `${SYSTEM_RULES}\n\nSITE NOTES\n${notes}`,
           tools: WEB_TOOLS,
-          temperature: 0.5,
+          temperature: 0.65,
           maxOutputTokens: MAX_TOKENS,
         };
       }
