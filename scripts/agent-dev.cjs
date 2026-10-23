@@ -25,6 +25,11 @@ if (fs.existsSync(envPath)) {
 }
 
 (async () => {
+  /* log (and survive) every fatal escape so the supervisor can see WHY
+     the child would otherwise die silently */
+  process.on('uncaughtException', (err) => console.error('[agent] FATAL uncaught', err));
+  process.on('unhandledRejection', (err) => console.error('[agent] unhandled rejection', err));
+
   const mod = await import(
     pathToFileURL(path.join(root, 'api', 'lib', 'agent.mjs')).href
   );
