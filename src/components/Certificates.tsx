@@ -20,11 +20,11 @@ export function Certificates() {
   const wide = useMediaQuery('(min-width: 768px)');
 
   /* The ring scales to fit its container, so a narrow viewport gets fewer
-     cards to keep the front plate legible — eight on phones, twelve on. */
+     cards to keep the front plate legible — seven on phones, ten on. */
   const ring = useMemo(() => {
     const byPath = new Map(certificates.map((c) => [c.src, c] as const));
     return plateMerit
-      .slice(0, wide ? 12 : 8)
+      .slice(0, wide ? 10 : 7)
       .map((src) => byPath.get(src))
       .filter((c): c is Certificate => Boolean(c))
       .map((c) => ({
@@ -46,24 +46,30 @@ export function Certificates() {
       title="Proof on paper"
       lede="Every claim above this line keeps a receipt. Forty documents, transcribed from the originals."
     >
-      {/* The ring — the section's single interaction. */}
-      <CircularCarousel
-        items={ring}
-        preset="cylinder"
-        intro="rise"
-        cardWidth={210}
-        aspectRatio={1.41}
-        gap={24}
-        autoplay="drift"
-        speed={10}
-        parallax={0.25}
-        stretch={0.35}
-        fadeColor="#080808"
-        innerShade={0.6}
-        cornerRadius={8}
-        captions
-        style={{ height: 'clamp(430px, 64vw, 620px)' }}
-      />
+      {/* The ring — the section's single interaction. Full-bleed so the
+          plates get every pixel the wrap padding would have eaten; the
+          vendor scales the whole ring to the container, so the front card
+          size is driven by the card count, not by cardWidth. */}
+      <div className="-mx-5 sm:-mx-8 lg:-mx-12">
+        <CircularCarousel
+          items={ring}
+          preset="cylinder"
+          intro="rise"
+          cardWidth={300}
+          aspectRatio={1.41}
+          gap={20}
+          autoplay="drift"
+          direction="right"
+          speed={16}
+          parallax={0.25}
+          stretch={0.35}
+          fadeColor="#080808"
+          innerShade={0.6}
+          cornerRadius={8}
+          captions
+          style={{ height: 'clamp(360px, 52vw, 540px)' }}
+        />
+      </div>
 
       {/* The registry — all forty, newest first. */}
       <div className="mt-16 sm:mt-20">
