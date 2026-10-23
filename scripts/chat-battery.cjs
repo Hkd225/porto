@@ -7,10 +7,10 @@
  * Usage: node scripts/chat-battery.cjs
  */
 const QUESTIONS = [
-  'Ciao, come stai?',
-  'Können Sie mir Hakids Projekte zeigen?',
-  'こんにちは、元気ですか？',
-  'can you tell me about the uncertainty engine in one line?',
+  '你好，你是谁？',
+  'Hakid 做过什么项目？',
+  '안녕하세요, 무엇을 도와줄 수 있나요?',
+  'привет, что можно узнать о Хакиде?',
 ];
 
 const post = async (q) => {

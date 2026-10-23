@@ -110,6 +110,25 @@ const METHOD_HANDBOOK = [
   '- The four method panels, in order: Read — the Evo² paper open on screen (Figure 1, weight-harness co-evolution), read line by line. Rebuild — uncertainty_engine.py in the editor, the entropy core re-implemented by hand, _clip01 through softmax. Push — the public GitHub profile (github.com/Hkd225), repositories pushed as they happened. Document — the public README of stress cases (github.com/Hkd225/Blood-Cell-Anomaly-Detection): strict leakage prevention, group validation, and labels shuffled to prove the accuracy is earned.',
 ].join('\n');
 
+/* Deterministic language steering — tiny models follow an explicit
+   in-turn directive far more reliably than a standing rule, and CJK/
+   Cyrillic questions in particular kept coming back in the wrong
+   tongue. Latin-script languages stay with the standing rule (the
+   model handles those well); for everything else the detector confirms
+   the script and the directive names the language outright. */
+function visitorLanguage(q) {
+  const s = String(q);
+  if (/[\u3040-\u309F\u30A0-\u30FF]/.test(s)) return 'Japanese';
+  if (/[\uAC00-\uD7AF]/.test(s)) return 'Korean';
+  if (/[\u4E00-\u9FFF]/.test(s)) return 'Simplified Chinese';
+  if (/[\u0400-\u04FF]/.test(s)) return 'Russian (Cyrillic)';
+  if (/[\u0600-\u06FF]/.test(s)) return 'Arabic';
+  if (/[\u0900-\u097F]/.test(s)) return 'Hindi';
+  if (/[\u10A0-\u10FF]/.test(s)) return 'Georgian';
+  if (/[\u0530-\u058F]/.test(s)) return 'Armenian';
+  return null; /* Latin scripts — the standing RULES cover these */
+}
+
 let aiPromise = null;
 function gemini() {
   if (!process.env.GEMINI_API_KEY) return null;
@@ -391,6 +410,12 @@ export async function handleChat(req, res) {
           question,
         );
       const contents = messages.map((m) => ({ role: m.role, parts: [{ text: m.content }] }));
+      const lang = visitorLanguage(question);
+      if (lang) {
+        contents[contents.length - 1].parts.unshift({
+          text: `The visitor writes in ${lang}. Respond ONLY in ${lang} — every sentence, no second language anywhere (names and URLs excepted).`,
+        });
+      }
       if (asksWeb) {
         contents[contents.length - 1].parts.unshift({
           text: 'The visitor explicitly asked you to check the web for this one. Call web_search once, then answer honestly and steer back.',
