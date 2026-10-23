@@ -26,6 +26,7 @@ import FlowingMenuImpl from './FlowingMenu.jsx';
 import PixelSwapImpl from './PixelSwap.jsx';
 import CursorGridImpl from './CursorGrid.jsx';
 import FlexCarouselImpl from './FlexCarousel.jsx';
+import CircularCarouselImpl from './CircularCarousel.jsx';
 import StarBorderImpl from './StarBorder.jsx';
 import SpotlightCardImpl from './SpotlightCard.jsx';
 import GlareHoverImpl from './GlareHover.jsx';
@@ -57,6 +58,7 @@ import type {
   PixelSwapProps,
   CursorGridProps,
   FlexCarouselProps,
+  CircularCarouselProps,
   StarBorderProps,
   SpotlightCardProps,
   GlareHoverProps,
@@ -88,6 +90,7 @@ export const FlowingMenu = FlowingMenuImpl as ComponentType<FlowingMenuProps>;
 export const PixelSwap = PixelSwapImpl as ComponentType<PixelSwapProps>;
 export const CursorGrid = CursorGridImpl as ComponentType<CursorGridProps>;
 export const FlexCarousel = FlexCarouselImpl as ComponentType<FlexCarouselProps>;
+export const CircularCarousel = CircularCarouselImpl as ComponentType<CircularCarouselProps>;
 export const StarBorder = StarBorderImpl as ComponentType<StarBorderProps>;
 export const SpotlightCard = SpotlightCardImpl as ComponentType<SpotlightCardProps>;
 export const GlareHover = GlareHoverImpl as ComponentType<GlareHoverProps>;
@@ -119,6 +122,7 @@ export type {
   PixelSwapProps,
   CursorGridProps,
   FlexCarouselProps,
+  CircularCarouselProps,
   StarBorderProps,
   SpotlightCardProps,
   GlareHoverProps,

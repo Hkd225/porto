@@ -984,3 +984,65 @@ export interface AccordionGalleryProps {
   onChange?: (index: number) => void;
   className?: string;
 }
+
+/* ------------------------------------------------------------------ */
+/* Galleries — circular ring                                           */
+/* ------------------------------------------------------------------ */
+
+export interface CircularCarouselItem {
+  src: string;
+  /** Announced to screen readers; the caption uses title instead. */
+  alt?: string;
+  title?: string;
+  subtitle?: string;
+}
+
+export interface CircularCarouselProps {
+  /** Images around the ring; passing a same-length list crossfades. */
+  items?: CircularCarouselItem[];
+  /** cylinder faces cards outward, orbit turns them all toward you,
+      wheel spins top-to-bottom, panorama puts the camera inside. */
+  preset?: 'cylinder' | 'orbit' | 'wheel' | 'panorama';
+  intro?: 'assemble' | 'rise' | 'spin' | 'none';
+  /** Card width in px; the whole ring scales down to fit its container. */
+  cardWidth?: number;
+  /** Card width divided by its height. */
+  aspectRatio?: number;
+  gap?: number;
+  /** Ring follow curvature, 0 flat to 1 fully wrapped (ignored by orbit). */
+  curve?: number;
+  /** Camera angle in degrees. */
+  tilt?: number;
+  /** Camera distance in px; lower exaggerates depth. */
+  perspective?: number;
+  autoplay?: 'drift' | 'step' | 'off';
+  /** Drift speed in degrees per second. */
+  speed?: number;
+  /** Seconds between moves in step mode. */
+  interval?: number;
+  direction?: 'left' | 'right';
+  draggable?: boolean;
+  /** How long a throw keeps gliding, 0–1. */
+  momentum?: number;
+  /** Settle on a card whenever the ring comes to rest. */
+  snap?: boolean;
+  pauseOnHover?: boolean;
+  focusOnClick?: boolean;
+  /** Camera lean toward the pointer, 0–1. */
+  parallax?: number;
+  /** Ring swell while spinning fast, 0–1. */
+  stretch?: number;
+  /** How strongly distant cards fade away, 0–1. */
+  depthFade?: number;
+  /** Color distant cards fade toward — match the page background. */
+  fadeColor?: string;
+  /** Brightness of the inside faces seen through the ring, 0–1. */
+  innerShade?: number;
+  cornerRadius?: number;
+  /** Shows the front card title, subtitle and reel counter under the ring. */
+  captions?: boolean;
+  onChange?: (index: number) => void;
+  onItemClick?: (item: CircularCarouselItem, index: number) => void;
+  className?: string;
+  style?: React.CSSProperties;
+}

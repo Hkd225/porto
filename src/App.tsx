@@ -9,6 +9,7 @@ import { Work } from './components/Work';
 import { Models } from './components/Models';
 import { Writing } from './components/Writing';
 import { About } from './components/About';
+import { Certificates } from './components/Certificates';
 import { Contact } from './components/Contact';
 import { useSmoothScroll } from './hooks/useSmoothScroll';
 
@@ -41,6 +42,7 @@ export default function App() {
         <Models />
         <Writing />
         <About />
+        <Certificates />
         <Contact />
       </main>
 

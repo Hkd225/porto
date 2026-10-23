@@ -11,6 +11,7 @@ export const NAV_ITEMS = [
   { id: 'models', label: 'Models' },
   { id: 'writing', label: 'Writing' },
   { id: 'about', label: 'About' },
+  { id: 'certificates', label: 'Certificates' },
   { id: 'contact', label: 'Contact' },
 ] as const;
 
@@ -23,5 +24,6 @@ export const TRACKED_IDS: readonly string[] = [
   'models',
   'writing',
   'about',
+  'certificates',
   'contact',
 ];

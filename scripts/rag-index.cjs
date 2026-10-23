@@ -86,7 +86,7 @@ async function main() {
 
   const entries = [];
   const seen = new Set();
-  for (const file of ['profile.ts', 'projects.ts']) {
+  for (const file of ['profile.ts', 'projects.ts', 'certificates.ts']) {
     let mod;
     try {
       mod = loadTS(file);
@@ -105,13 +105,31 @@ async function main() {
 
   console.log(`[rag] embedding ${entries.length} entries (gemini-embedding-001 · 768d)…`);
   const chunks = [];
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   for (let i = 0; i < entries.length; i += 50) {
     const batch = entries.slice(i, i + 50);
-    const res = await ai.models.embedContent({
-      model: 'gemini-embedding-001',
-      contents: batch.map((e) => `${e.meta} ${e.text}`),
-      config: { outputDimensionality: 768, taskType: 'RETRIEVAL_DOCUMENT' },
-    });
+    /* free tier throttles embeddings per minute — honour the retry hint */
+    let res;
+    for (let attempt = 1; ; attempt += 1) {
+      try {
+        res = await ai.models.embedContent({
+          model: 'gemini-embedding-001',
+          contents: batch.map((e) => `${e.meta} ${e.text}`),
+          config: { outputDimensionality: 768, taskType: 'RETRIEVAL_DOCUMENT' },
+        });
+        break;
+      } catch (err) {
+        const raw = typeof err === 'string' ? err : err?.message || JSON.stringify(err);
+        const hint = /retry in ([\d.]+)s/i.exec(String(raw));
+        if (attempt < 6 && hint) {
+          const wait = Math.ceil(parseFloat(hint[1]) * 1000) + 500;
+          console.log(`[rag] 429 — waiting ${wait}ms (attempt ${attempt})`);
+          await sleep(wait);
+          continue;
+        }
+        throw err;
+      }
+    }
     (res.embeddings || []).forEach((emb, j) => {
       if (!emb?.values) return;
       chunks.push({
