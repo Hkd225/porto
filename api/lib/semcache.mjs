@@ -90,13 +90,30 @@ function persist(store) {
   }
 }
 
-export function lookup(vector) {
+/* Script identity of a question — CJK vs Cyrillic vs Latin etc. A twin
+   answer saved for a question in another script must never replay: the
+   reply would arrive in the wrong language through no fault of the gate.
+   (Languages sharing a script, e.g. Italian vs Indonesian, stay safe to
+   twin; the model still answers in the STORED language, so the gate
+   refuses entries whose stored question tells a different script.) */
+const scriptOf = (text) => {
+  const s = String(text);
+  if (/[\u0400-\u04FF]/.test(s)) return 'cyr';
+  if (/[\u3040-\u30FF\u4E00-\u9FFF]/.test(s)) return 'cjk';
+  if (/[\u0600-\u06FF]/.test(s)) return 'arb';
+  if (/[\u0900-\u097F]/.test(s)) return 'dev';
+  return 'lat';
+};
+
+export function lookup(vector, question) {
   if (!vector) return null;
+  const script = scriptOf(question);
   const store = load();
   const now = Date.now();
   let best = null;
   for (const e of store.entries) {
     if (now - e.at > TTL_MS) continue;
+    if (e.script && e.script !== script) continue;
     const score = cosine(vector, e.vec);
     if (score > SEM_THRESHOLD && (!best || score > best.score)) {
       best = { ...e, score };
@@ -104,6 +121,7 @@ export function lookup(vector) {
   }
   if (!best) return null;
   best.at = now; /* LRU — twins keep the entry young */
+  best.script = script; /* keep the entry's identity current */
   persist(store);
   return { reply: best.reply, sources: best.sources || [], score: Number(best.score.toFixed(3)) };
 }
@@ -115,7 +133,8 @@ export function store(question, vector, reply, sources) {
   store.entries = store.entries.filter((e) => now - e.at < TTL_MS);
 
   /* a near-identical twin already stored — nothing new to remember */
-  const twin = store.entries.find((e) => cosine(vector, e.vec) >= TWIN_DEDUPE);
+  const script = scriptOf(question);
+  const twin = store.entries.find((e) => e.script === script && cosine(vector, e.vec) >= TWIN_DEDUPE);
   if (twin) {
     twin.at = now;
     persist(store);
@@ -124,6 +143,7 @@ export function store(question, vector, reply, sources) {
 
   store.entries.push({
     q: String(question).slice(0, 300),
+    script: scriptOf(question),
     vec: vector.map((v) => Number(v.toFixed(3))),
     reply: String(reply).slice(0, 1500),
     sources: (sources || []).slice(0, 5),

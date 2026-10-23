@@ -7,12 +7,10 @@
  * Usage: node scripts/chat-battery.cjs
  */
 const QUESTIONS = [
-  'apa itu Evo2?',
-  'ceritakan papernya yang dibaca di metode kamu',
-  'siapa itu Hakid?',
-  'apa fungsi uncertainty engine?',
-  'tes',
-  'apa kabar?',
+  'Ciao, come stai?',
+  'Können Sie mir Hakids Projekte zeigen?',
+  'こんにちは、元気ですか？',
+  'can you tell me about the uncertainty engine in one line?',
 ];
 
 const post = async (q) => {
