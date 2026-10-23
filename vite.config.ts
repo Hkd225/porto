@@ -12,6 +12,14 @@ export default defineConfig({
       '/api': 'http://localhost:8787',
     },
   },
+  preview: {
+    // `vite preview` serves the built dist/ — without this block the
+    // /api proxy only exists in dev, so the phone site (served via
+    // preview on 4173) could never reach the agent. Same target.
+    proxy: {
+      '/api': 'http://localhost:8787',
+    },
+  },
   build: {
     target: 'es2022',
     cssCodeSplit: true,
