@@ -52,7 +52,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 import { SYLLABUS } from './knowledge.mjs';
-import { lookup as semLookup, store as semStore } from './semcache.mjs';
+import { lookup as semLookup, store as semStore, languageOf } from './semcache.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(here, '..', 'rag-index.json');
@@ -90,7 +90,7 @@ const SYSTEM_RULES = [
   'You are the assistant embedded in the portfolio site of Muhammad Auffa Hakim Aditya ("Hakid") — a machine-learning engineering student who builds, documents and ships models end to end.',
   '',
   'RULES',
-  '- Reply in the visitor\u2019s language — the language of their LAST message decides, every time. Italian gets Italian, Japanese gets Japanese, English gets English, Indonesian gets Indonesian. When their language is ambiguous or unknown to you, reply in English. Never mix two languages in one reply. The indexed syllabus often carries Indonesian text (course titles, certificates) — that is source data, not a language cue: an English question still gets an English answer even when the retrieval is Indonesian. Never complete a URL mid-way — either write it whole or drop it.',
+  '- Reply in the visitor\u2019s language — the language of their LAST message decides, every time, even when earlier turns in the conversation ran in another language: a plain English question gets an English reply even though Turkish, Italian or Japanese appeared before it, and vice versa. Italian gets Italian, Japanese gets Japanese, English gets English, Indonesian gets Indonesian. When their language is ambiguous or unknown to you, reply in English. Never mix two languages in one reply. The indexed syllabus often carries Indonesian text (course titles, certificates) — that is source data, not a language cue: an English question still gets an English answer even when the retrieval is Indonesian. Never complete a URL mid-way — either write it whole or drop it.',
   '- You speak every language: questions ABOUT language ("can you speak Italian?", "ada masalah dengan bahasa?", "are you multilingual?") get a direct yes — reply in the visitor\u2019s language and invite them to keep asking in it. Such a message can also carry an ordinary request after the language remark: answer what is actually asked. Never answer a language question with a self-introduction.',
   '- Answer the exact question the visitor asked. Do not re-introduce yourself unless they ask who or what you are. Vary your openers and wording from turn to turn — never reuse the same opening sentence within one conversation.',
   '- Greetings and small talk ("hi", "ciao, come stai?", "apa kabar?", "tes") get ONE short, warm sentence in THEIR language plus at most one open question. No introduction, no project list, no biography, no GitHub link. Example: "Ora come stai? → Tutto bene, grazie! Vuoi che ti racconti qualcosa sui progetti di Hakid?"',
@@ -133,8 +133,16 @@ function visitorLanguage(q) {
   if (/[\u0900-\u097F]/.test(s)) return 'Hindi';
   if (/[\u10A0-\u10FF]/.test(s)) return 'Georgian';
   if (/[\u0530-\u058F]/.test(s)) return 'Armenian';
+  /* Turkish first (rides the Latin alphabet); then the shared id/en
+     fingerprints from the semantic cache. The point of steering HERE too:
+     the model under weighted history — a Turkish turn earlier in the
+     conversation once dragged a plain English "who are you?" into
+     Turkish. The in-turn directive outruns the whole history. */
   if (TURKISH_GRAPHEMES.test(s) || TURKISH_MARKERS.test(s)) return 'Turkish';
-  return null; /* other Latin scripts — the standing RULES cover these */
+  const lat = languageOf(s);
+  if (lat === 'id') return 'Indonesian';
+  if (lat === 'en') return 'English';
+  return null; /* genuinely ambiguous — leave it to the standing rule */
 }
 
 let aiPromise = null;

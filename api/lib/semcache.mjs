@@ -112,11 +112,12 @@ const scriptOf = (text) => {
    an Indonesian entry and the visitor got a self-introduction instead of
    an answer about language flexibility. Function-word fingerprints decide;
    short or code-switching messages fall to 'xx' (unknown Latin), which
-   refuses to twin id/en entries — one live call is the honest cost. */
+   refuses to twin id/en entries — one live call is the honest cost.
+   Exported so the agent can reuse the same fingerprints for steering. */
 const ID_MARKERS = /\b(yang|dan|dengan|untuk|pada|apa|apakah|bagaimana|kenapa|siapa|bisa|tidak|bukan|ini|itu|saya|kamu|ada|adalah|dalam|sudah|akan|juga|semua|kalau|karena|masih|tolong|satu|sebutkan|contoh|bahasa|proyekny[ai])\b/gi;
 const EN_MARKERS = /\b(what|how|why|who|where|when|the|is|are|can|could|would|do|does|did|you|your|his|him|their|about|tell|give|show|list|any|that|this|and|of|for|hello|hi|thanks|please)\b/gi;
 
-const languageOf = (text) => {
+export const languageOf = (text) => {
   const script = scriptOf(text);
   if (script !== 'lat') return script;
   const low = String(text).toLowerCase();
