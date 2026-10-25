@@ -19,6 +19,9 @@ export default defineConfig({
     proxy: {
       '/api': 'http://localhost:8787',
     },
+    // LAN/tunnel access (loca.lt / trycloudflare) sends foreign Host
+    // headers; Vite's default host allowlist refuses them with 403.
+    allowedHosts: true,
   },
   build: {
     target: 'es2022',
