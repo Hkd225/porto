@@ -176,7 +176,7 @@ export function Work() {
         <div key={filter} className="work-board-in">
           {/* Featured — hairline Swiss grid, spotlight follows the pointer. */}
           {firstFeatured && (
-            <div className="mt-10 grid grid-cols-1 gap-px border border-line-soft bg-line-soft sm:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-10 grid grid-cols-1 gap-px border border-line-soft bg-line-soft sm:grid-cols-2 xl:grid-cols-4">
               {visFeatured.map((p) => (
                 <SpotlightCard
                   key={p.slug}
