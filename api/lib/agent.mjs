@@ -52,7 +52,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 import { SYLLABUS } from './knowledge.mjs';
-import { lookup as semLookup, store as semStore, languageOf } from './semcache.mjs';
+import { languageOf } from './semcache.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(here, '..', 'rag-index.json');
@@ -425,17 +425,11 @@ export async function handleChat(req, res) {
         return;
       }
 
-      /* the semantic gate — one embedding, twin questions never bill */
-      send({ t: 'meta', v: 'matching memory…' });
-      const vector = await embedQuery(question);
-      const hit = semLookup(vector, question);
-      if (hit) {
-        log(`semantic HIT score ${hit.score} — replaying, 0 model calls`);
-        send({ t: 'meta', v: 'memory hit (semantic cache)' });
-        send({ t: 'text', v: hit.reply });
-        send({ t: 'done', sources: hit.sources, cached: true });
-        return;
-      }
+      /* Semantic cache REMOVED by design decision: the assistant's factual
+         surface must read only Hakid's own syllabus (site notes + RAG
+         index). Storing and replaying visitor questions across sessions
+         meant visitor data leaked into future answers — gone. Every turn
+         now runs live, grounded in the syllabus. */
 
       /* assemble the turn — history first, question last. When the
          visitor explicitly asks for a web check, a directive part
@@ -533,12 +527,8 @@ export async function handleChat(req, res) {
 
       send({ t: 'done', sources: sources.slice(0, 5), cached: false });
 
-      /* a grounded, tool-free answer becomes tomorrow's memory hit —
-         refusals never do */
-      const refusal = /^.{0,120}\b(can only|cannot|can't|unable)\b/i.test(reply);
-      if (!toolUsed && !refusal && reply.length >= 60) {
-        semStore(question, vector, reply, sources.slice(0, 5));
-      }
+      /* semantic cache retired — nothing is stored after the turn either;
+         see the design comment at the top of run() */
     } catch (err) {
       log(`turn failed — ${String(err?.stack || err?.message || err).slice(0, 400)}`);
       send({ t: 'error', v: userMessage(err) });

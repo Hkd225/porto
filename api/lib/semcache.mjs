@@ -1,33 +1,20 @@
 /**
- * semcache.mjs — the semantic cache ("memory hit").
+ * semcache.mjs — RETIRED, parked for reference only.
  *
- * Stores question→answer pairs (question vector + reply + sources) so
- * a semantically twin question replays the grounded answer without
- * touching the model — the 100% discount of this server's caching
- * ladder:
+ * Was: the semantic cache ("memory hit") — stored question→answer pairs
+ * (question vector + reply + sources) so a semantically twin question
+ * replayed the grounded answer without touching the model.
  *
- *   1. semantic cache  — same sense asked again → replay the answer
- *   2. KV prompt cache — the static prefix (rules + site notes + tools)
- *                       rides a Gemini cachedContent; on this key's
- *                       free tier the storage quota is 0, so the same
- *                       prefix ships inline and the server's implicit
- *                       (automatic) caching discounts it instead. The
- *                       code keeps trying the explicit path so a
- *                       quota upgrade lights it up for free.
- *   3. the model turn  — fresh questions only
+ * Why it no longer runs: the design decision that the assistant's factual
+ * surface must read ONLY Hakid's own syllabus. Storing visitor questions
+ * and replaying them to later visitors meant visitor content could leak
+ * into future answers. agent.mjs stopped calling lookup/store; this file
+ * stays so the language fingerprints remain documented — languageOf is
+ * still exported and used for steering.
  *
- * Threshold honesty: the brief said "twins at ≥45–50%". That number is
- * right for similarity metrics scaled so 0.5 = "same meaning". On
- * 768-d gemini-embedding-001 cosine, 0.5 = "loosely related topics" —
- * treating that as a twin would replay factual portfolio answers that
- * are WRONG. Twin questions score ≈0.90+; the gate sits at 0.88 and
- * anything looser falls through to the live model.
- *
- * Storage is best-effort: locally api/sem-cache.json (gitignored); on
- * Vercel the deploy filesystem is read-only, so writes fall through to
- * os.tmpdir() — the cache survives warm instances and quietly rebuilds
- * on cold starts. Nothing depends on it for correctness: a hit only
- * replays a reply, fresh questions always work.
+ * If it ever returns, bring back the same gates that were built here:
+ * language twins never replay across tongues and wrong-tongue entries
+ * (rlang ≠ lang) are dead weight.
  */
 
 import { readFileSync, writeFileSync } from 'node:fs';
