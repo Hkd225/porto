@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://hkd225.github.io/sitemap.xml
+Sitemap: https://muhammad-auffa-hakim-aditya-porto.vercel.app/sitemap.xml

@@ -2,13 +2,7 @@
 <!--
   Single-page site. The <loc> origin is rebound by scripts/site-url.cjs —
   run it with the deployed origin whenever the domain changes, and the
-  <lastmod> is restamped automatically. Touch the XML manually only to
-  add new pages.
--->
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://hkd225.github.io/</loc>
-    <lastmod>2026-10-14</lastmod>
+  <lastmod>2026-10-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
