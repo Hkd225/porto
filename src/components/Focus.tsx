@@ -100,11 +100,11 @@ export function Focus() {
             </span>
           </div>
 
-          <div className="mt-16 grid gap-16">
+          <div className="mt-10 grid gap-10 sm:mt-16 sm:gap-16">
             {areas.map((area, i) => (
               <article
                 key={area.id}
-                className="grid gap-5 border-t border-line-soft pt-10 first:border-0 first:pt-0"
+                className="grid gap-4 border-t border-line-soft pt-7 first:border-0 first:pt-0"
               >
                 <div className="flex items-baseline gap-4">
                   <span className="num text-accent/80">{String(i + 1).padStart(2, '0')}</span>
@@ -113,7 +113,7 @@ export function Focus() {
                     {area.label}
                   </span>
                 </div>
-                <h2 className="font-display italic leading-[0.96] text-[clamp(2.2rem,7.5vw,4.4rem)]">
+                <h2 className="font-display italic leading-[0.96] text-[clamp(1.75rem,6.5vw,4.4rem)]">
                   {area.label}
                 </h2>
                 <p className="max-w-[48ch] leading-relaxed text-muted">{area.blurb}</p>

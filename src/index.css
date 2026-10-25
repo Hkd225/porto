@@ -86,6 +86,20 @@
   --spacing-section: clamp(5.5rem, 12vw, 12.5rem);
 }
 
+/*
+  Phone density — the small screens keep the editorial language but sit
+  tighter, so the composition reads like the laptop page did: same
+  hierarchy, smaller type, shorter breathing room.
+*/
+@media (max-width: 640px) {
+  :root {
+    --spacing-section: clamp(3.2rem, 9vw, 5.5rem);
+  }
+  html {
+    font-size: 0.92rem; /* 14.7px — rem-clamped type & spacing all shrink together */
+  }
+}
+
 /* ============================================================
    BASE
    ============================================================ */

@@ -42,13 +42,13 @@ export function Section({ id, num, label, title, lede, className = '', backgroun
         </div>
 
         {title && (
-          <h2 className="mt-8 font-display leading-[1.0] tracking-[-0.015em] text-[clamp(2.1rem,4.6vw,4rem)]">
+          <h2 className="mt-6 font-display leading-[1.0] tracking-[-0.015em] text-[clamp(1.8rem,4.6vw,4rem)]">
             {title}
           </h2>
         )}
       </div>
 
-      <div className="wrap relative z-10 mt-14 sm:mt-16">{children}</div>
+      <div className="wrap relative z-10 mt-9 sm:mt-16">{children}</div>
     </section>
   );
 }
