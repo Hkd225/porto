@@ -97,10 +97,7 @@ function persist(store) {
 
 /* Script identity of a question — CJK vs Cyrillic vs Latin etc. A twin
    answer saved for a question in another script must never replay: the
-   reply would arrive in the wrong language through no fault of the gate.
-   (Languages sharing a script, e.g. Italian vs Indonesian, stay safe to
-   twin; the model still answers in the STORED language, so the gate
-   refuses entries whose stored question tells a different script.) */
+   reply would arrive in the wrong language through no fault of the gate. */
 const scriptOf = (text) => {
   const s = String(text);
   if (/[\u0400-\u04FF]/.test(s)) return 'cyr';
@@ -110,9 +107,29 @@ const scriptOf = (text) => {
   return 'lat';
 };
 
+/* Latin goes one level deeper — Indonesian vs English vs other. Sharing an
+   alphabet is NOT language identity: "Sen kimsin" (Turkish) once twinned
+   an Indonesian entry and the visitor got a self-introduction instead of
+   an answer about language flexibility. Function-word fingerprints decide;
+   short or code-switching messages fall to 'xx' (unknown Latin), which
+   refuses to twin id/en entries — one live call is the honest cost. */
+const ID_MARKERS = /\b(yang|dan|dengan|untuk|pada|apa|apakah|bagaimana|kenapa|siapa|bisa|tidak|bukan|ini|itu|saya|kamu|ada|adalah|dalam|sudah|akan|juga|semua|kalau|karena|masih|tolong|satu|sebutkan|contoh|bahasa|proyekny[ai])\b/gi;
+const EN_MARKERS = /\b(what|how|why|who|where|when|the|is|are|can|could|would|do|does|did|you|your|his|him|their|about|tell|give|show|list|any|that|this|and|of|for|hello|hi|thanks|please)\b/gi;
+
+const languageOf = (text) => {
+  const script = scriptOf(text);
+  if (script !== 'lat') return script;
+  const low = String(text).toLowerCase();
+  const id = (low.match(ID_MARKERS) || []).length;
+  const en = (low.match(EN_MARKERS) || []).length;
+  if (id >= 2 && id > en) return 'id';
+  if (en >= 2 && en > id) return 'en';
+  return 'xx';
+};
+
 export function lookup(vector, question) {
   if (!vector) return null;
-  const script = scriptOf(question);
+  const lang = languageOf(question);
   const store = load();
   const now = Date.now();
   /* NOTE: the winner is mutated IN PLACE inside store.entries — copying it
@@ -122,7 +139,13 @@ export function lookup(vector, question) {
   let bestScore = 0;
   for (const e of store.entries) {
     if (now - e.at > TTL_MS) continue;
-    if (e.script && e.script !== script) continue;
+    if (e.script && e.script !== scriptOf(question)) continue;
+    /* language twins only replay for the same language — a stored '.it'
+       reply never reaches an Indonesian question again */
+    if (e.lang && e.lang !== lang) continue;
+    /* a poisoned entry (stored answer in a DIFFERENT language than its own
+       question) is dead weight — regenerate gives the model a fair chance */
+    if (e.lang && e.rlang && e.rlang !== e.lang) continue;
     if (e.served && now - e.served < SERVE_COOLDOWN_MS) continue;
     const score = cosine(vector, e.vec);
     if (score > bestScore) {
@@ -143,11 +166,13 @@ export function store(question, vector, reply, sources) {
   const now = Date.now();
   store.entries = store.entries.filter((e) => now - e.at < TTL_MS);
 
-  /* a near-identical twin already stored — nothing new to remember, only
-     the freshness beats on; `served` is left untouched so the cooldown
-     does not get extended by regeneration attempts */
+  const lang = languageOf(question);
   const script = scriptOf(question);
-  const twin = store.entries.find((e) => e.script === script && cosine(vector, e.vec) >= TWIN_DEDUPE);
+
+  /* a near-identical twin already stored — nothing new to remember, only
+     the freshness beats on; a twin in another language falls through so
+     the fresh answer does land in the cache under its own language */
+  const twin = store.entries.find((e) => e.script === script && e.lang === lang && cosine(vector, e.vec) >= TWIN_DEDUPE);
   if (twin) {
     twin.at = now;
     persist(store);
@@ -156,7 +181,12 @@ export function store(question, vector, reply, sources) {
 
   store.entries.push({
     q: String(question).slice(0, 300),
-    script: scriptOf(question),
+    script,
+    lang,
+    /* the answer's own language — recorded so lookup can discard entries
+       whose reply betrayed the question's tongue (wrong-tongue live
+       answers used to become immortal bad replays) */
+    rlang: languageOf(reply),
     vec: vector.map((v) => Number(v.toFixed(3))),
     reply: String(reply).slice(0, 1500),
     sources: (sources || []).slice(0, 5),

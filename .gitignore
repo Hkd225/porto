@@ -28,3 +28,6 @@ audit
 
 # Runtime caches (best-effort semantic memory; Vercel uses /tmp instead)
 api/sem-cache.json
+
+# Local phone-screenshot evidence (WhatsApp outputs) — stays on this machine
+tamlan hp/
