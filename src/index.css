@@ -1,5 +1,12 @@
 @import 'tailwindcss';
 
+/* Custom variant: the "stage" breakpoint — desktop composition requires
+   BOTH width (the editorial grid) AND height (the pinned scenes need
+   vertical room). A landscape phone (844x390) has the width but not the
+   room: without the height term the pinned desktop scenes fired inside
+   it and their text stacked over the navbar. */
+@custom-variant stage (@media (min-width: 768px) and (min-height: 620px));
+
 /* ============================================================
    FONTS — self-hosted (downloaded by scripts/fonts-selfhost.cjs
    from the same css2 requests the page used to link). The page

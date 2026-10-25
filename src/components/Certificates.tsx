@@ -17,7 +17,7 @@ import { CircularCarousel } from './reactbits';
  * no URL, its printed certificate number is shown instead.
  */
 export function Certificates() {
-  const wide = useMediaQuery('(min-width: 768px)');
+  const wide = useMediaQuery('(min-width: 768px) and (min-height: 620px)');
 
   /* The ring scales to fit its container, so a narrow viewport gets fewer
      cards to keep the front plate legible — seven on phones, ten on. */

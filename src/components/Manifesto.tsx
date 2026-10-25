@@ -194,6 +194,7 @@ function MethodSnap({
                 />
               )}
             </span>
+            <span aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-ink/85 to-transparent" />
             <span className="absolute bottom-3 left-3 font-mono text-[10px] uppercase tracking-[0.22em] text-bone">
               <span className={isActive ? 'text-accent' : 'text-dim'}>{String(i + 1).padStart(2, '0')}</span>
               <span className="px-2 text-dim">·</span>
@@ -235,7 +236,7 @@ export function Manifesto() {
             <span className="h-px w-10 translate-y-[-4px] bg-line-2" aria-hidden="true" />
             <p className="kicker">The method</p>
           </div>
-          <p className="kicker hidden md:block">How I work</p>
+          <p className="kicker hidden stage:block">How I work</p>
         </div>
 
         <div className="mt-10 md:mt-14">
@@ -262,7 +263,7 @@ export function Manifesto() {
         <div className="mt-12 md:mt-16">
           {/* The one interaction, two faces: vendor accordion on desktop,
               snap scroller on phones (same items, same active index). */}
-          <div className="hidden md:block">
+          <div className="hidden stage:block">
             <AccordionGallery
               className="ag-mono"
               items={items}
@@ -281,7 +282,7 @@ export function Manifesto() {
               onChange={setActive}
             />
           </div>
-          <div className="md:hidden">
+          <div className="stage:hidden">
             <MethodSnap items={items} active={active} onChange={setActive} />
           </div>
         </div>

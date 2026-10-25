@@ -36,7 +36,7 @@ export function Focus() {
   const triggerRef = useRef<ScrollTrigger | null>(null);
   const [active, setActive] = useState(0);
   const reduced = useReducedMotion();
-  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const isDesktop = useMediaQuery('(min-width: 768px) and (min-height: 620px)');
   const areas = profile.focus;
   const total = areas.length;
   const pinned = isDesktop && !reduced;
