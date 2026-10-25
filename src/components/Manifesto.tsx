@@ -90,6 +90,36 @@ const belt: Array<{ name: string; icon: IconType }> = [
 ];
 
 /**
+ * The wrench-shaped LogoLoop prop — identity held at module scope.
+ *
+ * LogoLoop re-measures its whole belt (per-item getBoundingClientRect plus a
+ * synchronous paint frame) whenever the `logos` identity changes. Building
+ * that array inline during render handed it a fresh identity on every re-render
+ * of this section — and a hover/report emit mid-scroll turns into a full
+ * measure pass at strict intervals. Created once here, the engine refreshes
+ * only when the belt genuinely changes. Same JSX, same labels, one mount.
+ */
+const beltLogos = belt.map(({ name, icon: Icon }) => ({
+  node: (
+    <span role="img" aria-label={name} className="inline-flex">
+      <Icon size={36} aria-hidden />
+    </span>
+  ),
+  title: name,
+  ariaLabel: name,
+  hoverColor: '#e9e6de',
+}));
+
+/* AccordionGallery items — hoisted like beltLogos: the vendor re-measures when
+   the prop changes form, so the same four objects must be one array, built
+   once, at module level. */
+const galleryItems = profile.method.map((s) => ({
+  image: stepPhotos[s.word]?.src ?? '',
+  label: s.word,
+  alt: stepPhotos[s.word]?.alt ?? `${s.n} ${s.word} — method step`,
+}));
+
+/**
  * MethodSnap — the mobile face of the gallery.
  *
  * AccordionGallery's four panels turn into vertical slivers on a phone
@@ -194,11 +224,7 @@ export function Manifesto() {
   const [active, setActive] = useState(0);
   const step = steps[active] ?? steps[0];
 
-  const items = steps.map((s) => ({
-    image: stepPhotos[s.word]?.src ?? '',
-    label: s.word,
-    alt: stepPhotos[s.word]?.alt ?? `${s.n} ${s.word} — method step`,
-  }));
+  const items = galleryItems;
 
   return (
     <section id="method" aria-label="The method" className="border-t border-line-soft pt-[var(--spacing-section)] pb-[clamp(1.75rem,4vw,3rem)]">
@@ -299,16 +325,7 @@ export function Manifesto() {
           <LogoLoop
             className="text-dim"
             labels="hover"
-            logos={belt.map(({ name, icon: Icon }) => ({
-              node: (
-                <span role="img" aria-label={name} className="inline-flex">
-                  <Icon size={36} aria-hidden />
-                </span>
-              ),
-              title: name,
-              ariaLabel: name,
-              hoverColor: '#e9e6de',
-            }))}
+            logos={beltLogos}
             speed={34}
             logoHeight={36}
             gap={64}

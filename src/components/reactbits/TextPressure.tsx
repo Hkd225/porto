@@ -160,6 +160,8 @@ const TextPressure: React.FC<TextPressureProps> = ({
 
   const mouseRef = useRef<Point>({ x: 0, y: 0 });
   const cursorRef = useRef<Point & { seen: boolean }>({ x: 0, y: 0, seen: false });
+  const geometryRef = useRef<{ measured: boolean; centers: Array<{ x: number; y: number } | null> } | null>(null);
+  const measureRef = useRef<(() => void) | null>(null);
 
   const [fontSize, setFontSize] = useState(minFontSize);
   const [scaleY, setScaleY] = useState(1);
@@ -279,10 +281,49 @@ const TextPressure: React.FC<TextPressureProps> = ({
     let clock = 0;
     let engage = optionsRef.current.idle === 'wave' || optionsRef.current.idle === 'pulse' ? 0 : 1;
 
+    /* Span geometry, measured in title-space and cached. The original vendors
+       tick reads one getBoundingClientRect for THE TITLE plus another for every
+       character on every frame; during scroll that forces a re-layout of the
+       whole page per span per frame (measured ~1.2k reads/s). Character centers
+       move rigidly with the title, so one title read per tick plus cached
+       title-space offsets delivers the identical pressure math with no per-span
+       reads. Remeasured on title resize, font change and after fonts load. */
+    const measureGeometry = () => {
+      const spans = spansRef.current;
+      const rect = title.getBoundingClientRect();
+      geometryRef.current = {
+        measured: true,
+        centers: spans.map(span => {
+          if (!span) return null;
+          const r = span.getBoundingClientRect();
+          return { x: r.x - rect.x + r.width / 2, y: r.y - rect.y + r.height / 2 };
+        }),
+      };
+    };
+    measureRef.current = measureGeometry;
+
+    /* Measure reactions coalesce into one geometry refresh: mark dirty now,
+       let the tape next tick read it (shares its layout flush cheaply with
+       everything else happening that frame). */
+    let pendingMeasure = true;
+    const shakeMeasure = () => {
+      pendingMeasure = true;
+      wakeRef.current?.();
+    };
+    const titleBox = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(shakeMeasure) : null;
+    titleBox?.observe(title);
+    document.fonts?.addEventListener?.('loadingdone', shakeMeasure);
+    document.fonts?.ready?.then?.(shakeMeasure).catch?.(() => {});
+
     const tick = (now: number) => {
       rafId = 0;
       const elapsed = last ? Math.min(now - last, 64) : 1000 / 60;
       last = now;
+
+      if (pendingMeasure) {
+        pendingMeasure = false;
+        measureGeometry();
+      }
 
       const options = optionsRef.current;
       const idleMode: IdleMode =
@@ -309,13 +350,14 @@ const TextPressure: React.FC<TextPressureProps> = ({
       while (ripples.length && now - ripples[0].start > RIPPLE_LIFE * 1000) ripples.shift();
 
       const titleRect = title.getBoundingClientRect();
+      const geometry = geometryRef.current;
       const maxDist = Math.max(titleRect.width * options.radius, 1);
       const spread = Math.max(options.radius * 2, 0.2);
       const spans = spansRef.current;
-      const centers = spans.map(span => {
-        if (!span) return null;
-        const rect = span.getBoundingClientRect();
-        return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
+      const centers = spans.map((span, i) => {
+        const local = geometry?.measured ? geometry.centers[i] : null;
+        if (!span || !local) return null;
+        return { x: titleRect.x + local.x, y: titleRect.y + local.y };
       });
 
       let changed = false;
@@ -360,6 +402,10 @@ const TextPressure: React.FC<TextPressureProps> = ({
         }
       });
 
+      /* Center drift from font-variation writes is a few px and the pressure
+         field is smooth — imperceptible. Re-measure only on structural events
+         (resize, fonts, fontSize/scaleY change), not per write-frame. */
+
       const moving = Math.abs(cursor.x - mouse.x) > 0.1 || Math.abs(cursor.y - mouse.y) > 0.1;
       const animating = moving || idling || engage !== present || ripples.length > 0;
       idleFrames = animating ? 0 : idleFrames + 1;
@@ -377,11 +423,15 @@ const TextPressure: React.FC<TextPressureProps> = ({
 
     return () => {
       cancelAnimationFrame(rafId);
+      titleBox?.disconnect();
+      document.fonts?.removeEventListener?.('loadingdone', shakeMeasure);
       wakeRef.current = null;
     };
   }, []);
 
   useEffect(() => {
+    /* fontSize/scaleY just re-rendered — geometry is stale until remeasured. */
+    measureRef.current?.();
     wakeRef.current?.();
   }, [fontSize, scaleY, text, flex, fontFamily]);
 
