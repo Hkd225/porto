@@ -97,6 +97,10 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: auto;
+    /* Clip the root so stray layout overflow can never widen the ICB —
+       mobile Chrome otherwise grows the layout viewport, pushing fixed
+       corner elements (the AI dock) outside the visual area. */
+    overflow-x: clip;
   }
 
   body {
