@@ -257,7 +257,15 @@ const TextPressure: React.FC<TextPressureProps> = ({
 
     const resize = () => {
       const { width: containerW, height: containerH } = container.getBoundingClientRect();
-      const nextFontSize = Math.max(chars.length ? containerW / (chars.length / 2) : minFontSize, minFontSize);
+      /* Site deviation: fit BOTH axes. The vendor formula sizes from width
+         alone — fine for a full-viewport hero mount where w/chars÷2 lands
+         near the height, but in a shallow band (the contact signature,
+         clamp(4rem,10vw,9rem)) width-only sizing overshoots several-fold
+         and the glyphs spill over the rest of the section. Container
+         height is now a hard ceiling; the flex title still spreads the
+         glyphs edge to edge. */
+      const widthFit = chars.length ? containerW / (chars.length / 2) : minFontSize;
+      const nextFontSize = Math.max(minFontSize, Math.min(widthFit, containerH > 0 ? containerH : widthFit));
       setFontSize(nextFontSize);
       setScaleY(scale && containerH > 0 ? containerH / nextFontSize : 1);
     };
