@@ -114,9 +114,15 @@ const METHOD_HANDBOOK = [
 /* Deterministic language steering — tiny models follow an explicit
    in-turn directive far more reliably than a standing rule, and CJK/
    Cyrillic questions in particular kept coming back in the wrong
-   tongue. Latin-script languages stay with the standing rule (the
-   model handles those well); for everything else the detector confirms
-   the script and the directive names the language outright. */
+   tongue. Latin-script languages mostly stay with the standing rule
+   (the model handles those well); Turkish is the exception — it rides
+   the Latin alphabet, so the standing rule alone let it drift into the
+   conversation's dominant language ("Sen kimsin?" answered in
+   Indonesian). Its diacritics (ı ğ ş İ) and question words are
+   unambiguous, so it is caught deterministically below. */
+const TURKISH_GRAPHEMES = /[ığşİ]/;
+const TURKISH_MARKERS = /\b(kimsin|nedir|nasıl|merhaba|teşekkür|lütfen|kimdir|neden|nelerdir|nasibi|hakkında)\b/i;
+
 function visitorLanguage(q) {
   const s = String(q);
   if (/[\u3040-\u309F\u30A0-\u30FF]/.test(s)) return 'Japanese';
@@ -127,7 +133,8 @@ function visitorLanguage(q) {
   if (/[\u0900-\u097F]/.test(s)) return 'Hindi';
   if (/[\u10A0-\u10FF]/.test(s)) return 'Georgian';
   if (/[\u0530-\u058F]/.test(s)) return 'Armenian';
-  return null; /* Latin scripts — the standing RULES cover these */
+  if (TURKISH_GRAPHEMES.test(s) || TURKISH_MARKERS.test(s)) return 'Turkish';
+  return null; /* other Latin scripts — the standing RULES cover these */
 }
 
 let aiPromise = null;
@@ -322,6 +329,26 @@ function json(res, code, payload) {
   res.end(JSON.stringify(payload));
 }
 
+/* Gemini's free tier flaps: the next attempt after a first success in the
+   same minute can meet a 500/503 "model overloaded" and the turn used to
+   die in a friendly error. streamRound retries ONCE after a short settle
+   — safe because it is only used for the first round, where no text has
+   streamed, so the retry can never double-print an answer. */
+function isUpstreamHiccup(err) {
+  return /5\d\d|overloaded|unavailable|internal/i.test(String(err?.message || err || ''));
+}
+
+async function streamRound(ai, { model, contents, config }) {
+  try {
+    return await ai.models.generateContentStream({ model, contents, config });
+  } catch (err) {
+    if (!isUpstreamHiccup(err)) throw err;
+    console.info('[agent] 5xx hiccup on first round — retrying after settle');
+    await new Promise((r) => setTimeout(r, 1200));
+    return await ai.models.generateContentStream({ model, contents, config });
+  }
+}
+
 /* ------------------------------------------------------------------ *
  * handleChat — CORS, guard, stream                                     *
  * ------------------------------------------------------------------ */
@@ -446,7 +473,11 @@ export async function handleChat(req, res) {
       send({ t: 'meta', v: 'reading the site\u2019s notes…' });
 
       for (let round = 0; round < MAX_ROUNDS; round++) {
-        const stream = await ai.models.generateContentStream({ model: MODEL, contents, config });
+        /* Retry only on the opening round — later rounds follow a tool call,
+           and re-opening there could remix an answer that already streamed. */
+        const stream = round === 0
+          ? await streamRound(ai, { model: MODEL, contents, config })
+          : await ai.models.generateContentStream({ model: MODEL, contents, config });
         const rawParts = [];
         const calls = [];
         for await (const chunk of stream) {

@@ -9,6 +9,11 @@
 
 import { handleChat } from './lib/agent.mjs';
 
+/* SSE turns can spend a few extra seconds on the 5xx retry — lift Hobby's
+   10s default so a busy free-tier moment degrades into one retry instead
+   of a dropped connection. */
+export const config = { maxDuration: 30 };
+
 export default async function handler(req, res) {
   return handleChat(req, res);
 }
