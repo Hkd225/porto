@@ -122,6 +122,13 @@ const METHOD_HANDBOOK = [
    unambiguous, so it is caught deterministically below. */
 const TURKISH_GRAPHEMES = /[ığşİ]/;
 const TURKISH_MARKERS = /\b(kimsin|nedir|nasıl|merhaba|teşekkür|lütfen|kimdir|neden|nelerdir|nasibi|hakkında)\b/i;
+/* Local-language tests are the most likely "kendala bahasa" an Indonesian
+   visitor triggers: Javanese and Sundanese ride Latin text, match neither
+   the id nor the en fingerprints, and used to fall through to the
+   ambiguous → English rule. Only highly distinctive words are used —
+   'mangga' (also the fruit, and "let's go") was deliberately excluded. */
+const JAVANESE_MARKERS = /\b(piye|kabare|nggih|kula|sampeyan|mawon|nanging|mboten)\b/i;
+const SUNDANESE_MARKERS = /\b(kumaha|damang|bilih|naon|teuranga|sadananya|jeung)\b/i;
 
 function visitorLanguage(q) {
   const s = String(q);
@@ -142,6 +149,8 @@ function visitorLanguage(q) {
   const lat = languageOf(s);
   if (lat === 'id') return 'Indonesian';
   if (lat === 'en') return 'English';
+  if (JAVANESE_MARKERS.test(s)) return 'Javanese';
+  if (SUNDANESE_MARKERS.test(s)) return 'Sundanese';
   return null; /* genuinely ambiguous — leave it to the standing rule */
 }
 
