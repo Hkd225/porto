@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Single-page site. Replace the <loc> with the real deployed URL before
-  publishing if this is hosted somewhere other than the GitHub Pages path.
-  Update <lastmod> whenever the content below changes.
+  Single-page site. The <loc> origin is rebound by scripts/site-url.cjs —
+  run it with the deployed origin whenever the domain changes, and the
+  <lastmod> is restamped automatically. Touch the XML manually only to
+  add new pages.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
